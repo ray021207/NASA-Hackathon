@@ -165,8 +165,8 @@ test('NISAR summary: the real file validates; any bad or missing field hides the
 test('Overview: the NISAR section sits right after the hero, is hidden until data validates, and the hero links to it', async () => {
   const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
   const i = html.indexOf('id="overview-nisar"');
-  assert.ok(i > 0 && i < html.indexOf('id="overview-story"'));
-  assert.match(html.slice(i - 80, i + 160), /hidden/);
+  assert.ok(i > html.indexOf('id="evidence"') && i < html.indexOf('id="atlas"'), 'the NISAR panel lives in the Evidence view');
+  assert.match(html.slice(i - 80, i + 200), /hidden/);
   assert.match(html, /href="#overview-nisar"/);
   const spans = [...html.matchAll(/data-nisar="([a-z0-9-]+)"/g)].map(m => m[1]);
   assert.ok(spans.length >= 15);
@@ -188,8 +188,42 @@ test('Pumping summary: the real file validates; any bad or missing field hides t
   assert.equal(cleanPumping({}), null);
   const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
   const i = html.indexOf('id="overview-pumping"');
-  assert.ok(i > html.indexOf('id="overview-nisar"') && i < html.indexOf('id="overview-story"'));
+  assert.ok(i > html.indexOf('id="overview-nisar"') && i < html.indexOf('id="atlas"'));
   assert.match(html.slice(i - 20, i + 200), /hidden/);
   const app = await readFile(new URL('../app.js', import.meta.url), 'utf8');
   for (const key of new Set([...html.matchAll(/data-pump="([a-z0-9-]+)"/g)].map(m => m[1]))) assert.ok(app.includes(key === 'acft' || /^[a-z]+$/.test(key) ? key : "'" + key + "'"), 'app.js fills ' + key);
+});
+
+test('views: four views and three evidence tabs exist, every tab has its panel, and the page works without the script', async () => {
+  const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
+  for (const v of ['overview', 'evidence', 'map', 'about']) assert.equal((html.match(new RegExp('data-view="' + v + '"', 'g')) || []).length, 1, v);
+  const tabs = [...html.matchAll(/role="tab" id="tab-[a-z]+" aria-controls="([a-z-]+)"/g)].map(m => m[1]);
+  assert.deepEqual(tabs, ['overview-nisar', 'overview-farmland', 'overview-pumping']);
+  for (const id of tabs) assert.match(html, new RegExp('<section id="' + id + '"[^>]*role="tabpanel"'));
+  const css = await readFile(new URL('../design-system.css', import.meta.url), 'utf8');
+  assert.match(css, /html\.views-on \[data-view\]:not\(\.is-active\)\{display:none/, 'hiding is gated on html.views-on, so a failed script leaves the full page');
+  assert.ok(!/\[data-view\]:not\(\.is-active\)\{display:none/.test(css.replace(/html\.views-on \[data-view\]:not\(\.is-active\)\{display:none/, '')), 'no ungated hiding rule');
+  const app = await readFile(new URL('../app.js', import.meta.url), 'utf8');
+  assert.match(app, /classList\.remove\('views-on'\)/, 'falls back to the full page on error');
+});
+
+test('nothing was removed: the text of every earlier section is still on the page', async () => {
+  const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
+  for (const phrase of ['Arizona is our home.', 'A familiar landscape.', 'A clearer view of the ground we share.', 'What the research already tells us', 'Why look in both directions?',
+    'NASA’s newest radar satellite, tested on Arizona.', 'Radar also shows what covers the ground', 'Where farms are estimated to pump the most', 'Farmland can fool this radar', 'From the other side',
+    'What this does not show', 'Other cautions', 'Where NISAR and Sentinel-1 do not agree', 'The people behind', 'Explore study regions'])
+    assert.ok(html.includes(phrase), phrase);
+});
+
+test('app.js and model.mjs parse as modules (a duplicate declaration or typo would break the whole page)', async () => {
+  const { mkdtempSync, writeFileSync } = await import('node:fs');
+  const { execFileSync } = await import('node:child_process');
+  const { tmpdir } = await import('node:os');
+  const { join } = await import('node:path');
+  const dir = mkdtempSync(join(tmpdir(), 'syntax-'));
+  for (const name of ['app.js', 'motion.js', 'model.mjs']) {
+    const file = join(dir, name.replace(/\.js$/, '.mjs'));
+    writeFileSync(file, await readFile(new URL('../' + name, import.meta.url), 'utf8'));
+    execFileSync(process.execPath, ['--check', file], { stdio: 'pipe' });   // throws with the error text if the syntax is invalid
+  }
 });

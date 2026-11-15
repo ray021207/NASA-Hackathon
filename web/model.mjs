@@ -149,7 +149,7 @@ const cleanFarmland = f => {
     boxPct: nz(f.crop_share_box_pct, 0, 100), sinkPct: nz(f.crop_share_sinking_pct, 0, 100), times: nz(f.enrichment, 0, 1000), acres: nz(f.crop_acres_sinking, 0, 1e8),
     diff: nz(f.rate_diff_cm_yr, -100, 100), lo: nz(f.rate_diff_lo, -100, 100), hi: nz(f.rate_diff_hi, -100, 100),
     cropSink: nz(f.share_sinking_cropland_pct, 0, 100), desertSink: nz(f.share_sinking_desert_pct, 0, 100),
-    aucHH: nz(f.auc_hh_spread, 0.5, 1), aucHV: nz(f.auc_hv_spread, 0.5, 1), aucMean: nz(f.auc_mean_hh, 0.5, 1),
+    aucHH: nz(f.auc_hh_spread, 0.5, 1), aucHV: nz(f.auc_hv_spread, 0.5, 1), aucMean: nz(f.auc_mean_hh, 0.5, 1), aucMeanHV: nz(f.auc_mean_hv, 0.5, 1), aucRatio: nz(f.auc_hvhh, 0.5, 1),
     rhoHH: nz(f.rain_rho_hh, -1, 1), rhoHV: nz(f.rain_rho_hv, -1, 1), dates: nz(f.n_dates, 1, 1000), dry: nz(f.dry_dates, 0, 1000),
     nisarDiff: nz(f.nisar_diff_cm_yr, -100, 100), nisarCells: nz(f.nisar_cells, 1, 1e9),
     figure: typeof f.figure === 'string' && /^[A-Za-z0-9_.-]+\.png$/.test(f.figure) ? f.figure : null

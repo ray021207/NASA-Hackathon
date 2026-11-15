@@ -26,6 +26,7 @@
     <span class="project-label">The desert sinks, and the radar keeps the beat.</span>
     <nav aria-label="Site navigation">
       <a class="nav-overview" href="#overview">Overview</a>
+      <a class="nav-evidence" href="#evidence">Evidence</a>
       <a class="nav-explore" href="#atlas">Study regions</a>
       <button type="button" data-dialog="method">How we measured</button>
       <button type="button" data-dialog="limits">Limits</button>
@@ -34,7 +35,7 @@
     </nav>
   </header>
 
-  <section id="overview" class="overview" aria-labelledby="overview-title">
+  <section id="overview" class="overview" data-view="overview" aria-labelledby="overview-title">
     <div class="overview-topline"><span>ARIZONA / EARTH OBSERVATION</span><span>AN INDEPENDENT FIELD ATLAS &nbsp;·&nbsp; 2026</span></div>
     <div class="overview-hero">
       <svg class="overview-desert-art" viewBox="0 0 1520 670" preserveAspectRatio="xMidYMid slice" focusable="false" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
@@ -99,98 +100,17 @@
         <span class="overview-visual-label">ARIZONA / ONE SHARED LANDSCAPE</span>
       </div>
     </div>
-    <section id="overview-nisar" class="overview-proof overview-nisar" aria-labelledby="nisar-title" hidden>
-      <div class="overview-proof-heading">
-        <span class="overview-mission-label">NASA NISAR / FIRST YEAR, TESTED</span>
-        <h2 id="nisar-title">NASA’s newest radar satellite, tested on Arizona.</h2>
-        <p>NISAR has revisited Arizona about every 12 days since late October 2025 (a few visits were skipped). We asked one plain question: does its first year see the same sinking that ten years of older satellite data show? <strong>These results are our own processing of NASA’s Provisional data.</strong></p>
-      </div>
-      <div class="overview-proof-grid">
-        <article class="overview-proof-card">
-          <span class="overview-proof-id">01 / SAME PLACES</span>
-          <strong class="overview-proof-number"><span data-nisar="r"></span> <small>match</small></strong>
-          <h3>NISAR finds the same sinking basin.</h3>
-          <p>Across <span data-nisar="blocks"></span> map blocks at Willcox, NISAR’s one-year pattern lines up with the ten-year Sentinel-1 pattern (correlation <span data-nisar="r"></span>; 1 is a perfect match, 0 is none). Where one satellite sees sinking, so does the other.</p>
-        </article>
-        <article class="overview-proof-card">
-          <span class="overview-proof-id">02 / A CLEANER SIGNAL</span>
-          <strong class="overview-proof-number">−<span data-nisar="percent"></span>% <small>noise</small></strong>
-          <h3>NISAR’s weather correction works.</h3>
-          <p>NISAR provides tables of how moist air delays the radar signal but leaves them for users to apply. We tested applying them both ways and kept the direction that helps: it cut the scatter in our Willcox series from <span data-nisar="before"></span> to <span data-nisar="after"></span> mm. The wrong direction made it much worse.</p>
-        </article>
-        <article class="overview-proof-card">
-          <span class="overview-proof-id">03 / NOT YET A SPEED</span>
-          <strong class="overview-proof-number"><span data-nisar="willcox-date"></span> <small>to confirm</small></strong>
-          <h3>One year is still too short for a speed.</h3>
-          <p>Noise in single observation dates dominates a short record. At Willcox’s <span data-nisar="willcox-rate"></span> cm/yr we estimate NISAR needs about <span data-nisar="willcox-years"></span> years of unbroken data for a 90% chance of a confirmed rate. Today that chance is about <span data-nisar="willcox-chance"></span>%. At Eloy (<span data-nisar="eloy-rate"></span> cm/yr, started June 2026) it is about <span data-nisar="eloy-date"></span>.</p>
-        </article>
-      </div>
-      <figure class="nisar-figure">
-        <img id="nisar-figure-img" alt="Left: scatter of NISAR one-year rate against Sentinel-1 ten-year rate, showing a rising relationship. Right: NISAR change over time at Willcox playa against the Sentinel-1 trend lines." width="1430" height="560" loading="lazy">
-        <figcaption>Willcox basin. Left: each point is a 300 m block; the red line is the median Sentinel-1 rate for each NISAR rate. Right: NISAR’s year at the playa against Sentinel-1’s long-term trends. The sharp dip on one date in September 2026 is a single bad observation, not real motion.</figcaption>
-      </figure>
-      <p class="overview-proof-qualifier"><strong>Where NISAR and Sentinel-1 do not agree.</strong> Over the six months both watched (Oct 2025–Apr 2026) their changes did not match (correlation <span data-nisar="overlap"></span>): about 1 cm of movement in six months is smaller than the noise. In the sinking areas NISAR also reads faster than Sentinel-1 (<span data-nisar="s-nisar"></span> against <span data-nisar="s-s1"></span> cm/yr, relative to the surroundings); we cannot yet tell whether that is noise or a recent speed-up. Over its full year NISAR’s playa change was <span data-nisar="net"></span> cm, close to Sentinel-1’s long-term trend of <span data-nisar="trend"></span> cm/yr, but one date carries 1–1.5 cm of error, so this is consistent, not proven. <button type="button" data-dialog="limits">Read all limits ↗</button></p>
-      <p class="overview-proof-qualifier"><strong>From the other side.</strong> NISAR’s ascending track looks at Willcox from the opposite direction. Over the same June to October months (<span data-nisar="span"></span> days), the areas Sentinel-1 shows sinking changed by <span data-nisar="asc"></span> mm in the ascending data (95% range <span data-nisar="asc-lo"></span> to <span data-nisar="asc-hi"></span>) and <span data-nisar="desc"></span> mm in the descending data (<span data-nisar="desc-lo"></span> to <span data-nisar="desc-hi"></span>), relative to the rest, against <span data-nisar="exp"></span> mm expected from Sentinel-1’s long-term rate. Negative means moving away from the satellite. The difference between the two directions would reveal sideways motion; it is <span data-nisar="ew"></span> mm (<span data-nisar="ew-lo"></span> to <span data-nisar="ew-hi"></span>), too uncertain to say anything. Over so short a span the two directions’ whole-map patterns are mostly noise, so we do not compare them block by block.</p>
-      <div class="nisar-surface">
-        <span class="overview-mission-label">NISAR BACKSCATTER / WHAT IS ON TOP</span>
-        <h3>Radar also shows what covers the ground: farmland and desert.</h3>
-        <p class="nisar-surface-lede">How strongly the ground reflects the signal depends on what is on it. We read NISAR’s reflected signal in two channels (HH and HV) on <span data-nisar="dates"></span> dates, and compared irrigated cropland, taken from USDA’s 2025 Cropland Data Layer, with desert shrubland.</p>
-        <div class="overview-proof-grid">
-          <article class="overview-proof-card">
-            <span class="overview-proof-id">01 / WHERE THE CROPS ARE</span>
-            <strong class="overview-proof-number"><span data-nisar="sink-pct"></span>% <small>of the sinking area</small></strong>
-            <h3>Farmland is a small part of the land but a large part of the sinking.</h3>
-            <p>Cropland covers <span data-nisar="box-pct"></span>% of the Willcox study box but <span data-nisar="sink-pct"></span>% of the area Sentinel-1 shows sinking (<span data-nisar="times"></span> times its share), about <span data-nisar="acres"></span> acres of crops.</p>
-          </article>
-          <article class="overview-proof-card">
-            <span class="overview-proof-id">02 / WHAT THE RADAR READS</span>
-            <strong class="overview-proof-number">−<span data-nisar="rate-diff"></span> <small>cm/yr, may be inflated</small></strong>
-            <h3>Cropland reads as sinking faster than nearby desert.</h3>
-            <p>On Sentinel-1’s ten-year record, cropland cells read <span data-nisar="rate-diff"></span> cm/yr lower than desert cells (95% range <span data-nisar="rate-lo"></span> to <span data-nisar="rate-hi"></span>). <span data-nisar="crop-sink"></span>% of cropland cells read faster than 1 cm/yr of sinking, against <span data-nisar="desert-sink"></span>% of desert cells. Farmland can inflate this kind of reading (see below), and it shows where, not why.</p>
-          </article>
-          <article class="overview-proof-card">
-            <span class="overview-proof-id">03 / HOW NISAR TELLS THEM APART</span>
-            <strong class="overview-proof-number"><span data-nisar="auc-hh"></span> <small>score</small></strong>
-            <h3>NISAR sees farming as change through the year, not as brightness.</h3>
-            <p>On dry dates, how much the HH signal swings over the year separates cropland from desert with a score of <span data-nisar="auc-hh"></span> (0.5 is a coin flip, 1 is perfect). Average HH brightness scores <span data-nisar="auc-mean"></span>: no help. The HV swing scores <span data-nisar="auc-hv"></span>.</p>
-          </article>
-        </div>
-        <figure class="nisar-figure">
-          <img id="nisar-farmland-img" alt="Left and middle: median NISAR HH and HV backscatter in decibels through the year for cropland, fallow land, shrubland and barren ground at Willcox. Right: bar chart of how well each measure separates cropland from desert." width="1950" height="546" loading="lazy">
-          <figcaption>Willcox study box, 28 NISAR dates (Oct 2025–Nov 2026). Left and middle: the median signal for each land type. Right: how well each measure tells cropland from desert shrubland, from 0.5 (no better than chance) to 1 (perfect). The jumps that every line shares are mostly rain, not farming.</figcaption>
-        </figure>
-        <p class="overview-proof-qualifier"><strong>Farmland can fool this radar.</strong> Published studies find that changing soil moisture and crops add apparent sinking to Sentinel-1-type (C-band) radar over fields: a systematic bias of up to several millimetres a year in general, and an estimated 2–4 cm a year for cotton in California, with the largest gaps against L-band in orchards such as pistachios, which also grow at Willcox. So part of the gap above may not be real sinking. What points the same way independently: NISAR’s L-band, less affected by this, also puts cropland lower (see below), and Willcox farmland has long been studied as a subsidence area. <button type="button" data-dialog="sources">See the studies ↗</button></p>
-        <p class="overview-proof-qualifier"><strong>Other cautions.</strong> Rain brightens every land type at once: NISAR’s scene-wide brightness follows the previous three days’ rainfall (rank correlation <span data-nisar="rho-hh"></span> for HH, <span data-nisar="rho-hv"></span> for HV; rainfall from the ERA5 weather reanalysis on a 25 km grid). So we compare crops with desert on the same date and re-checked the scores using only the <span data-nisar="dry"></span> dry dates. Not settled: NISAR’s own L-band rates also put cropland below desert (<span data-nisar="nisar-diff"></span> cm/yr), but only <span data-nisar="nisar-cells"></span> cropland cells stay coherent all year, so we do not trust that size. The land-cover map describes the 2025 growing season while the radar year runs to November 2026, and fields rotate. None of this shows which farm, well or user caused any sinking.</p>
-      </div>
-    </section>
-    <section id="overview-pumping" class="overview-proof overview-nisar" aria-labelledby="pumping-title" hidden>
-      <div class="overview-proof-heading">
-        <span class="overview-mission-label">PUMPING / WHERE THE WATER IS TAKEN</span>
-        <h2 id="pumping-title">Where farms are estimated to pump the most, the ground sinks the most.</h2>
-        <p>The USGS maps every irrigated field in the Willcox basin and estimates how much groundwater each one drew in 2024. We laid those estimates over the ten-year Sentinel-1 sinking map. <strong>The pumping figures are a model’s estimates, not meter readings.</strong></p>
-      </div>
-      <div class="overview-proof-grid">
-        <article class="overview-proof-card">
-          <span class="overview-proof-id">01 / THE PUMPING</span>
-          <strong class="overview-proof-number"><span data-pump="acft"></span> <small>acre-feet a year</small></strong>
-          <h3>About <span data-pump="acft"></span> acre-feet from <span data-pump="acres"></span> irrigated acres.</h3>
-          <p>USGS counts <span data-pump="fields"></span> irrigated fields, all watered from groundwater, in 2024. An acre-foot is the water that covers an acre one foot deep.</p>
-        </article>
-        <article class="overview-proof-card">
-          <span class="overview-proof-id">02 / WHERE IT SINKS</span>
-          <strong class="overview-proof-number"><span data-pump="high"></span> <small>cm/yr where pumping is highest</small></strong>
-          <h3>Sinking steps up with the pumping nearby.</h3>
-          <p>Sorting the basin into 300 m blocks by the estimated pumping within <span data-pump="radius"></span> km, the typical block reads <span data-pump="none"></span> cm/yr with no field nearby, <span data-pump="low"></span> with a little pumping, <span data-pump="medium"></span> with more, and <span data-pump="high"></span> with the most (negative means sinking).</p>
-        </article>
-        <article class="overview-proof-card">
-          <span class="overview-proof-id">03 / HOW STRONG</span>
-          <strong class="overview-proof-number"><span data-pump="rho"></span> <small>correlation</small></strong>
-          <h3>A clear link, but mostly about where the fields are.</h3>
-          <p>Ranking blocks by pumping and by sinking gives <span data-pump="rho"></span> (95% range <span data-pump="rho-lo"></span> to <span data-pump="rho-hi"></span>); <span data-pump="rho-in"></span> inside the pumped area alone. Irrigated acreage by itself scores <span data-pump="rho-acres"></span>, so the modelled volumes add little beyond where the irrigated land is (<span data-pump="partial"></span>, range <span data-pump="partial-lo"></span> to <span data-pump="partial-hi"></span>).</p>
-        </article>
-      </div>
-      <p class="overview-proof-qualifier"><strong>What this does not show.</strong> Matching places is not proof of cause: the pumping is a 2024 model estimate while the radar rate averages ten years, and C-band radar can over-read sinking over farmland (see above). The field-by-field test is inconclusive: only <span data-pump="coherent"></span>% of fields kept a usable 30 m radar reading, mostly idle land, orchards and vineyards, while almost all of the <span data-pump="row-fields"></span> field-crop fields (small grains, cover crops, alfalfa, corn and cotton) lost it (<span data-pump="row-with"></span> kept), so the heaviest pumpers are missing. Across the <span data-pump="field-n"></span> pumped fields that did keep one, pumping per acre and sinking were barely related (<span data-pump="field-rho"></span>, range <span data-pump="field-lo"></span> to <span data-pump="field-hi"></span>). Water levels in wells, geology and the depth of the clay layers are not included. <button type="button" data-dialog="sources">See the data source ↗</button></p>
-    </section>
+    <nav class="quick-answers" aria-labelledby="quick-title">
+      <h2 id="quick-title">What do you want to know?</h2>
+      <ul>
+        <li><a href="#atlas"><strong>Where is the ground sinking?</strong><span>Open the map</span></a></li>
+        <li><a href="#overview-nisar"><strong>What does NASA’s NISAR show?</strong><span>Its first year, tested</span></a></li>
+        <li><a href="#overview-farmland"><strong>What is on top of it?</strong><span>Farmland and desert, seen by radar</span></a></li>
+        <li><a href="#overview-pumping"><strong>Is it the pumping?</strong><span>Farm water use against sinking</span></a></li>
+        <li><button type="button" data-dialog="limits"><strong>How sure are we?</strong><span>Read the limits</span></button></li>
+        <li><button type="button" data-dialog="method"><strong>How does radar measure the ground?</strong><span>A plain-language guide</span></button></li>
+      </ul>
+    </nav>
     <section id="overview-story" class="overview-narrative" aria-labelledby="overview-narrative-title">
       <div class="overview-narrative-head">
         <div>
@@ -293,7 +213,117 @@
     </div>
   </section>
 
-  <main id="atlas" class="workspace">
+  <section id="evidence" class="evidence" data-view="evidence" aria-labelledby="evidence-title" tabindex="-1">
+    <header class="evidence-head">
+      <span class="overview-mission-label">EVIDENCE / WHAT WE FOUND</span>
+      <h2 id="evidence-title">Pick a question. Read only what you need.</h2>
+      <p>Each tab opens one finding with a chart. The reasoning and the caveats are behind the “How we know” buttons.</p>
+    </header>
+    <div class="evidence-tabs" role="tablist" aria-label="Evidence topics">
+      <button type="button" role="tab" id="tab-nisar" aria-controls="overview-nisar" aria-selected="true">What NISAR shows</button>
+      <button type="button" role="tab" id="tab-farmland" aria-controls="overview-farmland" aria-selected="false" tabindex="-1">Farms and the radar</button>
+      <button type="button" role="tab" id="tab-pumping" aria-controls="overview-pumping" aria-selected="false" tabindex="-1">Pumping and sinking</button>
+    </div>
+    <section id="overview-nisar" class="overview-proof overview-nisar" aria-labelledby="nisar-title" role="tabpanel" hidden>
+      <div class="overview-proof-heading">
+        <span class="overview-mission-label">NASA NISAR / FIRST YEAR, TESTED</span>
+        <h2 id="nisar-title">NASA’s newest radar satellite, tested on Arizona.</h2>
+        <p>NISAR has revisited Arizona about every 12 days since late October 2025 (a few visits were skipped). We asked one plain question: does its first year see the same sinking that ten years of older satellite data show? <strong>These results are our own processing of NASA’s Provisional data.</strong></p>
+      </div>
+      <div class="overview-proof-grid">
+        <article class="overview-proof-card">
+          <span class="overview-proof-id">01 / SAME PLACES</span>
+          <strong class="overview-proof-number"><span data-nisar="r"></span> <small>match</small></strong>
+          <h3>NISAR finds the same sinking basin.</h3>
+          <details class="more"><summary>How we know</summary><p>Across <span data-nisar="blocks"></span> map blocks at Willcox, NISAR’s one-year pattern lines up with the ten-year Sentinel-1 pattern (correlation <span data-nisar="r"></span>; 1 is a perfect match, 0 is none). Where one satellite sees sinking, so does the other.</p></details>
+        </article>
+        <article class="overview-proof-card">
+          <span class="overview-proof-id">02 / A CLEANER SIGNAL</span>
+          <strong class="overview-proof-number">−<span data-nisar="percent"></span>% <small>noise</small></strong>
+          <h3>NISAR’s weather correction works.</h3>
+          <details class="more"><summary>How we know</summary><p>NISAR provides tables of how moist air delays the radar signal but leaves them for users to apply. We tested applying them both ways and kept the direction that helps: it cut the scatter in our Willcox series from <span data-nisar="before"></span> to <span data-nisar="after"></span> mm. The wrong direction made it much worse.</p></details>
+        </article>
+        <article class="overview-proof-card">
+          <span class="overview-proof-id">03 / NOT YET A SPEED</span>
+          <strong class="overview-proof-number"><span data-nisar="willcox-date"></span> <small>to confirm</small></strong>
+          <h3>One year is still too short for a speed.</h3>
+          <details class="more"><summary>How we know</summary><p>Noise in single observation dates dominates a short record. At Willcox’s <span data-nisar="willcox-rate"></span> cm/yr we estimate NISAR needs about <span data-nisar="willcox-years"></span> years of unbroken data for a 90% chance of a confirmed rate. Today that chance is about <span data-nisar="willcox-chance"></span>%. At Eloy (<span data-nisar="eloy-rate"></span> cm/yr, started June 2026) it is about <span data-nisar="eloy-date"></span>.</p></details>
+        </article>
+      </div>
+      <div class="viz" id="viz-directions" hidden></div>
+      <figure class="nisar-figure">
+        <img id="nisar-figure-img" alt="Left: scatter of NISAR one-year rate against Sentinel-1 ten-year rate, showing a rising relationship. Right: NISAR change over time at Willcox playa against the Sentinel-1 trend lines." width="1430" height="560" loading="lazy">
+        <figcaption>Willcox basin. Left: each point is a 300 m block; the red line is the median Sentinel-1 rate for each NISAR rate. Right: NISAR’s year at the playa against Sentinel-1’s long-term trends. The sharp dip on one date in September 2026 is a single bad observation, not real motion.</figcaption>
+      </figure>
+      <details class="more more-block"><summary>Where NISAR and Sentinel-1 do not agree</summary><p class="overview-proof-qualifier"> Over the six months both watched (Oct 2025–Apr 2026) their changes did not match (correlation <span data-nisar="overlap"></span>): about 1 cm of movement in six months is smaller than the noise. In the sinking areas NISAR also reads faster than Sentinel-1 (<span data-nisar="s-nisar"></span> against <span data-nisar="s-s1"></span> cm/yr, relative to the surroundings); we cannot yet tell whether that is noise or a recent speed-up. Over its full year NISAR’s playa change was <span data-nisar="net"></span> cm, close to Sentinel-1’s long-term trend of <span data-nisar="trend"></span> cm/yr, but one date carries 1–1.5 cm of error, so this is consistent, not proven. <button type="button" data-dialog="limits">Read all limits ↗</button></p></details>
+      <details class="more more-block"><summary>From the other side</summary><p class="overview-proof-qualifier"> NISAR’s ascending track looks at Willcox from the opposite direction. Over the same June to October months (<span data-nisar="span"></span> days), the areas Sentinel-1 shows sinking changed by <span data-nisar="asc"></span> mm in the ascending data (95% range <span data-nisar="asc-lo"></span> to <span data-nisar="asc-hi"></span>) and <span data-nisar="desc"></span> mm in the descending data (<span data-nisar="desc-lo"></span> to <span data-nisar="desc-hi"></span>), relative to the rest, against <span data-nisar="exp"></span> mm expected from Sentinel-1’s long-term rate. Negative means moving away from the satellite. The difference between the two directions would reveal sideways motion; it is <span data-nisar="ew"></span> mm (<span data-nisar="ew-lo"></span> to <span data-nisar="ew-hi"></span>), too uncertain to say anything. Over so short a span the two directions’ whole-map patterns are mostly noise, so we do not compare them block by block.</p></details>
+    </section>
+    <section id="overview-farmland" class="overview-proof overview-nisar" aria-labelledby="farmland-title" role="tabpanel" hidden>
+      <div class="nisar-surface">
+        <span class="overview-mission-label">NISAR BACKSCATTER / WHAT IS ON TOP</span>
+        <h3 id="farmland-title">Radar also shows what covers the ground: farmland and desert.</h3>
+        <p class="nisar-surface-lede">How strongly the ground reflects the signal depends on what is on it. We read NISAR’s reflected signal in two channels (HH and HV) on <span data-nisar="dates"></span> dates, and compared irrigated cropland, taken from USDA’s 2025 Cropland Data Layer, with desert shrubland.</p>
+        <div class="overview-proof-grid">
+          <article class="overview-proof-card">
+            <span class="overview-proof-id">01 / WHERE THE CROPS ARE</span>
+            <strong class="overview-proof-number"><span data-nisar="sink-pct"></span>% <small>of the sinking area</small></strong>
+            <h3>Farmland is a small part of the land but a large part of the sinking.</h3>
+            <details class="more"><summary>How we know</summary><p>Cropland covers <span data-nisar="box-pct"></span>% of the Willcox study box but <span data-nisar="sink-pct"></span>% of the area Sentinel-1 shows sinking (<span data-nisar="times"></span> times its share), about <span data-nisar="acres"></span> acres of crops.</p></details>
+          </article>
+          <article class="overview-proof-card">
+            <span class="overview-proof-id">02 / WHAT THE RADAR READS</span>
+            <strong class="overview-proof-number">−<span data-nisar="rate-diff"></span> <small>cm/yr, may be inflated</small></strong>
+            <h3>Cropland reads as sinking faster than nearby desert.</h3>
+            <details class="more"><summary>How we know</summary><p>On Sentinel-1’s ten-year record, cropland cells read <span data-nisar="rate-diff"></span> cm/yr lower than desert cells (95% range <span data-nisar="rate-lo"></span> to <span data-nisar="rate-hi"></span>). <span data-nisar="crop-sink"></span>% of cropland cells read faster than 1 cm/yr of sinking, against <span data-nisar="desert-sink"></span>% of desert cells. Farmland can inflate this kind of reading (see below), and it shows where, not why.</p></details>
+          </article>
+          <article class="overview-proof-card">
+            <span class="overview-proof-id">03 / HOW NISAR TELLS THEM APART</span>
+            <strong class="overview-proof-number"><span data-nisar="auc-hh"></span> <small>score</small></strong>
+            <h3>NISAR sees farming as change through the year, not as brightness.</h3>
+            <details class="more"><summary>How we know</summary><p>On dry dates, how much the HH signal swings over the year separates cropland from desert with a score of <span data-nisar="auc-hh"></span> (0.5 is a coin flip, 1 is perfect). Average HH brightness scores <span data-nisar="auc-mean"></span>: no help. The HV swing scores <span data-nisar="auc-hv"></span>.</p></details>
+          </article>
+        </div>
+        <div class="viz-pair"><div class="viz" id="viz-share" hidden></div><div class="viz" id="viz-auc" hidden></div></div>
+        <figure class="nisar-figure">
+          <img id="nisar-farmland-img" alt="Left and middle: median NISAR HH and HV backscatter in decibels through the year for cropland, fallow land, shrubland and barren ground at Willcox. Right: bar chart of how well each measure separates cropland from desert." width="1950" height="546" loading="lazy">
+          <figcaption>Willcox study box, 28 NISAR dates (Oct 2025–Nov 2026). Left and middle: the median signal for each land type. Right: how well each measure tells cropland from desert shrubland, from 0.5 (no better than chance) to 1 (perfect). The jumps that every line shares are mostly rain, not farming.</figcaption>
+        </figure>
+        <details class="more more-block"><summary>Farmland can fool this radar</summary><p class="overview-proof-qualifier"> Published studies find that changing soil moisture and crops add apparent sinking to Sentinel-1-type (C-band) radar over fields: a systematic bias of up to several millimetres a year in general, and an estimated 2–4 cm a year for cotton in California, with the largest gaps against L-band in orchards such as pistachios, which also grow at Willcox. So part of the gap above may not be real sinking. What points the same way independently: NISAR’s L-band, less affected by this, also puts cropland lower (see below), and Willcox farmland has long been studied as a subsidence area. <button type="button" data-dialog="sources">See the studies ↗</button></p></details>
+        <details class="more more-block"><summary>Other cautions</summary><p class="overview-proof-qualifier"> Rain brightens every land type at once: NISAR’s scene-wide brightness follows the previous three days’ rainfall (rank correlation <span data-nisar="rho-hh"></span> for HH, <span data-nisar="rho-hv"></span> for HV; rainfall from the ERA5 weather reanalysis on a 25 km grid). So we compare crops with desert on the same date and re-checked the scores using only the <span data-nisar="dry"></span> dry dates. Not settled: NISAR’s own L-band rates also put cropland below desert (<span data-nisar="nisar-diff"></span> cm/yr), but only <span data-nisar="nisar-cells"></span> cropland cells stay coherent all year, so we do not trust that size. The land-cover map describes the 2025 growing season while the radar year runs to November 2026, and fields rotate. None of this shows which farm, well or user caused any sinking.</p></details>
+      </div>
+    </section>
+    <section id="overview-pumping" class="overview-proof overview-nisar" aria-labelledby="pumping-title" role="tabpanel" hidden>
+      <div class="overview-proof-heading">
+        <span class="overview-mission-label">PUMPING / WHERE THE WATER IS TAKEN</span>
+        <h2 id="pumping-title">Where farms are estimated to pump the most, the ground sinks the most.</h2>
+        <p>The USGS maps every irrigated field in the Willcox basin and estimates how much groundwater each one drew in 2024. We laid those estimates over the ten-year Sentinel-1 sinking map. <strong>The pumping figures are a model’s estimates, not meter readings.</strong></p>
+      </div>
+      <div class="overview-proof-grid">
+        <article class="overview-proof-card">
+          <span class="overview-proof-id">01 / THE PUMPING</span>
+          <strong class="overview-proof-number"><span data-pump="acft"></span> <small>acre-feet a year</small></strong>
+          <h3>About <span data-pump="acft"></span> acre-feet from <span data-pump="acres"></span> irrigated acres.</h3>
+          <details class="more"><summary>How we know</summary><p>USGS counts <span data-pump="fields"></span> irrigated fields, all watered from groundwater, in 2024. An acre-foot is the water that covers an acre one foot deep.</p></details>
+        </article>
+        <article class="overview-proof-card">
+          <span class="overview-proof-id">02 / WHERE IT SINKS</span>
+          <strong class="overview-proof-number"><span data-pump="high"></span> <small>cm/yr where pumping is highest</small></strong>
+          <h3>Sinking steps up with the pumping nearby.</h3>
+          <details class="more"><summary>How we know</summary><p>Sorting the basin into 300 m blocks by the estimated pumping within <span data-pump="radius"></span> km, the typical block reads <span data-pump="none"></span> cm/yr with no field nearby, <span data-pump="low"></span> with a little pumping, <span data-pump="medium"></span> with more, and <span data-pump="high"></span> with the most (negative means sinking).</p></details>
+        </article>
+        <article class="overview-proof-card">
+          <span class="overview-proof-id">03 / HOW STRONG</span>
+          <strong class="overview-proof-number"><span data-pump="rho"></span> <small>correlation</small></strong>
+          <h3>A clear link, but mostly about where the fields are.</h3>
+          <details class="more"><summary>How we know</summary><p>Ranking blocks by pumping and by sinking gives <span data-pump="rho"></span> (95% range <span data-pump="rho-lo"></span> to <span data-pump="rho-hi"></span>); <span data-pump="rho-in"></span> inside the pumped area alone. Irrigated acreage by itself scores <span data-pump="rho-acres"></span>, so the modelled volumes add little beyond where the irrigated land is (<span data-pump="partial"></span>, range <span data-pump="partial-lo"></span> to <span data-pump="partial-hi"></span>).</p></details>
+        </article>
+      </div>
+      <div class="viz" id="viz-pump" hidden></div>
+      <details class="more more-block"><summary>What this does not show</summary><p class="overview-proof-qualifier"> Matching places is not proof of cause: the pumping is a 2024 model estimate while the radar rate averages ten years, and C-band radar can over-read sinking over farmland (see above). The field-by-field test is inconclusive: only <span data-pump="coherent"></span>% of fields kept a usable 30 m radar reading, mostly idle land, orchards and vineyards, while almost all of the <span data-pump="row-fields"></span> field-crop fields (small grains, cover crops, alfalfa, corn and cotton) lost it (<span data-pump="row-with"></span> kept), so the heaviest pumpers are missing. Across the <span data-pump="field-n"></span> pumped fields that did keep one, pumping per acre and sinking were barely related (<span data-pump="field-rho"></span>, range <span data-pump="field-lo"></span> to <span data-pump="field-hi"></span>). Water levels in wells, geology and the depth of the clay layers are not included. <button type="button" data-dialog="sources">See the data source ↗</button></p></details>
+    </section>
+  </section>
+
+  <main id="atlas" class="workspace" data-view="map">
     <header class="atlas-heading">
       <span class="eyebrow">ARIZONA / SATELLITE FIELD ATLAS</span>
       <h2>Explore study regions</h2>
@@ -344,7 +374,7 @@
     <p id="explain-text"></p>
     <p id="explain-note" class="explain-note"></p>
   </aside>
-  <section id="about" class="about" aria-labelledby="about-title">
+  <section id="about" class="about" data-view="about" aria-labelledby="about-title">
     <div class="about-lead">
       <div class="about-heading">
         <span class="eyebrow">THE PEOPLE / SINKRONIZED</span>

@@ -844,7 +844,8 @@ async function loadNisar() {
 function renderNisar(n) {
   const section = $('#overview-nisar');
   if (!section) return;
-  if (!n) { section.hidden = true; return; }
+  const farm = $('#overview-farmland');
+  if (!n) { section.hidden = true; if (farm) farm.hidden = true; return; }
   const month = iso => new Date(iso + 'T12:00:00Z').toLocaleDateString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' });
   const one = x => (Math.round(x * 10) / 10).toFixed(1), two = x => (Math.round(x * 100) / 100).toFixed(2);
   const sign = x => (x < 0 ? '\u2212' : '') + one(Math.abs(x));
@@ -864,12 +865,35 @@ function renderNisar(n) {
     'auc-hh': two(f.aucHH), 'auc-hv': two(f.aucHV), 'auc-mean': two(f.aucMean), 'rho-hh': two(f.rhoHH), 'rho-hv': two(f.rhoHV), dry: String(f.dry),
     'nisar-diff': mn(f.nisarDiff), 'nisar-cells': new Intl.NumberFormat('en-US').format(f.nisarCells)
   });
-  section.querySelectorAll('[data-nisar]').forEach(node => { node.textContent = values[node.dataset.nisar] ?? ''; });
+  document.querySelectorAll('#overview-nisar [data-nisar], #overview-farmland [data-nisar]').forEach(node => { node.textContent = values[node.dataset.nisar] ?? ''; });
   const img = $('#nisar-figure-img');
   if (img) img.src = window.ATLAS_PREVIEW_IMAGES?.[n.figure] || new URL(n.figure, DATA).href;
   const img2 = $('#nisar-farmland-img');
   if (img2) img2.src = window.ATLAS_PREVIEW_IMAGES?.[n.farmland.figure] || new URL(n.farmland.figure, DATA).href;
   section.hidden = false;
+  if (farm) farm.hidden = false;
+  const fl = n.farmland, mm = x => (x < 0 ? '\u2212' : x > 0 ? '+' : '') + one(Math.abs(x)) + ' mm';
+  const away = x => Math.max(0, -x);
+  barChart($('#viz-directions'), {
+    title: 'Is the sinking visible from both sides?', sub: 'How far the sinking areas moved away from the satellite over ' + dr.span + ' days, relative to the rest (mm). Whiskers: 95% range.',
+    max: 14, rows: [
+      { label: 'NISAR, ascending track', value: away(dr.asc), lo: away(dr.ascHi), hi: away(dr.ascLo), text: mm(dr.asc), color: '#a64b2a' },
+      { label: 'NISAR, descending track', value: away(dr.desc), lo: away(dr.descHi), hi: away(dr.descLo), text: mm(dr.desc), color: '#c77d5e' },
+      { label: 'Expected from Sentinel-1\u2019s long-term rate', value: away(dr.exp), text: mm(dr.exp), color: '#52664b' }],
+    note: 'Both NISAR directions point the same way as the expectation; the ascending range excludes zero.' });
+  barChart($('#viz-share'), {
+    title: 'Farmland is a small share of the land, a big share of the sinking', sub: 'Cropland as a share of the area (%).', max: 10, unit: '%',
+    rows: [{ label: 'Whole Willcox study box', value: fl.boxPct, text: one(fl.boxPct) + '%', color: '#8a9a84' },
+           { label: 'Area Sentinel-1 shows sinking', value: fl.sinkPct, text: one(fl.sinkPct) + '%', color: '#a64b2a' }],
+    note: 'USDA Cropland Data Layer 2025 against Sentinel-1 rates; association, not cause.' });
+  barChart($('#viz-auc'), {
+    title: 'What lets NISAR tell farmland from desert?', sub: 'Separation score on dry dates: 0.5 is a coin flip (left edge), 1 is perfect.', min: 0.5, max: 1,
+    rows: [{ label: 'Yearly swing in HH', value: fl.aucHH, text: two(fl.aucHH), color: '#a64b2a' },
+           { label: 'Yearly swing in HV', value: fl.aucHV, text: two(fl.aucHV), color: '#c77d5e' },
+           { label: 'HV to HH ratio', value: fl.aucRatio, text: two(fl.aucRatio), color: '#8a9a84' },
+           { label: 'Average HV brightness', value: fl.aucMeanHV, text: two(fl.aucMeanHV), color: '#8a9a84' },
+           { label: 'Average HH brightness', value: fl.aucMean, text: two(fl.aucMean), color: '#8a9a84' }],
+    note: 'Change through the year separates them; average brightness barely does.' });
 }
 loadNisar().then(renderNisar);
 
@@ -897,5 +921,115 @@ function renderPumping(p) {
   };
   section.querySelectorAll('[data-pump]').forEach(node => { node.textContent = values[node.dataset.pump] ?? ''; });
   section.hidden = false;
+  const dep = x => Math.max(0, -x);
+  barChart($('#viz-pump'), {
+    title: 'The more estimated pumping nearby, the faster the ground sinks', sub: 'Typical sinking rate (cm/yr) by estimated pumping within ' + p.radius + ' km. Longer bar means faster sinking.', max: 2.5,
+    rows: [{ label: 'No field nearby', value: dep(p.none), text: s1(p.none) + ' cm/yr', color: '#8a9a84' },
+           { label: 'Low pumping', value: dep(p.low), text: s1(p.low) + ' cm/yr', color: '#d9a58c' },
+           { label: 'Medium pumping', value: dep(p.medium), text: s1(p.medium) + ' cm/yr', color: '#c77d5e' },
+           { label: 'High pumping', value: dep(p.high), text: s1(p.high) + ' cm/yr', color: '#a64b2a' }],
+    note: 'Modelled 2024 pumping (USGS) against the ten-year Sentinel-1 rate; association, not cause.' });
 }
 loadPumping().then(renderPumping);
+
+// Bar chart built from plain HTML (wraps on phones, readable by screen readers). Rows are keyboard-focusable and announce their value.
+function barChart(host, { title, sub, rows, note, min = 0, max }) {
+  if (!host || !rows?.length) return;
+  const pct = v => Math.max(0, Math.min(100, (v - min) / (max - min) * 100));
+  const wrap = el('div', 'viz-card');
+  wrap.append(el('h4', '', title), el('p', 'viz-sub', sub));
+  const list = el('ul', 'bars');
+  rows.forEach(r => {
+    const li = el('li', 'bar-row');
+    li.tabIndex = 0;
+    li.setAttribute('aria-label', r.label + ': ' + r.text);
+    li.title = r.label + ': ' + r.text;
+    const track = el('span', 'bar-track');
+    const fill = el('span', 'bar-fill');
+    fill.style.background = r.color;
+    track.append(fill);
+    if (r.lo != null && r.hi != null) {
+      const ci = el('span', 'bar-ci');
+      ci.style.left = pct(r.lo) + '%';
+      ci.style.width = Math.max(0, pct(r.hi) - pct(r.lo)) + '%';
+      track.append(ci);
+    }
+    li.append(el('span', 'bar-label', r.label), track, el('span', 'bar-value', r.text));
+    list.append(li);
+    requestAnimationFrame(() => requestAnimationFrame(() => { fill.style.width = pct(r.value) + '%'; }));
+  });
+  wrap.append(list);
+  if (note) wrap.append(el('p', 'viz-note', note));
+  host.replaceChildren(wrap);
+  host.hidden = false;
+}
+
+// Views: one part of the page at a time, with the evidence behind tabs. Every section stays in the HTML; the page only starts hiding parts once this has run
+// (html.views-on), so if anything here fails the whole page is still shown exactly as before.
+(function initViews() {
+  try {
+    const views = [...document.querySelectorAll('[data-view]')];
+    const tabs = [...document.querySelectorAll('.evidence [role=tab]')];
+    const panels = tabs.map(t => document.getElementById(t.getAttribute('aria-controls')));
+    if (views.length < 4 || !tabs.length || panels.some(p => !p)) return;
+    const navFor = { overview: '#overview', evidence: '#evidence', map: '#atlas', about: '#about' };
+    const rootEl = document.documentElement;
+    const available = () => tabs.filter((t, i) => !panels[i].hidden);
+    function syncTabs() {
+      tabs.forEach((t, i) => { t.hidden = panels[i].hidden; });
+      const active = panels.findIndex(p => p.classList.contains('is-active'));
+      if (active >= 0 && panels[active].hidden) { const first = available()[0]; if (first) selectPanel(panels[tabs.indexOf(first)]); }
+    }
+    function selectPanel(panel) {
+      panels.forEach((p, i) => {
+        const on = p === panel;
+        p.classList.toggle('is-active', on);
+        tabs[i].setAttribute('aria-selected', String(on));
+        tabs[i].tabIndex = on ? 0 : -1;
+      });
+    }
+    function route(hash, user) {
+      const id = decodeURIComponent((hash || '').replace(/^#/, ''));
+      const target = id ? document.getElementById(id) : null;
+      const viewEl = (target && target.closest('[data-view]')) || views.find(v => v.dataset.view === 'overview');
+      const name = viewEl.dataset.view;
+      views.forEach(v => v.classList.toggle('is-active', v === viewEl));
+      if (name === 'evidence') {
+        const hit = target && panels.find(p => p === target || p.contains(target));
+        const pick = hit && !hit.hidden ? hit : panels.find(p => !p.hidden) || panels[0];
+        selectPanel(pick);
+      }
+      document.querySelectorAll('.masthead nav a[href^="#"]').forEach(link => {
+        if (link.getAttribute('href') === navFor[name]) link.setAttribute('aria-current', 'page'); else link.removeAttribute('aria-current');
+      });
+      rootEl.dataset.view = name;
+      if (typeof map !== 'undefined' && map) setTimeout(() => map.invalidateSize({ pan: false }), 60);
+      const goTop = !target || target === viewEl;
+      requestAnimationFrame(() => {
+        if (goTop) window.scrollTo({ top: 0 });
+        else (name === 'evidence' ? document.getElementById('evidence') : target).scrollIntoView({ block: 'start' });
+        if (user) viewEl.focus({ preventScroll: true });
+      });
+    }
+    tabs.forEach((tab, i) => {
+      tab.addEventListener('click', () => { location.hash = '#' + panels[i].id; });
+      tab.addEventListener('keydown', ev => {
+        const list = available();
+        const at = list.indexOf(tab);
+        let next = null;
+        if (ev.key === 'ArrowRight') next = list[(at + 1) % list.length];
+        else if (ev.key === 'ArrowLeft') next = list[(at - 1 + list.length) % list.length];
+        else if (ev.key === 'Home') next = list[0];
+        else if (ev.key === 'End') next = list[list.length - 1];
+        if (next) { ev.preventDefault(); next.focus(); location.hash = '#' + panels[tabs.indexOf(next)].id; }
+      });
+    });
+    window.addEventListener('hashchange', () => route(location.hash, true));
+    if ('MutationObserver' in window) panels.forEach(p => new MutationObserver(syncTabs).observe(p, { attributes: true, attributeFilter: ['hidden'] }));
+    rootEl.classList.add('views-on');
+    route(location.hash, false);
+    syncTabs();
+  } catch (error) {
+    document.documentElement.classList.remove('views-on');   // fall back to the full page
+  }
+})();

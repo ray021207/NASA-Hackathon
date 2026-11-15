@@ -84,6 +84,8 @@
   "auc_hh_spread": 0.878,
   "auc_hv_spread": 0.793,
   "auc_mean_hh": 0.503,
+  "auc_mean_hv": 0.58,
+  "auc_hvhh": 0.649,
   "rain_rho_hh": 0.65,
   "rain_rho_hv": 0.79,
   "n_dates": 28,

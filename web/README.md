@@ -166,3 +166,7 @@ This UI opens with a short story from the Arizona-based team: why local land and
 Read `docs/overview_evidence.md` for the research bibliography, claim-to-source mapping and limitations. The on-site **Resources** dialog links to USGS, ADWR, peer-reviewed papers, SAR data and the source code.
 
 The new narrative content preserves the pipeline-driven study list and the recently added cumulative-displacement animation. The field-note drawer explains data interpretation without inventing numeric pixel measurements. The satellite and terrain basemaps remain; dark is removed from the switcher. 
+
+## Views and tabs
+
+The page shows one part at a time: Overview, Evidence, Map, About (`data-view` on each). The Evidence view has three tabs, one panel per `role="tabpanel"` section. Navigation uses the URL hash (`#evidence`, `#overview-nisar`, `#overview-farmland`, `#overview-pumping`, `#atlas`, `#about`), so every old link still works. The hiding rules in `design-system.css` apply only under `html.views-on`, which `initViews()` in `app.js` sets after it has wired everything; if it cannot, the whole page stays visible. Long text is inside `<details class="more">`; charts come from `barChart()` and the validated summary files. When adding a section, give it a `data-view` or put it inside a tab panel, and keep its words.

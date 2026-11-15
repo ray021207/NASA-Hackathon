@@ -39,7 +39,7 @@ out = dict(
         rate_diff_cm_yr=gc["rate_by_class"]["diff_cm_yr"], rate_diff_lo=gc["rate_by_class"]["diff_ci95"][0], rate_diff_hi=gc["rate_by_class"]["diff_ci95"][1],
         share_sinking_cropland_pct=round(gc["rate_by_class"]["share_sinking_cropland"] * 100), share_sinking_desert_pct=round(gc["rate_by_class"]["share_sinking_shrubland"] * 100),
         auc_hh_spread=gc["separability_auc_dry_dates_only"]["yearly spread HH (dB std)"], auc_hv_spread=gc["separability_auc_dry_dates_only"]["yearly spread HV (dB std)"],
-        auc_mean_hh=gc["separability_auc_dry_dates_only"]["mean HH (dB)"],
+        auc_mean_hh=gc["separability_auc_dry_dates_only"]["mean HH (dB)"], auc_mean_hv=gc["separability_auc_dry_dates_only"]["mean HV (dB)"], auc_hvhh=gc["separability_auc_dry_dates_only"]["mean HV-HH (dB)"],
         rain_rho_hh=gc["rain"]["spearman_3d_hh"], rain_rho_hv=gc["rain"]["spearman_3d_hv"], n_dates=gc["n_dates"], dry_dates=gc["rain"]["dry_dates"],
         nisar_diff_cm_yr=gc["rate_by_class_nisar"]["cropland_minus_shrubland_cm_yr"], nisar_cells=gc["rate_by_class_nisar"]["n_cropland"],
         figure="gcov_farmland_willcox.png"),
