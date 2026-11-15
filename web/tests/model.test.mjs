@@ -201,7 +201,7 @@ test('views: four views and three evidence tabs exist, every tab has its panel, 
   const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
   for (const v of ['overview', 'evidence', 'map', 'about']) assert.equal((html.match(new RegExp('data-view="' + v + '"', 'g')) || []).length, 1, v);
   const tabs = [...html.matchAll(/role="tab" id="tab-[a-z]+" aria-controls="([a-z-]+)"/g)].map(m => m[1]);
-  assert.deepEqual(tabs, ['overview-nisar', 'overview-farmland', 'overview-pumping', 'overview-groundwater']);
+  assert.deepEqual(tabs, ['overview-nisar', 'overview-farmland', 'overview-pumping', 'overview-groundwater', 'overview-planning']);
   for (const id of tabs) assert.match(html, new RegExp('<section id="' + id + '"[^>]*role="tabpanel"'));
   const css = await readFile(new URL('../design-system.css', import.meta.url), 'utf8');
   assert.match(css, /html\.views-on \[data-view\]:not\(\.is-active\)\{display:none/, 'hiding is gated on html.views-on, so a failed script leaves the full page');
@@ -312,4 +312,14 @@ test('moving content can be paused (WCAG 2.2.2): a real button outside the decor
   assert.match(css, /html\.motion-paused \.ticker-track\{animation-play-state:paused\}/);
   const motion = await readFile(new URL('../motion.js', import.meta.url), 'utf8');
   assert.match(motion, /classList\.contains\('motion-paused'\)\) return;/, 'hero animation stops when paused');
+});
+
+test('For-planners tab: every source is linked, it states that it is not advice, and it adds no unverified data', async () => {
+  const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
+  const i = html.indexOf('<section id="overview-planning"'), j = html.indexOf('</section>', i);
+  const panel = html.slice(i, j);
+  for (const url of ['https://doi.org/10.3133/wsp1859F', 'https://doi.org/10.3133/cir1182', 'https://www.azleg.gov/ars/32/02117.htm', 'https://www.azwater.gov/node/5934']) assert.ok(panel.includes(url), url);
+  assert.match(panel, /not engineering or legal advice/);
+  assert.match(panel, /professional geotechnical investigation/);
+  assert.ok(!/data-(nisar|pump|gw)=/.test(panel), 'static, sourced text only');
 });

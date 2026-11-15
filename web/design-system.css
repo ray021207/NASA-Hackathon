@@ -680,3 +680,13 @@ details.more-block>p.overview-proof-qualifier{margin-top:12px}
 html.motion-paused .ticker-track{animation-play-state:paused}
 @media(prefers-reduced-motion:reduce){.motion-toggle{display:none}}
 @media(max-width:560px){.ticker-wrap{flex-direction:column}.motion-toggle{align-self:flex-start}}
+/* For-planners tab */
+.plan-guide{background:var(--paper);border:1px solid #e3ddd3;border-radius:var(--edge-radius);padding:24px 26px;margin:24px 0 0}
+.plan-guide h3{font:730 20px/1.3 var(--sans);letter-spacing:-.02em;margin:0 0 12px;color:var(--ink)}
+.plan-list{margin:0;padding:0 0 0 20px;display:grid;gap:12px}
+.plan-list li{font:400 16px/1.6 var(--sans);color:var(--ink)}
+.plan-list li::marker{color:var(--rust)}
+.plan-sources{margin:22px 0 0}
+.plan-sources h4{font:700 14px/1.3 var(--sans);margin:0 0 8px;color:var(--ink)}
+.plan-sources ul{margin:0;padding:0 0 0 18px;display:grid;gap:6px}
+.plan-sources li{font:400 14px/1.5 var(--sans)}

@@ -35,6 +35,11 @@ Sections 1-5 are the paste block. Section 6 lists what the team made itself.
 16. Peng, M., Lu, Z., Zhao, C., Motagh, M., Bai, L., Conway, B., & Chen, H. (2022). Mapping land subsidence and aquifer system properties of the Willcox Basin, Arizona, from InSAR observations and independent component analysis. *Remote Sensing of Environment*, 271, 112894. https://doi.org/10.1016/j.rse.2022.112894
 17. Devlin, K. (2025). *More Than Just Noise: Effects of Vegetation and Agriculture on InSAR Time Series Analysis.* Doctoral dissertation, Cornell University. https://ecommons.cornell.edu/entities/publication/5e298b2f-9ae6-4861-abfe-a8c194323c08 (a dissertation, not a journal article).
 18. Saporta, P., Gomba, G., & De Zan, F. (2021). Analyzing an InSAR short-term systematic phase bias with regards to soil moisture and landcover. EGU General Assembly 2021, abstract EGU21-3503. https://meetingorganizer.copernicus.org/EGU21/EGU21-3503.html (a conference abstract).
+19a. Galloway, D., Jones, D. R., & Ingebritsen, S. E. (1999). *Land Subsidence in the United States.* U.S. Geological Survey Circular 1182. https://doi.org/10.3133/cir1182
+19b. Brown, S. G., & Schumann, H. H. (1969). *Geohydrology and Water Utilization in the Willcox Basin, Graham and Cochise Counties, Arizona.* U.S. Geological Survey Water-Supply Paper 1859-F. https://doi.org/10.3133/wsp1859F
+19c. Smilovsky, D. (2025). Recharged but Not Recovered: InSAR Observations of Persistent Land Subsidence in Arizona's Willcox Basin. GSA Connects 2025, abstract. https://gsameetings.secure-platform.com/connects25/solicitations/103002/sessiongallery/schedule/items/95198/application/10103
+19d. Arizona Revised Statutes § 32-2117, Earth fissure maps; posting; immunity. https://www.azleg.gov/ars/32/02117.htm
+19e. Arizona Department of Water Resources. *Willcox Active Management Area* (designation order Dec 19 2024; date of designation Jan 8 2025). https://www.azwater.gov/node/5934
 19. U.S. Geological Survey. *Land Subsidence* (USGS Water Science School). https://www.usgs.gov/water-science-school/science/land-subsidence
 
 ## 5. Software, services and design

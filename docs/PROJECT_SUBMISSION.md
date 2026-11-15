@@ -42,6 +42,13 @@ Rates are along the satellite's line of sight. Negative means sinking.
 **How it works**
 A reproducible Python pipeline reads NISAR interferograms (GUNW) and backscatter (GCOV) from NASA's archive. It streams only the needed window from each 7 GB file instead of downloading it. It removes the ionosphere and troposphere, references the motion to stable ground, chains the time series, and fits rates with uncertainties from spatial block resampling. It combines these with NASA JPL's OPERA Sentinel-1 displacement, USDA cropland, USGS pumping estimates and USGS/ADWR well measurements. The website is a static map app that works by keyboard and screen reader. Every number is loaded through strict checks that hide a section rather than show a wrong value.
 
+**For planners**
+A dedicated tab explains, from USGS reports, Arizona law and ADWR records:
+- What lies beneath: basin fill, and up to 140 ft of Lake Cochise clay under Willcox Playa.
+- Why most of the sinking is permanent, because squeezed clay does not spring back.
+- How uneven sinking opens earth fissures that have damaged Arizona highways, canals, pipelines and drains.
+- What documented practice suggests: check the state fissure maps, take care at basin edges, design crossings for movement, re-check drains, monitor, and slow the water-table decline.
+
 **Benefits and impact**
 Aquifer storage lost to compaction does not come back. Showing where it is happening, how fast, and how confident we are helps people decide where to look first. NISAR's free 12-day L-band data can make this monitoring routine, and our pipeline is ready to rerun on NISAR's validated reprocessing planned for 2027.
 
@@ -112,6 +119,11 @@ Select every option that applies. This answer is not shown to judges.
 | Devlin (2025), vegetation and agriculture effects on InSAR, Cornell dissertation | https://ecommons.cornell.edu/entities/publication/5e298b2f-9ae6-4861-abfe-a8c194323c08 |
 | Saporta, Gomba & De Zan (2021), InSAR phase bias, EGU21-3503 | https://meetingorganizer.copernicus.org/EGU21/EGU21-3503.html |
 | USGS Water Science School: Land Subsidence | https://www.usgs.gov/water-science-school/science/land-subsidence |
+| Galloway et al. (1999), Land Subsidence in the United States, USGS Circular 1182 | https://doi.org/10.3133/cir1182 |
+| Brown & Schumann (1969), Willcox Basin geohydrology, USGS WSP 1859-F | https://doi.org/10.3133/wsp1859F |
+| Smilovsky (2025), persistent subsidence in the Willcox Basin, GSA Connects abstract | https://gsameetings.secure-platform.com/connects25/solicitations/103002/sessiongallery/schedule/items/95198/application/10103 |
+| Arizona Revised Statutes § 32-2117 (earth fissure maps) | https://www.azleg.gov/ars/32/02117.htm |
+| ADWR Willcox Active Management Area | https://www.azwater.gov/node/5934 |
 | Site logo, generated with ChatGPT (OpenAI) from the team's brief | https://chatgpt.com/ |
 | Hosting: Vercel | https://vercel.com/ |
 | Source code and data: GitHub | https://github.com/mansi200304/NASA-Hackathon |
