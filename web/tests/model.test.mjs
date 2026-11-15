@@ -301,17 +301,11 @@ test('SI disclosure: the AI-generated logo carries a visible label in the header
   assert.match(html, /Logo: SI-generated image, made with ChatGPT/, 'footer note');
 });
 
-test('moving content can be paused (WCAG 2.2.2): a real button outside the decorative ticker', async () => {
+test('the scrolling word band and its pause button are removed', async () => {
   const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
-  const btn = html.indexOf('<button type="button" class="motion-toggle" aria-pressed="false">Pause animation</button>');
-  assert.ok(btn > 0, 'pause button present');
-  const tick = html.indexOf('<div class="ticker" aria-hidden="true">');
-  const tickEnd = html.indexOf('</div>', html.indexOf('<div class="ticker-track">'));
-  assert.ok(btn > tickEnd && tick < btn, 'button is after the aria-hidden ticker, not inside it');
+  assert.ok(!html.includes('ticker') && !html.includes('motion-toggle'), 'ticker band and pause button removed');
   const css = await readFile(new URL('../design-system.css', import.meta.url), 'utf8');
-  assert.match(css, /html\.motion-paused \.ticker-track\{animation-play-state:paused\}/);
-  const motion = await readFile(new URL('../motion.js', import.meta.url), 'utf8');
-  assert.match(motion, /classList\.contains\('motion-paused'\)\) return;/, 'hero animation stops when paused');
+  assert.ok(!css.includes('ticker') && !css.includes('motion-toggle'), 'no leftover ticker styles');
 });
 
 test('Geology and infrastructure tab: every source is linked, it states that it is not advice, and it adds no unverified data', async () => {
