@@ -447,7 +447,8 @@ function renderDetails() {
   kicker.append(el('span', '', (p.county || 'Arizona') + ', Arizona'), el('span', '', 'Study ' + String(state.slugs.indexOf(state.selected) + 1).padStart(2, '0')));
   root.append(kicker, el('h1', '', p.name), el('p', 'story-name', p.tagline));
   const studyContext = el('div', 'study-context'); studyContext.append(explainButton('study')); root.append(studyContext);
-  if (p.confirmation) root.append(el('p', 'confirmation-chip' + (p.confirmation === 'single look direction' ? ' unconfirmed' : ''), p.confirmation === 'single look direction' ? 'Unconfirmed · ' + p.confirmation : p.confirmation));
+  const look = lookCard(p.confirmation, series);
+  if (look) root.append(look);
   const summaryPanel = el('div', 'report-summary');
   renderInsights(summaryPanel, series);
   const hasRate = series && isNumber(series.rate_cm_yr);
@@ -651,6 +652,30 @@ function renderTimelapse(slug, name) {
   };
   state.miniMap = view;
   return { node: fig, show };
+}
+// "Both look directions" / "single look direction", explained in a small card: what it means and how it was recorded.
+// Sentinel-1 views the ground from two opposite angles: southbound (descending) and northbound (ascending) passes.
+function lookCard(status, series) {
+  if (status !== 'both look directions' && status !== 'single look direction') return null;
+  const both = status === 'both look directions';
+  const card = el('section', 'look-card ' + (both ? 'look-both' : 'look-single'));
+  card.setAttribute('aria-label', 'Look direction');
+  const icon = el('span', 'look-icon'); icon.setAttribute('aria-hidden', 'true');
+  icon.append(el('i', 'look-arrow down'));
+  if (both) icon.append(el('i', 'look-arrow up'));
+  const body = el('div', 'look-body');
+  body.append(el('strong', 'look-title', both ? 'Seen from both sides' : 'Seen from one side only'));
+  body.append(el('p', 'look-line', both
+    ? 'The Sentinel-1 satellite looks at this ground from two opposite angles, on its southbound (descending) and northbound (ascending) passes. Both views show it sinking, so it is unlikely to be a measurement error.'
+    : 'Only the satellite\u2019s southbound (descending) passes cover this area in our data. Without the opposite view we cannot rule out a measurement error, so treat this result as unconfirmed.'));
+  const asc = series?.ascending_check;
+  const rec = ['Southbound: ' + (series?.track || 'Sentinel-1 descending')];
+  if (both) rec.push('Northbound: Sentinel-1 ascending frame 5125' + (asc && isNumber(asc.median_rate) ? ' (median ' + formatNumber(asc.median_rate) + ' cm/yr over ' + asc.n_px + ' measured cells)' : ''));
+  else rec.push('Our northbound (ascending) frame does not reach this area');
+  rec.push('2016\u20132026, OPERA DISP-S1');
+  body.append(el('p', 'look-record', 'How it was recorded: ' + rec.join(' \u00b7 ') + '.'));
+  card.append(icon, body);
+  return card;
 }
 // Study report tabs. The chosen tab is kept when another study area is opened, so areas can be compared section by section.
 function reportTabs(root, entries) {
