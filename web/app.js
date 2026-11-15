@@ -1,4 +1,4 @@
-import { cleanGroundwater, cleanPumping, normalizeSeries, normalizeRate, normalizeHotspots, validateGeoJSON, safeSourceURL, formatNumber, isNumber, cleanInsights, normalizeCumulative, cleanTeam, cleanNisar } from './model.mjs';
+import { cleanGeology, cleanGroundwater, cleanPumping, normalizeSeries, normalizeRate, normalizeHotspots, validateGeoJSON, safeSourceURL, formatNumber, isNumber, cleanInsights, normalizeCumulative, cleanTeam, cleanNisar } from './model.mjs';
 
 const $ = selector => document.querySelector(selector);
 const DATA = new URL('../data/processed/', import.meta.url);
@@ -431,11 +431,14 @@ function renderDetails() {
     validation.append(el('p', 'validation-note', 'Match the area and observation period before comparing rates.'));
   }
   technicalGrid.append(validation);
+  const geology = renderGeology(state.selected);
   const story = section('Why this place');
   story.append(el('p', 'detail-copy', p.story));
   if (typeof p.land_use_note === 'string' && p.land_use_note.trim()) story.append(note(p.land_use_note));
   story.classList.add('report-why');
-  root.append(story, technical);
+  root.append(story);
+  if (geology) root.append(geology);
+  root.append(technical);
   const bottom = el('div', 'detail-bottom');
   bottom.append(el('div', '', 'Radar measures motion along the satellite’s line of sight. A vertical rate requires a justified conversion.'));
   const button = el('button', '', 'Read the measurement limits');
@@ -1088,3 +1091,56 @@ loadGroundwater().then(renderGroundwater);
     document.documentElement.classList.remove('nav-js');
   }
 })();
+
+// Subsurface geology for the selected study area: a schematic layer column (top = surface), facts with their sources, our measured values.
+let GEOLOGY = null;
+loadJSON('geology.json', cleanGeology).then(result => {
+  GEOLOGY = result.status === 'ready' ? result.value : null;
+  if (GEOLOGY && state.selected && !document.querySelector('#detail-content .geology')) renderDetails();
+});
+const GEO_KIND_LABEL = { sand: 'Sand and gravel', clay: 'Clay or silt', mixed: 'Mixed sand, silt and clay', consolidated: 'Older, firmer fill', evaporite: 'Salt and gypsum beds', rock: 'Bedrock' };
+function renderGeology(slug) {
+  const g = GEOLOGY?.areas?.[slug];
+  if (!g) return null;
+  const box = section('What lies beneath');
+  box.classList.add('geology');
+  box.append(el('p', 'geology-basin', g.basin), el('p', 'detail-copy', g.summary));
+  const figure = el('figure', 'geo-figure');
+  const column = el('ol', 'geo-column');
+  column.setAttribute('aria-label', 'Layers from the surface down (schematic, not to scale)');
+  const top = el('li', 'geo-surface'); top.append(el('span', '', 'Ground surface')); column.append(top);
+  g.layers.forEach(layer => {
+    const li = el('li', 'geo-layer kind-' + layer.kind);
+    const swatch = el('span', 'geo-swatch'); swatch.setAttribute('aria-hidden', 'true');
+    const text = el('div', 'geo-text');
+    const name = el('strong', '', layer.name);
+    text.append(name, el('span', 'geo-kind', GEO_KIND_LABEL[layer.kind]), el('p', '', layer.note));
+    if (layer.compacts) text.append(el('span', 'geo-compacts', 'Compacts when the water level falls'));
+    li.append(swatch, text);
+    column.append(li);
+  });
+  figure.append(column, el('figcaption', '', 'Schematic order of layers from the sources below, not to scale.'));
+  box.append(figure);
+  const m = g.measured;
+  const facts = [];
+  if (isNumber(m.rate)) facts.push(['Ground motion', formatNumber(m.rate) + ' cm/yr (Sentinel-1, 2016\u20132026, line of sight)']);
+  facts.push(['Water table', isNumber(m.decline) ? 'falling about ' + formatNumber(m.decline) + ' ft a year (median of ' + m.wells + ' wells, 1980s\u201390s to 2015\u201325)' : 'no wells in our water-level data for this area']);
+  box.append(el('h3', 'geo-subhead', 'What we measured here'), factList(facts));
+  box.append(el('h3', 'geo-subhead', 'What the studies say'));
+  const list = el('ul', 'geo-facts');
+  g.facts.forEach(f => {
+    const li = el('li', '', f.text + ' ');
+    const src = g.sources.find(s => s.id === f.source);
+    if (src) { const link = el('a', 'geo-cite', '(' + src.short + ')'); link.href = src.url; link.target = '_blank'; link.rel = 'noopener noreferrer'; li.append(link); }
+    list.append(li);
+  });
+  box.append(list);
+  if (g.caveat) box.append(note(g.caveat));
+  const more = el('details', 'more');
+  more.append(el('summary', '', 'Sources for this area'));
+  const srcList = el('ul', 'geo-sources');
+  g.sources.forEach(s => { const li = el('li'); const link = el('a', '', s.label); link.href = s.url; link.target = '_blank'; link.rel = 'noopener noreferrer'; li.append(link); srcList.append(li); });
+  more.append(srcList);
+  box.append(more);
+  return box;
+}

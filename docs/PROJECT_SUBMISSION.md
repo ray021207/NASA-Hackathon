@@ -42,8 +42,8 @@ Rates are along the satellite's line of sight. Negative means sinking.
 **How it works**
 A reproducible Python pipeline reads NISAR interferograms (GUNW) and backscatter (GCOV) from NASA's archive. It streams only the needed window from each 7 GB file instead of downloading it. It removes the ionosphere and troposphere, references the motion to stable ground, chains the time series, and fits rates with uncertainties from spatial block resampling. It combines these with NASA JPL's OPERA Sentinel-1 displacement, USDA cropland, USGS pumping estimates and USGS/ADWR well measurements. The website is a static map app that works by keyboard and screen reader. Every number is loaded through strict checks that hide a section rather than show a wrong value.
 
-**For planners**
-A dedicated tab explains, from USGS reports, Arizona law and ADWR records:
+**Geology and infrastructure**
+Each study area's report shows what lies beneath that area: its basin, a layer diagram, our measured sinking and water-table decline, and sourced facts. A general tab explains, from USGS reports, Arizona law and ADWR records:
 - What lies beneath: basin fill, and up to 140 ft of Lake Cochise clay under Willcox Playa.
 - Why most of the sinking is permanent, because squeezed clay does not spring back.
 - How uneven sinking opens earth fissures that have damaged Arizona highways, canals, pipelines and drains.
@@ -120,6 +120,10 @@ Select every option that applies. This answer is not shown to judges.
 | Saporta, Gomba & De Zan (2021), InSAR phase bias, EGU21-3503 | https://meetingorganizer.copernicus.org/EGU21/EGU21-3503.html |
 | USGS Water Science School: Land Subsidence | https://www.usgs.gov/water-science-school/science/land-subsidence |
 | Galloway et al. (1999), Land Subsidence in the United States, USGS Circular 1182 | https://doi.org/10.3133/cir1182 |
+| Pool, Carruth & Meehan (2001), Hydrogeology of Picacho Basin, USGS WRI 00-4277 (full report) | https://pubs.usgs.gov/wri/2000/4277/report.pdf |
+| Coates & Cushman (1955), Douglas Basin geology and ground water, USGS WSP 1354 | https://pubs.usgs.gov/publication/wsp1354 |
+| White & Hardt (1965), San Simon Basin hydrologic analysis, USGS WSP 1809-R | https://pubs.usgs.gov/wsp/1809r/report.pdf |
+| Konieczki (2006), Willcox and Douglas Basins monitoring network, USGS Fact Sheet 2006-3055 | https://pubs.usgs.gov/fs/2006/3055/ |
 | Brown & Schumann (1969), Willcox Basin geohydrology, USGS WSP 1859-F | https://doi.org/10.3133/wsp1859F |
 | Smilovsky (2025), persistent subsidence in the Willcox Basin, GSA Connects abstract | https://gsameetings.secure-platform.com/connects25/solicitations/103002/sessiongallery/schedule/items/95198/application/10103 |
 | Arizona Revised Statutes § 32-2117 (earth fissure maps) | https://www.azleg.gov/ars/32/02117.htm |

@@ -92,3 +92,7 @@ Written by `src/export_pumping.py` from `pumping_vs_sinking.json` (`src/pumping_
 ## `groundwater_summary.json` (Evidence, Water levels tab)
 
 Written by `src/export_groundwater.py` from `groundwater_vs_sinking.json`. The tab `#overview-groundwater` is hidden unless `cleanGroundwater` accepts the whole file: well count, median decline (ft/yr) and total drop (ft), years, share of wells deeper, Spearman with 95% range and tile count, four decline quartiles (range, n, median sinking rate, share on sinking ground), sinking-to-decline ratio, baseline and recent year ranges.
+
+## `geology.json` (study report, 'What lies beneath')
+
+Written by `src/geology_areas.py`. `sources` maps an id to `{label, url, short}`; `areas.<slug>` has `basin`, `summary`, `layers` (top to bottom: `name`, `kind` in sand, clay, mixed, consolidated, evaporite, rock, `note`, `compacts`), `facts` (`text`, `source` id), `measured` (`rate_cm_yr`, `wells`, `decline_ft_yr` or null), `caveat`. `cleanGeology` drops any area whose facts cite unknown sources.

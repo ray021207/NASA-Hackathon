@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { normalizeSeries, normalizeRate, normalizeHotspots, validateGeoJSON, safeSourceURL, formatNumber, cleanInsights, normalizeCumulative, cleanTeam, cleanNisar, cleanPumping, cleanGroundwater } from '../model.mjs';
+import { normalizeSeries, normalizeRate, normalizeHotspots, validateGeoJSON, safeSourceURL, formatNumber, cleanInsights, normalizeCumulative, cleanTeam, cleanNisar, cleanPumping, cleanGroundwater, cleanGeology } from '../model.mjs';
 import { readFile } from 'node:fs/promises';
 
 const series = extra => ({ hotspot: 'eloy', units: 'cm', reference: 'Synthetic test reference', dates: ['2026-01-01', '2026-01-13'], displacement: [0, -1], rate_cm_yr: -2, rate_sigma: 0.2, ...extra });
@@ -201,7 +201,7 @@ test('views: four views and three evidence tabs exist, every tab has its panel, 
   const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
   for (const v of ['overview', 'evidence', 'map', 'about']) assert.equal((html.match(new RegExp('data-view="' + v + '"', 'g')) || []).length, 1, v);
   const tabs = [...html.matchAll(/role="tab" id="tab-[a-z]+" aria-controls="([a-z-]+)"/g)].map(m => m[1]);
-  assert.deepEqual(tabs, ['overview-nisar', 'overview-farmland', 'overview-pumping', 'overview-groundwater', 'overview-planning']);
+  assert.deepEqual(tabs, ['overview-nisar', 'overview-farmland', 'overview-pumping', 'overview-groundwater', 'overview-geology']);
   for (const id of tabs) assert.match(html, new RegExp('<section id="' + id + '"[^>]*role="tabpanel"'));
   const css = await readFile(new URL('../design-system.css', import.meta.url), 'utf8');
   assert.match(css, /html\.views-on \[data-view\]:not\(\.is-active\)\{display:none/, 'hiding is gated on html.views-on, so a failed script leaves the full page');
@@ -314,12 +314,30 @@ test('moving content can be paused (WCAG 2.2.2): a real button outside the decor
   assert.match(motion, /classList\.contains\('motion-paused'\)\) return;/, 'hero animation stops when paused');
 });
 
-test('For-planners tab: every source is linked, it states that it is not advice, and it adds no unverified data', async () => {
+test('Geology and infrastructure tab: every source is linked, it states that it is not advice, and it adds no unverified data', async () => {
   const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
-  const i = html.indexOf('<section id="overview-planning"'), j = html.indexOf('</section>', i);
+  const i = html.indexOf('<section id="overview-geology"'), j = html.indexOf('</section>', i);
   const panel = html.slice(i, j);
   for (const url of ['https://doi.org/10.3133/wsp1859F', 'https://doi.org/10.3133/cir1182', 'https://www.azleg.gov/ars/32/02117.htm', 'https://www.azwater.gov/node/5934']) assert.ok(panel.includes(url), url);
   assert.match(panel, /not engineering or legal advice/);
   assert.match(panel, /professional geotechnical investigation/);
   assert.ok(!/data-(nisar|pump|gw)=/.test(panel), 'static, sourced text only');
+});
+
+test('Per-area geology: every study area has its own basin, layers and sourced facts; bad entries are dropped', async () => {
+  const raw = JSON.parse(await readFile(new URL('../../data/processed/geology.json', import.meta.url), 'utf8'));
+  const g = cleanGeology(raw);
+  assert.ok(g);
+  const hot = JSON.parse(await readFile(new URL('../../data/processed/hotspots.geojson', import.meta.url), 'utf8')).features.map(f => f.properties.slug);
+  for (const slug of hot) {
+    const a = g.areas[slug];
+    assert.ok(a, 'geology for ' + slug);
+    assert.ok(a.layers.length >= 2 && a.facts.length >= 2 && a.sources.length >= 1);
+    assert.ok(a.facts.every(f => a.sources.some(s => s.id === f.source)), 'every fact cites a listed source');
+    assert.ok(a.sources.every(s => /^https:\/\//.test(s.url)));
+  }
+  assert.notEqual(g.areas.willcox.basin, g.areas.south.basin, 'different basins are not merged');
+  const bad = JSON.parse(JSON.stringify(raw)); bad.areas.eloy.facts.forEach(f => { f.source = 'nope'; });
+  assert.equal(cleanGeology(bad).areas.eloy, undefined, 'an area whose facts cite unknown sources is dropped');
+  assert.equal(cleanGeology(null), null);
 });

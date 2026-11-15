@@ -10,7 +10,7 @@ const [html, css, mapCSS, designCSS, leafletCSS, leaflet, model, app, motion] = 
 ]);
 const data = {}, images = {};
 for (const name of await readdir(new URL('../data/processed/', root))) {
-  if (/^(hotspots|adwr_subsidence|mines_excluded|checked_flat)\.geojson$/.test(name) || /^(timeseries_|rate_|cumulative_).*\.json$/.test(name) || name === 'nisar_summary.json' || name === 'pumping_summary.json' || name === 'groundwater_summary.json') {
+  if (/^(hotspots|adwr_subsidence|mines_excluded|checked_flat)\.geojson$/.test(name) || /^(timeseries_|rate_|cumulative_).*\.json$/.test(name) || name === 'nisar_summary.json' || name === 'pumping_summary.json' || name === 'groundwater_summary.json' || name === 'geology.json') {
     // A malformed optional file must not silently become a valid measurement.
     try { data[name] = JSON.parse(await read('../data/processed/' + name)); }
     catch { console.warn('Skipped malformed JSON: ' + name); }

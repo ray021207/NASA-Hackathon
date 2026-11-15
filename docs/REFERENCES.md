@@ -40,6 +40,10 @@ Sections 1-5 are the paste block. Section 6 lists what the team made itself.
 19c. Smilovsky, D. (2025). Recharged but Not Recovered: InSAR Observations of Persistent Land Subsidence in Arizona's Willcox Basin. GSA Connects 2025, abstract. https://gsameetings.secure-platform.com/connects25/solicitations/103002/sessiongallery/schedule/items/95198/application/10103
 19d. Arizona Revised Statutes § 32-2117, Earth fissure maps; posting; immunity. https://www.azleg.gov/ars/32/02117.htm
 19e. Arizona Department of Water Resources. *Willcox Active Management Area* (designation order Dec 19 2024; date of designation Jan 8 2025). https://www.azwater.gov/node/5934
+19f. Pool, D. R., Carruth, R. L., & Meehan, W. D. (2001), as item 14, read in full at https://pubs.usgs.gov/wri/2000/4277/report.pdf
+19g. Coates, D. R., & Cushman, R. L. (1955). *Geology and Ground-Water Resources of the Douglas Basin, Arizona.* U.S. Geological Survey Water-Supply Paper 1354. https://pubs.usgs.gov/publication/wsp1354
+19h. White, N. D., & Hardt, W. F. (1965). *Electrical-Analog Analysis of Hydrologic Data for San Simon Basin, Cochise and Graham Counties, Arizona.* U.S. Geological Survey Water-Supply Paper 1809-R. https://pubs.usgs.gov/wsp/1809r/report.pdf
+19i. Konieczki, A. D. (2006). *Investigation of the Hydrologic Monitoring Network of the Willcox and Douglas Basins of Southeastern Arizona.* U.S. Geological Survey Fact Sheet 2006-3055. https://pubs.usgs.gov/fs/2006/3055/
 19. U.S. Geological Survey. *Land Subsidence* (USGS Water Science School). https://www.usgs.gov/water-science-school/science/land-subsidence
 
 ## 5. Software, services and design

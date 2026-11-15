@@ -204,3 +204,25 @@ export function cleanGroundwater(raw) {
     from: nz(raw.baseline_from, 1900, 2100), to: nz(raw.baseline_to, 1900, 2100), recentFrom: nz(raw.recent_from, 1900, 2100), recentTo: nz(raw.recent_to, 1900, 2100) };
   return Object.values(o).every(v => v !== null) && q.every(x => Object.values(x).every(v => v !== null)) ? { ...o, q } : null;
 }
+// Subsurface geology per study area (data/processed/geology.json, src/geology_areas.py). Text only; any malformed area is dropped, never shown.
+const GEO_KINDS = new Set(['sand', 'clay', 'mixed', 'consolidated', 'evaporite', 'rock']);
+const geoText = (v, max) => typeof v === 'string' && v.trim() && v.trim().length <= max ? v.trim() : null;
+export function cleanGeology(raw) {
+  if (!raw || typeof raw !== 'object' || !raw.areas || !raw.sources) return null;
+  const sources = {};
+  for (const [id, s] of Object.entries(raw.sources)) {
+    const label = geoText(s?.label, 300), url = safeSourceURL(s?.url), short = geoText(s?.short, 60);
+    if (label && url && short) sources[id] = { label, url, short };
+  }
+  const areas = {};
+  for (const [slug, a] of Object.entries(raw.areas)) {
+    const layers = (Array.isArray(a?.layers) ? a.layers : []).slice(0, 6).map(l => ({ name: geoText(l?.name, 80), kind: GEO_KINDS.has(l?.kind) ? l.kind : null, note: geoText(l?.note, 260), compacts: l?.compacts === true }))
+      .filter(l => l.name && l.kind && l.note);
+    const facts = (Array.isArray(a?.facts) ? a.facts : []).slice(0, 8).map(f => ({ text: geoText(f?.text, 420), source: sources[f?.source] ? f.source : null })).filter(f => f.text && f.source);
+    const m = a?.measured || {};
+    const measured = { rate: isNumber(m.rate_cm_yr) ? m.rate_cm_yr : null, wells: isNumber(m.wells) ? m.wells : 0, decline: isNumber(m.decline_ft_yr) ? m.decline_ft_yr : null };
+    const basin = geoText(a?.basin, 140), summary = geoText(a?.summary, 420), caveat = geoText(a?.caveat, 320);
+    if (basin && summary && layers.length >= 2 && facts.length >= 2) areas[slug] = { basin, summary, caveat, layers, facts, measured, sources: [...new Set(facts.map(f => f.source))].map(id => ({ id, ...sources[id] })) };
+  }
+  return Object.keys(areas).length ? { areas } : null;
+}
