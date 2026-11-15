@@ -948,3 +948,7 @@ details.more>summary:not(#_){min-height:44px;padding:11px 16px}
 .chart .chart-label:not(#_){font-family:var(--sans);font-weight:600;font-size:10px;fill:var(--slate-deep);letter-spacing:0}
 .chart .chart-unit:not(#_){font-weight:700}
 .chart .chart-tip:not(#_){font-family:var(--sans);font-weight:600;fill:var(--ink)}
+/* Methods & checks: sections flow down two balanced columns (no empty gaps beside short sections); headings in the site font. */
+.workspace .report-methods .report-technical-grid:not(#_){display:block;columns:2 340px;column-gap:38px}
+.workspace .report-methods .report-technical-grid>.detail-section:not(#_){break-inside:avoid;-webkit-column-break-inside:avoid;display:block;margin:0 0 26px}
+.workspace .report-methods .report-technical-grid>.detail-section:not(#_) h2{font:720 17px/1.35 var(--sans);letter-spacing:-.02em;color:var(--ink)}
