@@ -344,3 +344,8 @@ test('rate card and comparison sit side by side: the row is two columns and neit
   const app = await readFile(new URL('../app.js', import.meta.url), 'utf8');
   assert.ok(!app.includes('What this number means'), 'rate notes shown directly, not behind a button');
 });
+
+test('study report top strip is readable: light text on the slate bar', async () => {
+  const css = await readFile(new URL('../design-system.css', import.meta.url), 'utf8');
+  assert.match(css, /\.workspace \.details-panel \.detail-kicker:not\(#_\)\{color:var\(--canvas\)/);
+});

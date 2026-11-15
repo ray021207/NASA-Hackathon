@@ -879,3 +879,6 @@ details.more>summary:not(#_){min-height:44px;padding:11px 16px}
  .workspace .basemap-options button:not(#_){min-height:32px;padding:6px 12px;font-size:12.5px}
  .workspace .map-toolbar #fit-study:not(#_){min-height:32px;padding:6px 12px;font-size:12.5px}
 }
+/* Study report top strip (county · study number): light text on the slate bar (5.9:1); it was olive on slate (1.1:1). */
+.workspace .details-panel .detail-kicker:not(#_){color:var(--canvas);font-weight:700;letter-spacing:.02em}
+.workspace .details-panel .detail-kicker:not(#_) span{color:inherit}
