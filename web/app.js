@@ -1,4 +1,4 @@
-import { normalizeSeries, normalizeRate, normalizeHotspots, validateGeoJSON, safeSourceURL, formatNumber, isNumber, cleanInsights, normalizeCumulative } from './model.mjs';
+import { normalizeSeries, normalizeRate, normalizeHotspots, validateGeoJSON, safeSourceURL, formatNumber, isNumber, cleanInsights, normalizeCumulative, cleanTeam } from './model.mjs';
 
 const $ = selector => document.querySelector(selector);
 const DATA = new URL('../data/processed/', import.meta.url);
@@ -762,3 +762,44 @@ start().catch(error => {
   console.error('Atlas initialization failed:', error);
 });
 
+// ---- About us: team profiles from web/team.json (hand-edited; see web/README.md) ----
+async function loadTeam() {
+  try {
+    if (window.ATLAS_PREVIEW_DATA && 'team.json' in window.ATLAS_PREVIEW_DATA) return cleanTeam(window.ATLAS_PREVIEW_DATA['team.json']);
+    const response = await fetch(new URL('team.json', import.meta.url), { cache: 'no-cache' });
+    return response.ok ? cleanTeam(await response.json()) : null;
+  } catch { return null; }
+}
+const initials = name => name.split(/\s+/).filter(Boolean).slice(0, 2).map(word => word[0].toUpperCase()).join('');
+function renderAbout(team) {
+  const grid = $('#team-grid'), intro = $('#about-intro');
+  if (!grid || !intro) return;
+  grid.replaceChildren();
+  if (!team) { intro.textContent = 'Team profiles are being added.'; intro.hidden = false; return; }
+  intro.textContent = team.intro || ''; intro.hidden = !team.intro;
+  team.members.forEach(member => {
+    const card = el('article', 'team-card');
+    if (member.photo) {
+      const photo = el('img', 'team-photo');
+      photo.src = new URL(member.photo, import.meta.url).href; photo.alt = 'Photo of ' + member.name; photo.loading = 'lazy'; photo.width = 84; photo.height = 84;
+      card.append(photo);
+    } else {
+      const avatar = el('div', 'team-avatar', initials(member.name)); avatar.setAttribute('aria-hidden', 'true'); card.append(avatar);
+    }
+    card.append(el('h3', '', member.name));
+    if (member.role) card.append(el('p', 'team-role', member.role));
+    const facts = el('dl');
+    const fact = (label, node) => { const row = el('div'); row.append(el('dt', '', label), node); facts.append(row); };
+    if (member.study) fact('Studying', el('dd', '', member.study));
+    if (member.interests.length) { const dd = el('dd'), tags = el('ul', 'team-tags'); member.interests.forEach(tag => tags.append(el('li', '', tag))); dd.append(tags); fact('Interests', dd); }
+    if (member.bio) fact('About', el('dd', '', member.bio));
+    if (facts.children.length) card.append(facts); else if (!member.links.length) card.append(el('p', 'team-soon', 'Profile coming soon.'));
+    if (member.links.length) {
+      const row = el('div', 'team-links');
+      member.links.forEach(link => { const anchor = el('a', '', link.label + ' \u2197'); anchor.href = link.url; anchor.target = '_blank'; anchor.rel = 'noopener noreferrer'; row.append(anchor); });
+      card.append(row);
+    }
+    grid.append(card);
+  });
+}
+loadTeam().then(renderAbout);

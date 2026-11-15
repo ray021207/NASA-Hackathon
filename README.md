@@ -1,6 +1,6 @@
 # Sinkronized
 
-*The desert sinks. The radar keeps the beat.*
+*The desert sinks, and the radar keeps the beat.*
 
 **Live site: https://sinkronized.vercel.app** (updates by itself a few minutes after a merge into `main`)
 

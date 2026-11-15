@@ -16,6 +16,7 @@ for (const name of await readdir(new URL('../data/processed/', root))) {
     catch { console.warn('Skipped malformed JSON: ' + name); }
   }
 }
+try { data['team.json'] = JSON.parse(await read('team.json')); } catch { console.warn('No usable team.json: the About us section will be empty in the preview.'); }
 for (const feature of normalizeHotspots(data['hotspots.geojson']).features) {
   const name = 'rate_' + feature.properties.slug + '.png';
   try { images[name] = 'data:image/png;base64,' + (await readFile(new URL('../data/processed/' + name, root))).toString('base64'); }

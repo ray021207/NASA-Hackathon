@@ -101,6 +101,22 @@ Use a WGS84 FeatureCollection. Marker popups read name plus reason or note. Sour
 
 The chart under each study follows the pointer: a cursor, a readout of both lines, and the map swaps to the total change since the first date, as of the date under the cursor. Click (or tap) holds a date; Play steps through all dates; the arrow keys, Home, End, Space and Escape work; the two buttons under the chart put the sinking-area or stable-ground pixels on the map. Data comes from `cumulative_<slug>.json` and `data/processed/cumulative/` (see `docs/UI_DATA_CONTRACT.md` section 9). Without those files the chart stays a plain chart.
 
+## About us (team profiles)
+
+Everything in the About us section comes from `web/team.json`. Edit that file, nothing else. Fields per person (only `name` is required; anything left out is simply not shown):
+
+| Field | What it is |
+| --- | --- |
+| `name` | Full name (required) |
+| `role` | What you do on the project, one line |
+| `study` | What you study, and where if you like |
+| `interests` | A list of short phrases, e.g. `["radar", "water policy"]` (a comma-separated string also works) |
+| `bio` | One short paragraph |
+| `photo` | A picture saved in `web/assets/team/`, as `assets/team/name.jpg` (png, jpg or webp) |
+| `links` | `[{ "label": "LinkedIn", "url": "https://..." }]`, https or http only |
+
+Publish only what each person is comfortable having on a public page (no email addresses or phone numbers). A person with only a name shows "Profile coming soon." Malformed fields are dropped quietly by `cleanTeam()` in `model.mjs`. Run `node web/build-preview.mjs` afterwards to refresh the portable preview.
+
 ## Logo and icons
 
 The original logo is `docs/brand/sinkronized-logo-original.png`. `python src/make_logo_assets.py` trims it and writes `web/assets/` (header logo, 512 px version, browser-tab icon, phone icon). To change the logo, replace the original and re-run that command (if the original has an opaque white background, the script clears it automatically). The header image is decorative (the name beside it is the accessible label).

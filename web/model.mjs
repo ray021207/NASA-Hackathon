@@ -111,3 +111,21 @@ export function normalizeCumulative(raw, slug) {
   }
   return { ...raw, masks };
 }
+const teamText = (value, max) => typeof value === 'string' && value.trim() && value.trim().length <= max ? value.trim() : null;
+const TEAM_PHOTO = /^assets\/team\/[A-Za-z0-9_.-]+\.(png|jpe?g|webp)$/i;
+export function cleanTeam(raw) {
+  // Hand-written About us content (web/team.json). Optional, text-only and strict: a malformed field is dropped, never shown.
+  if (!raw || !Array.isArray(raw.members)) return null;
+  const members = [];
+  for (const m of raw.members.slice(0, 12)) {
+    const name = teamText(m?.name, 80);
+    if (!name) continue;
+    const interests = (Array.isArray(m.interests) ? m.interests : typeof m.interests === 'string' ? m.interests.split(',') : [])
+      .map(t => teamText(t, 40)).filter(Boolean).slice(0, 12);
+    const links = (Array.isArray(m.links) ? m.links : []).map(l => ({ label: teamText(l?.label, 40), url: safeSourceURL(l?.url) }))
+      .filter(l => l.label && l.url).slice(0, 6);
+    members.push({ name, role: teamText(m.role, 120), study: teamText(m.study, 160), bio: teamText(m.bio, 600), interests, links,
+      photo: typeof m.photo === 'string' && TEAM_PHOTO.test(m.photo) ? m.photo : null });
+  }
+  return members.length ? { intro: teamText(raw.intro, 400), members } : null;
+}

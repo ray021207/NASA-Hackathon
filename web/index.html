@@ -9,8 +9,8 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32.png">
 <link rel="apple-touch-icon" href="./assets/apple-touch-icon.png">
-  <meta name="description" content="The desert sinks. The radar keeps the beat. A groundwater field atlas.">
-  <title>Sinkronized — The desert sinks. The radar keeps the beat.</title>
+  <meta name="description" content="The desert sinks, and the radar keeps the beat. A groundwater field atlas.">
+  <title>Sinkronized — The desert sinks, and the radar keeps the beat.</title>
   <link rel="stylesheet" href="./vendor/leaflet.css">
   <link rel="stylesheet" href="./styles.css">
   <link rel="stylesheet" href="./map.css">
@@ -23,12 +23,13 @@
   <a class="skip-link" href="#details">Skip to study details</a>
   <header class="masthead">
     <a class="wordmark" href="./" aria-label="Sinkronized, home"><img class="logo" src="./assets/logo.png" alt="" width="46" height="46"><span>Sinkronized</span></a>
-    <span class="project-label">The desert sinks. The radar keeps the beat.</span>
+    <span class="project-label">The desert sinks, and the radar keeps the beat.</span>
     <nav aria-label="Site navigation">
       <a class="nav-overview" href="#overview">Overview</a>
       <a class="nav-explore" href="#atlas">Study regions</a>
       <button type="button" data-dialog="method">How we measured</button>
       <button type="button" data-dialog="limits">Limits</button>
+      <a class="nav-about" href="#about">About us</a>
       <button type="button" data-dialog="sources">Resources <span class="out-arrow" aria-hidden="true"></span></button>
     </nav>
   </header>
@@ -250,7 +251,13 @@
     <p id="explain-text"></p>
     <p id="explain-note" class="explain-note"></p>
   </aside>
-  <footer class="page-footer"><span>NASA Space Apps 2026 <span class="footer-separator">/</span> Dancing with the SARs</span><span>Independent team project · Preliminary research</span></footer>
+  <section id="about" class="about" aria-labelledby="about-title">
+        <span class="eyebrow">THE TEAM</span>
+        <h2 id="about-title">About us</h2>
+        <p id="about-intro" class="about-intro" hidden></p>
+        <div id="team-grid" class="team-grid"></div>
+      </section>
+      <footer class="page-footer"><span>NASA Space Apps 2026 <span class="footer-separator">/</span> Dancing with the SARs</span><span>Independent team project · Preliminary research</span></footer>
 
   <dialog id="about-dialog" aria-labelledby="dialog-title">
     <div class="dialog-top"><span class="eyebrow">Sinkronized</span><button id="close-dialog" type="button" aria-label="Close information">Close ×</button></div>

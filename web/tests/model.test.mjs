@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { normalizeSeries, normalizeRate, normalizeHotspots, validateGeoJSON, safeSourceURL, formatNumber, cleanInsights, normalizeCumulative } from '../model.mjs';
+import { normalizeSeries, normalizeRate, normalizeHotspots, validateGeoJSON, safeSourceURL, formatNumber, cleanInsights, normalizeCumulative, cleanTeam } from '../model.mjs';
 import { readFile } from 'node:fs/promises';
 
 const series = extra => ({ hotspot: 'eloy', units: 'cm', reference: 'Synthetic test reference', dates: ['2026-01-01', '2026-01-13'], displacement: [0, -1], rate_cm_yr: -2, rate_sigma: 0.2, ...extra });
@@ -114,4 +114,29 @@ test('time-slider pictures are strictly validated', async () => {
     assert.deepEqual(cum.dates, series.dates, slug + ': pictures and chart must use the same dates');
     for (const file of [...cum.frames, ...Object.values(cum.masks)]) await readFile(new URL(file, root));
   }
+});
+
+test('About us content is optional, strict and text-only', async () => {
+  assert.equal(cleanTeam(null), null); assert.equal(cleanTeam({ members: [] }), null); assert.equal(cleanTeam({ members: [{ role: 'x' }] }), null);
+  const t = cleanTeam({ intro: ' Hi ', members: [
+    { name: ' Ada ', role: 'Lead', study: 'Physics', interests: 'radar, water ,', bio: 'b', photo: 'assets/team/ada.jpg',
+      links: [{ label: 'Site', url: 'https://example.com/a' }, { label: 'Bad', url: 'javascript:alert(1)' }, { label: '', url: 'https://x.org' }] },
+    { name: 'Bo', photo: '../secret.png' }, { name: 5 }] });
+  assert.equal(t.intro, 'Hi'); assert.equal(t.members.length, 2);
+  const [a, b] = t.members;
+  assert.deepEqual(a.interests, ['radar', 'water']); assert.deepEqual(a.links, [{ label: 'Site', url: 'https://example.com/a' }]);
+  assert.equal(a.photo, 'assets/team/ada.jpg'); assert.equal(b.photo, null);
+  // the shipped file is valid, and the page links to a section that exists
+  const team = cleanTeam(JSON.parse(await readFile(new URL('../team.json', import.meta.url), 'utf8')));
+  assert.ok(team && team.members.length >= 1);
+  const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
+  assert.match(html, /href="#about"/); assert.match(html, /id="about"/);
+});
+
+test('header: name and tagline come before the navigation, and the tagline is one sentence', async () => {
+  const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
+  const header = html.slice(html.indexOf('<header class="masthead">'), html.indexOf('</header>'));
+  assert.ok(header.indexOf('class="wordmark"') < header.indexOf('class="project-label"') && header.indexOf('class="project-label"') < header.indexOf('<nav'));
+  const label = header.match(/class="project-label">([^<]+)</)[1];
+  assert.equal((label.match(/[.!?](\s|$)/g) || []).length, 1, 'exactly one sentence: ' + label);
 });
