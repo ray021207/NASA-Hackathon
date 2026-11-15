@@ -199,7 +199,7 @@
 
   function frame(time) {
     frameId = 0;
-    if (reduced.matches || !inView || document.hidden) return;
+    if (reduced.matches || !inView || document.hidden || document.documentElement.classList.contains('motion-paused')) return;
     // Cap the decorative effect to approximately 40 fps; use 30 fps on touch devices.
     const minInterval = coarse.matches ? 33 : 25;
     if (time - lastDraw >= minInterval) {
@@ -217,7 +217,7 @@
   }
 
   function start() {
-    if (!frameId && inView && !document.hidden && !reduced.matches) {
+    if (!frameId && inView && !document.hidden && !reduced.matches && !document.documentElement.classList.contains('motion-paused')) {
       lastDraw = 0;
       frameId = requestAnimationFrame(frame);
     }
@@ -253,6 +253,7 @@
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) stop(); else start();
   });
+  document.addEventListener('motionchange', () => { if (document.documentElement.classList.contains('motion-paused')) stop(); else start(); });
   if (reduced.addEventListener) reduced.addEventListener('change', () => {
     if (reduced.matches) { stop(); ctx.clearRect(0, 0, width, height); }
     else start();
@@ -385,4 +386,26 @@
   } catch (error) {
     document.documentElement.classList.remove('scroll-fx');
   }
+})();
+
+/* Pause control for the moving ticker band and the hero animation (WCAG 2.2.2 Pause, Stop, Hide). Works by mouse, keyboard and touch; the choice is remembered. */
+(() => {
+  'use strict';
+  const btn = document.querySelector('.motion-toggle');
+  if (!btn) return;
+  const root = document.documentElement;
+  let saved = null;
+  try { saved = localStorage.getItem('sinkronized-motion-paused'); } catch (error) { saved = null; }
+  const apply = paused => {
+    root.classList.toggle('motion-paused', paused);
+    btn.setAttribute('aria-pressed', String(paused));
+    btn.textContent = paused ? 'Play animation' : 'Pause animation';
+    document.dispatchEvent(new Event('motionchange'));
+  };
+  apply(saved === '1');
+  btn.addEventListener('click', () => {
+    const paused = !root.classList.contains('motion-paused');
+    apply(paused);
+    try { localStorage.setItem('sinkronized-motion-paused', paused ? '1' : '0'); } catch (error) { /* storage unavailable: the choice lasts for this visit */ }
+  });
 })();

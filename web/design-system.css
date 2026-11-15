@@ -664,3 +664,19 @@ details.more-block>p.overview-proof-qualifier{margin-top:12px}
   .masthead nav>a[href][aria-current=page]{background-size:0 0;box-shadow:inset 3px 0 0 var(--rust);padding-left:14px}
   .masthead nav>button[data-dialog=limits]{display:block}
 }
+
+/* ---- SI disclosure on the AI-generated logo (Space Apps rule: SI-generated images carry a visible watermark) ---- */
+.logo-wrap{position:relative;display:inline-flex;flex:none}
+.si-chip{position:absolute;right:-6px;bottom:-4px;font:800 9px/1 var(--sans);letter-spacing:.04em;color:var(--canvas);background:var(--ink);border:1.5px solid var(--canvas);border-radius:6px;padding:3px 4px}
+.overview-rings{position:relative}
+.si-badge{position:absolute;left:50%;bottom:16%;transform:translateX(-50%);font:700 12px/1 var(--sans);letter-spacing:.03em;color:var(--canvas);background:rgba(45,42,37,.86);border-radius:999px;padding:6px 11px;white-space:nowrap;z-index:2}
+.page-footer .si-note{color:var(--ink)}
+/* ---- Pause control for the moving ticker and hero animation (WCAG 2.2.2) ---- */
+.ticker-wrap{display:flex;align-items:stretch;gap:10px;margin:6px 0 30px}
+.ticker-wrap .ticker{flex:1;min-width:0;margin:0}
+.motion-toggle{flex:none;min-height:44px;padding:0 16px;border:1.5px solid var(--ink);border-radius:var(--edge-radius);background:var(--paper);color:var(--ink);font:700 13px/1.2 var(--sans);cursor:pointer}
+.motion-toggle:hover{background:var(--ink);color:var(--canvas)}
+.motion-toggle[aria-pressed=true]{background:var(--rust);border-color:var(--rust);color:#fff}
+html.motion-paused .ticker-track{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){.motion-toggle{display:none}}
+@media(max-width:560px){.ticker-wrap{flex-direction:column}.motion-toggle{align-self:flex-start}}

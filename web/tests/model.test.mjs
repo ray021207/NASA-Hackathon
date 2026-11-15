@@ -293,3 +293,23 @@ test('phone menu: a labelled toggle controls the nav, collapsing is gated on the
   const app = await readFile(new URL('../app.js', import.meta.url), 'utf8');
   assert.match(app, /classList\.add\('nav-js'\)/);
 });
+
+test('SI disclosure: the AI-generated logo carries a visible label in the header, the hero and the footer', async () => {
+  const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
+  assert.match(html, /<span class="si-chip"[^>]*>AI<\/span>/, 'header logo mark');
+  assert.match(html, /<span class="si-badge">AI-generated logo<\/span>/, 'hero logo badge');
+  assert.match(html, /Logo: SI-generated image, made with ChatGPT/, 'footer note');
+});
+
+test('moving content can be paused (WCAG 2.2.2): a real button outside the decorative ticker', async () => {
+  const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
+  const btn = html.indexOf('<button type="button" class="motion-toggle" aria-pressed="false">Pause animation</button>');
+  assert.ok(btn > 0, 'pause button present');
+  const tick = html.indexOf('<div class="ticker" aria-hidden="true">');
+  const tickEnd = html.indexOf('</div>', html.indexOf('<div class="ticker-track">'));
+  assert.ok(btn > tickEnd && tick < btn, 'button is after the aria-hidden ticker, not inside it');
+  const css = await readFile(new URL('../design-system.css', import.meta.url), 'utf8');
+  assert.match(css, /html\.motion-paused \.ticker-track\{animation-play-state:paused\}/);
+  const motion = await readFile(new URL('../motion.js', import.meta.url), 'utf8');
+  assert.match(motion, /classList\.contains\('motion-paused'\)\) return;/, 'hero animation stops when paused');
+});
