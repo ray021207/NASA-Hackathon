@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 490" preserveAspectRatio="xMidYMid slice" role="presentation" aria-hidden="true">
+  <!-- Original flat desert-sunset illustration (sun, layered red-rock buttes, saguaros, prickly pear, agave). Decorative only; shown very faintly behind the opening text on phones. -->
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f7c78f"/><stop offset=".55" stop-color="#f3a964"/><stop offset="1" stop-color="#ee8f4e"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="490" fill="url(#sky)"/>
+  <circle cx="265" cy="172" r="88" fill="#fde7b0" fill-opacity=".30"/>
+  <circle cx="265" cy="172" r="58" fill="#fde7b0"/>
+  <path d="M-20 118 C40 94 100 108 150 98 S250 82 300 96 L300 110 C230 104 160 122 100 118 S10 132 -20 128Z" fill="#fbd9a2" fill-opacity=".55"/>
+  <path d="M230 58 C270 42 330 50 360 38 S420 44 430 56 L430 68 C380 64 330 74 290 70 S240 76 230 68Z" fill="#fbd9a2" fill-opacity=".55"/>
+  <!-- far mesas -->
+  <path d="M0 330 V250 L18 236 L34 244 L52 214 L74 222 L96 196 L120 208 L140 236 L170 250 L200 270 L230 258 L250 232 L276 226 L292 204 L318 196 L334 214 L352 240 L372 232 L400 252 V330Z" fill="#f2a362"/>
+  <!-- tall red-rock buttes -->
+  <path d="M0 360 V276 L16 262 L24 236 L44 228 L58 250 L74 280 L110 292 L150 312 L200 318 L250 306 L284 276 L296 248 L304 214 L318 190 L340 186 L352 214 L358 246 L378 262 L400 270 V360Z" fill="#e57f45"/>
+  <path d="M0 392 V332 L40 322 L84 336 L130 348 L176 340 L226 352 L270 364 L320 352 L364 340 L400 346 V392Z" fill="#cf553b"/>
+  <!-- distant saguaros -->
+  <g fill="none" stroke="#b04a54" stroke-linecap="round" stroke-linejoin="round" stroke-width="9">
+    <path d="M150 396 V346"/><path d="M150 378 H138 V362"/><path d="M150 370 H160 V356"/>
+    <path d="M352 392 V338"/><path d="M352 372 H341 V358"/>
+  </g>
+  <rect y="380" width="400" height="110" fill="#cf553b"/>
+  <!-- rolling hills -->
+  <path d="M0 420 Q60 392 130 404 T260 398 T400 388 V490 H0Z" fill="#a2404a"/>
+  <path d="M0 452 Q90 424 190 442 T400 430 V490 H0Z" fill="#59303c"/>
+  <!-- foreground saguaros, prickly pear, agave -->
+  <g fill="none" stroke="#59303c" stroke-linecap="round" stroke-linejoin="round">
+    <g stroke-width="15"><path d="M62 468 V332"/><path d="M62 412 H38 V378"/><path d="M62 394 H86 V354"/></g>
+    <g stroke-width="14"><path d="M300 452 V300"/><path d="M300 402 H278 V368"/><path d="M300 382 H322 V342"/></g>
+  </g>
+  <g fill="#59303c">
+    <ellipse cx="352" cy="446" rx="13" ry="18" transform="rotate(-8 352 446)"/>
+    <ellipse cx="374" cy="428" rx="12" ry="16" transform="rotate(14 374 428)"/>
+    <ellipse cx="338" cy="420" rx="11" ry="15" transform="rotate(-20 338 420)"/>
+    <ellipse cx="364" cy="406" rx="9" ry="12" transform="rotate(10 364 406)"/>
+  </g>
+  <g fill="none" stroke="#59303c" stroke-linecap="round" stroke-width="5">
+    <path d="M196 456 Q188 432 182 422 M196 456 Q196 428 196 416 M196 456 Q204 432 210 422"/>
+    <path d="M122 458 Q116 440 112 432 M122 458 Q122 436 122 428 M122 458 Q128 440 132 432"/>
+  </g>
+</svg>
