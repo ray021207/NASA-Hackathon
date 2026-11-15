@@ -915,3 +915,31 @@ details.more>summary:not(#_){min-height:44px;padding:11px 16px}
  .geo-compare-table td{border-bottom:0;padding:8px 14px}
  .geo-compare-table td::before{content:attr(data-label);display:block;font:700 11px/1.3 var(--sans);letter-spacing:.05em;text-transform:uppercase;color:var(--slate-deep);margin-bottom:3px}
 }
+/* ---- Farms and the radar: picture and findings share the screen ---- */
+.zoom-frame{position:relative}
+.zoom-open{position:absolute;top:10px;right:10px;z-index:2;min-height:36px;padding:0 13px;border:0;border-radius:999px;background:rgba(255,253,248,.94);color:var(--ink);font:700 12.5px/1 var(--sans);box-shadow:0 2px 8px rgba(0,0,0,.25);cursor:pointer}
+.zoom-open:hover{background:var(--ink);color:#fff}
+.zoom-open:focus-visible{outline:2px solid var(--rust);outline-offset:2px}
+.farm-split .nisar-portrait:not(#_){margin:8px 0 0;max-width:none}
+.farm-split .nisar-portrait img{max-height:62vh;width:auto;max-width:100%;margin:0 auto}
+@media(min-width:1000px){
+ .farm-split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:28px;align-items:start;margin-top:8px}
+ .farm-split .nisar-portrait:not(#_){position:sticky;top:142px;margin:0}
+ .farm-split .nisar-portrait img{max-height:calc(100vh - 340px);min-height:260px;object-fit:contain}
+ .farm-split-text .overview-proof-grid:not(#_){grid-template-columns:1fr;margin-top:0}
+ .farm-split-text .viz-pair{grid-template-columns:1fr}
+}
+/* full-size viewer */
+.image-viewer{width:min(1400px,96vw);height:92vh;max-width:none;max-height:none;padding:0;border:0;border-radius:14px;background:var(--ink);color:#fff;overflow:hidden}
+.image-viewer[open]{display:flex;flex-direction:column}
+.image-viewer::backdrop{background:rgba(20,18,15,.72)}
+.viewer-bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 14px;background:#24211d}
+.viewer-title{font:700 14px/1.3 var(--sans)}
+.viewer-hint{font:400 12.5px/1.3 var(--sans);color:#d9d2c6;margin-right:auto}
+.viewer-tools{display:flex;gap:6px}
+.viewer-tools button{min-width:40px;min-height:36px;padding:0 12px;border:1px solid rgba(255,255,255,.35);border-radius:8px;background:transparent;color:#fff;font:700 14px/1 var(--sans);cursor:pointer}
+.viewer-tools button:hover{background:#fff;color:var(--ink)}
+.viewer-stage{flex:1;overflow:auto;cursor:grab;display:grid;place-items:center}
+.viewer-stage.dragging{cursor:grabbing}
+.viewer-stage img{display:block;max-width:none;height:auto;user-select:none;-webkit-user-drag:none}
+@media(max-width:600px){.viewer-hint{display:none}.image-viewer{width:100vw;height:100dvh;border-radius:0}}

@@ -265,12 +265,15 @@
         <span class="overview-mission-label">NISAR BACKSCATTER / WHAT IS ON TOP</span>
         <h3 id="farmland-title">Radar also shows what covers the ground: farmland and desert.</h3>
         <p class="nisar-surface-lede">How strongly the ground reflects the signal depends on what is on it. We read NISAR’s reflected signal in two channels (HH and HV) on <span data-nisar="dates"></span> dates, and compared irrigated cropland, taken from USDA’s 2025 Cropland Data Layer, with desert shrubland.</p>
+        <div class="farm-split">
         <figure class="nisar-figure nisar-portrait">
-          <img id="nisar-portrait-img" alt="False-colour NISAR radar image of the Willcox basin: hundreds of round irrigated fields appear pink, the dry lake bed of Willcox Playa is a dark shape in the middle, and desert washes and mountain slopes appear in greens and blues." width="1190" height="1396" loading="lazy">
+          <div class="zoom-frame"><button type="button" class="zoom-open" data-zoom="#nisar-portrait-img">View full size</button>
+          <img id="nisar-portrait-img" alt="False-colour NISAR radar image of the Willcox basin: hundreds of round irrigated fields appear pink, the dry lake bed of Willcox Playa is a dark shape in the middle, and desert washes and mountain slopes appear in greens and blues." width="1190" height="1396" loading="lazy"></div>
           <figcaption><strong>NISAR’s radar portrait of the Willcox basin.</strong> Pink circles are irrigated fields; the dark shape in the middle is Willcox Playa, a dry lake bed. A data image made by us from <span data-nisar="p-dates"></span> NISAR radar images, not a photograph.
             <details class="more"><summary>How to read this image</summary><p>The image covers about <span data-nisar="p-w"></span> km from west to east, from <span data-nisar="p-start"></span> to <span data-nisar="p-end"></span>. <span class="key key-r"></span>Red shows how much the HH radar signal changes through the year (dry dates only, so rain does not drive it), <span class="key key-g"></span>green the average HV signal, and <span class="key key-b"></span>blue the average HH signal. Fields that are planted, watered and harvested change a lot, so they turn red and pink; the desert changes little. We checked the labels against other data: <span data-nisar="p-pink"></span>% of pink pixels are cropland in USDA’s 2025 Cropland Data Layer, against <span data-nisar="p-all"></span>% of the whole image, and USGS records center-pivot or lateral-move sprinklers on <span data-nisar="p-pivot"></span>% of the basin’s irrigated acres in 2024, which is why so many fields are round. The playa reference point falls in the dark area. Image: Sinkronized, from NASA/ISRO NISAR GCOV data (Provisional and Validated releases).</p></details>
           </figcaption>
         </figure>
+        <div class="farm-split-text">
         <div class="overview-proof-grid">
           <article class="overview-proof-card">
             <span class="overview-proof-id">01 / WHERE THE CROPS ARE</span>
@@ -292,6 +295,8 @@
           </article>
         </div>
         <div class="viz-pair"><div class="viz" id="viz-share" hidden></div><div class="viz" id="viz-auc" hidden></div></div>
+        </div>
+        </div>
         <figure class="nisar-figure">
           <img id="nisar-farmland-img" alt="Left and middle: median NISAR HH and HV backscatter in decibels through the year for cropland, fallow land, shrubland and barren ground at Willcox. Right: bar chart of how well each measure separates cropland from desert." width="1950" height="546" loading="lazy">
           <figcaption>Willcox study box, 28 NISAR dates (Oct 2025–Nov 2026). Left and middle: the median signal for each land type. Right: how well each measure tells cropland from desert shrubland, from 0.5 (no better than chance) to 1 (perfect). The jumps that every line shares are mostly rain, not farming.</figcaption>
@@ -490,6 +495,11 @@
   </section>
       <footer class="page-footer"><span>NASA Space Apps 2026 <span class="footer-separator">/</span> Dancing with the SARs</span><span>Independent team project · Preliminary research</span><span class="si-note">Logo: SI-generated image, made with ChatGPT (OpenAI) from the team’s brief</span></footer>
 
+  <dialog id="image-viewer" class="image-viewer" aria-label="Full-size image">
+    <div class="viewer-bar"><strong class="viewer-title">Full-size image</strong><span class="viewer-hint">Drag to move around. Use the buttons or your trackpad to zoom.</span>
+      <div class="viewer-tools"><button type="button" data-z="-1" aria-label="Zoom out">−</button><button type="button" data-z="0">Fit</button><button type="button" data-z="1" aria-label="Zoom in">+</button><button type="button" class="viewer-close">Close ×</button></div></div>
+    <div class="viewer-stage" tabindex="0"><img alt=""></div>
+  </dialog>
   <dialog id="about-dialog" aria-labelledby="dialog-title">
     <div class="dialog-top"><span class="eyebrow">Sinkronized</span><button id="close-dialog" type="button" aria-label="Close information">Close ×</button></div>
     <h2 id="dialog-title"></h2><div id="dialog-body"></div>

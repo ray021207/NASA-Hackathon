@@ -1427,3 +1427,47 @@ function renderGeology(slug) {
   side.append(more);
   return box;
 }
+
+// Full-size image viewer: opened from a "View full size" button or by selecting the picture. Zoom with the buttons or
+// Ctrl/trackpad pinch, drag to pan, arrow keys scroll; Escape or Close returns focus to the button.
+(function initImageViewer() {
+  const dlg = document.getElementById('image-viewer');
+  if (!dlg || typeof dlg.showModal !== 'function') return;
+  const stage = dlg.querySelector('.viewer-stage'), img = stage.querySelector('img'), title = dlg.querySelector('.viewer-title');
+  let zoom = 1, opener = null;
+  const apply = () => {
+    const fit = Math.min(stage.clientWidth / (img.naturalWidth || 1), stage.clientHeight / (img.naturalHeight || 1)) || 1;
+    img.style.width = Math.round((img.naturalWidth || stage.clientWidth) * fit * zoom) + 'px';
+    dlg.querySelector('[data-z="0"]').textContent = zoom === 1 ? 'Fit' : Math.round(zoom * 100) + '%';
+  };
+  const setZoom = (z, cx = 0.5, cy = 0.5) => {
+    const before = { x: stage.scrollLeft + stage.clientWidth * cx, y: stage.scrollTop + stage.clientHeight * cy, w: img.offsetWidth || 1, h: img.offsetHeight || 1 };
+    zoom = Math.min(6, Math.max(1, z)); apply();
+    stage.scrollLeft = before.x / before.w * img.offsetWidth - stage.clientWidth * cx;
+    stage.scrollTop = before.y / before.h * img.offsetHeight - stage.clientHeight * cy;
+  };
+  const open = source => {
+    if (!source?.src) return;
+    opener = document.activeElement;
+    img.src = source.currentSrc || source.src; img.alt = source.alt || '';
+    title.textContent = source.closest('figure')?.querySelector('figcaption strong')?.textContent || 'Full-size image';
+    zoom = 1; dlg.showModal();
+    const ready = () => { apply(); stage.focus(); };
+    if (img.complete && img.naturalWidth) requestAnimationFrame(ready); else img.addEventListener('load', ready, { once: true });
+  };
+  document.querySelectorAll('[data-zoom]').forEach(btn => {
+    const target = document.querySelector(btn.dataset.zoom);
+    btn.addEventListener('click', () => open(target));
+    target?.addEventListener('click', () => open(target));
+    if (target) target.style.cursor = 'zoom-in';
+  });
+  dlg.querySelectorAll('[data-z]').forEach(b => b.addEventListener('click', () => { const d = Number(b.dataset.z); setZoom(d === 0 ? (zoom === 1 ? 2 : 1) : zoom * (d > 0 ? 1.5 : 1 / 1.5)); }));
+  dlg.querySelector('.viewer-close').addEventListener('click', () => dlg.close());
+  dlg.addEventListener('close', () => { img.removeAttribute('src'); opener?.focus?.(); });
+  stage.addEventListener('wheel', e => { if (!e.ctrlKey) return; e.preventDefault(); const r = stage.getBoundingClientRect(); setZoom(zoom * (e.deltaY < 0 ? 1.15 : 1 / 1.15), (e.clientX - r.left) / r.width, (e.clientY - r.top) / r.height); }, { passive: false });
+  let drag = null;
+  stage.addEventListener('pointerdown', e => { if (e.pointerType === 'touch') return; drag = { x: e.clientX, y: e.clientY, l: stage.scrollLeft, t: stage.scrollTop }; stage.classList.add('dragging'); });
+  window.addEventListener('pointermove', e => { if (!drag) return; stage.scrollLeft = drag.l - (e.clientX - drag.x); stage.scrollTop = drag.t - (e.clientY - drag.y); });
+  window.addEventListener('pointerup', () => { drag = null; stage.classList.remove('dragging'); });
+  window.addEventListener('resize', () => { if (dlg.open) apply(); });
+})();

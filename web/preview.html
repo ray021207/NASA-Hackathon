@@ -2153,6 +2153,34 @@ details.more>summary:not(#_){min-height:44px;padding:11px 16px}
  .geo-compare-table td{border-bottom:0;padding:8px 14px}
  .geo-compare-table td::before{content:attr(data-label);display:block;font:700 11px/1.3 var(--sans);letter-spacing:.05em;text-transform:uppercase;color:var(--slate-deep);margin-bottom:3px}
 }
+/* ---- Farms and the radar: picture and findings share the screen ---- */
+.zoom-frame{position:relative}
+.zoom-open{position:absolute;top:10px;right:10px;z-index:2;min-height:36px;padding:0 13px;border:0;border-radius:999px;background:rgba(255,253,248,.94);color:var(--ink);font:700 12.5px/1 var(--sans);box-shadow:0 2px 8px rgba(0,0,0,.25);cursor:pointer}
+.zoom-open:hover{background:var(--ink);color:#fff}
+.zoom-open:focus-visible{outline:2px solid var(--rust);outline-offset:2px}
+.farm-split .nisar-portrait:not(#_){margin:8px 0 0;max-width:none}
+.farm-split .nisar-portrait img{max-height:62vh;width:auto;max-width:100%;margin:0 auto}
+@media(min-width:1000px){
+ .farm-split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:28px;align-items:start;margin-top:8px}
+ .farm-split .nisar-portrait:not(#_){position:sticky;top:142px;margin:0}
+ .farm-split .nisar-portrait img{max-height:calc(100vh - 340px);min-height:260px;object-fit:contain}
+ .farm-split-text .overview-proof-grid:not(#_){grid-template-columns:1fr;margin-top:0}
+ .farm-split-text .viz-pair{grid-template-columns:1fr}
+}
+/* full-size viewer */
+.image-viewer{width:min(1400px,96vw);height:92vh;max-width:none;max-height:none;padding:0;border:0;border-radius:14px;background:var(--ink);color:#fff;overflow:hidden}
+.image-viewer[open]{display:flex;flex-direction:column}
+.image-viewer::backdrop{background:rgba(20,18,15,.72)}
+.viewer-bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 14px;background:#24211d}
+.viewer-title{font:700 14px/1.3 var(--sans)}
+.viewer-hint{font:400 12.5px/1.3 var(--sans);color:#d9d2c6;margin-right:auto}
+.viewer-tools{display:flex;gap:6px}
+.viewer-tools button{min-width:40px;min-height:36px;padding:0 12px;border:1px solid rgba(255,255,255,.35);border-radius:8px;background:transparent;color:#fff;font:700 14px/1 var(--sans);cursor:pointer}
+.viewer-tools button:hover{background:#fff;color:var(--ink)}
+.viewer-stage{flex:1;overflow:auto;cursor:grab;display:grid;place-items:center}
+.viewer-stage.dragging{cursor:grabbing}
+.viewer-stage img{display:block;max-width:none;height:auto;user-select:none;-webkit-user-drag:none}
+@media(max-width:600px){.viewer-hint{display:none}.image-viewer{width:100vw;height:100dvh;border-radius:0}}
 </style>
   <script>/* @preserve
  * Leaflet 1.9.4, a JS library for interactive maps. https://leafletjs.com
@@ -4236,7 +4264,52 @@ function renderGeology(slug) {
   more.append(srcList);
   side.append(more);
   return box;
-}</script>
+}
+
+// Full-size image viewer: opened from a "View full size" button or by selecting the picture. Zoom with the buttons or
+// Ctrl/trackpad pinch, drag to pan, arrow keys scroll; Escape or Close returns focus to the button.
+(function initImageViewer() {
+  const dlg = document.getElementById('image-viewer');
+  if (!dlg || typeof dlg.showModal !== 'function') return;
+  const stage = dlg.querySelector('.viewer-stage'), img = stage.querySelector('img'), title = dlg.querySelector('.viewer-title');
+  let zoom = 1, opener = null;
+  const apply = () => {
+    const fit = Math.min(stage.clientWidth / (img.naturalWidth || 1), stage.clientHeight / (img.naturalHeight || 1)) || 1;
+    img.style.width = Math.round((img.naturalWidth || stage.clientWidth) * fit * zoom) + 'px';
+    dlg.querySelector('[data-z="0"]').textContent = zoom === 1 ? 'Fit' : Math.round(zoom * 100) + '%';
+  };
+  const setZoom = (z, cx = 0.5, cy = 0.5) => {
+    const before = { x: stage.scrollLeft + stage.clientWidth * cx, y: stage.scrollTop + stage.clientHeight * cy, w: img.offsetWidth || 1, h: img.offsetHeight || 1 };
+    zoom = Math.min(6, Math.max(1, z)); apply();
+    stage.scrollLeft = before.x / before.w * img.offsetWidth - stage.clientWidth * cx;
+    stage.scrollTop = before.y / before.h * img.offsetHeight - stage.clientHeight * cy;
+  };
+  const open = source => {
+    if (!source?.src) return;
+    opener = document.activeElement;
+    img.src = source.currentSrc || source.src; img.alt = source.alt || '';
+    title.textContent = source.closest('figure')?.querySelector('figcaption strong')?.textContent || 'Full-size image';
+    zoom = 1; dlg.showModal();
+    const ready = () => { apply(); stage.focus(); };
+    if (img.complete && img.naturalWidth) requestAnimationFrame(ready); else img.addEventListener('load', ready, { once: true });
+  };
+  document.querySelectorAll('[data-zoom]').forEach(btn => {
+    const target = document.querySelector(btn.dataset.zoom);
+    btn.addEventListener('click', () => open(target));
+    target?.addEventListener('click', () => open(target));
+    if (target) target.style.cursor = 'zoom-in';
+  });
+  dlg.querySelectorAll('[data-z]').forEach(b => b.addEventListener('click', () => { const d = Number(b.dataset.z); setZoom(d === 0 ? (zoom === 1 ? 2 : 1) : zoom * (d > 0 ? 1.5 : 1 / 1.5)); }));
+  dlg.querySelector('.viewer-close').addEventListener('click', () => dlg.close());
+  dlg.addEventListener('close', () => { img.removeAttribute('src'); opener?.focus?.(); });
+  stage.addEventListener('wheel', e => { if (!e.ctrlKey) return; e.preventDefault(); const r = stage.getBoundingClientRect(); setZoom(zoom * (e.deltaY < 0 ? 1.15 : 1 / 1.15), (e.clientX - r.left) / r.width, (e.clientY - r.top) / r.height); }, { passive: false });
+  let drag = null;
+  stage.addEventListener('pointerdown', e => { if (e.pointerType === 'touch') return; drag = { x: e.clientX, y: e.clientY, l: stage.scrollLeft, t: stage.scrollTop }; stage.classList.add('dragging'); });
+  window.addEventListener('pointermove', e => { if (!drag) return; stage.scrollLeft = drag.l - (e.clientX - drag.x); stage.scrollTop = drag.t - (e.clientY - drag.y); });
+  window.addEventListener('pointerup', () => { drag = null; stage.classList.remove('dragging'); });
+  window.addEventListener('resize', () => { if (dlg.open) apply(); });
+})();
+</script>
 </head>
 <body>
   <a class="skip-link" href="#details">Skip to study details</a>
@@ -4484,12 +4557,15 @@ function renderGeology(slug) {
         <span class="overview-mission-label">NISAR BACKSCATTER / WHAT IS ON TOP</span>
         <h3 id="farmland-title">Radar also shows what covers the ground: farmland and desert.</h3>
         <p class="nisar-surface-lede">How strongly the ground reflects the signal depends on what is on it. We read NISAR’s reflected signal in two channels (HH and HV) on <span data-nisar="dates"></span> dates, and compared irrigated cropland, taken from USDA’s 2025 Cropland Data Layer, with desert shrubland.</p>
+        <div class="farm-split">
         <figure class="nisar-figure nisar-portrait">
-          <img id="nisar-portrait-img" alt="False-colour NISAR radar image of the Willcox basin: hundreds of round irrigated fields appear pink, the dry lake bed of Willcox Playa is a dark shape in the middle, and desert washes and mountain slopes appear in greens and blues." width="1190" height="1396" loading="lazy">
+          <div class="zoom-frame"><button type="button" class="zoom-open" data-zoom="#nisar-portrait-img">View full size</button>
+          <img id="nisar-portrait-img" alt="False-colour NISAR radar image of the Willcox basin: hundreds of round irrigated fields appear pink, the dry lake bed of Willcox Playa is a dark shape in the middle, and desert washes and mountain slopes appear in greens and blues." width="1190" height="1396" loading="lazy"></div>
           <figcaption><strong>NISAR’s radar portrait of the Willcox basin.</strong> Pink circles are irrigated fields; the dark shape in the middle is Willcox Playa, a dry lake bed. A data image made by us from <span data-nisar="p-dates"></span> NISAR radar images, not a photograph.
             <details class="more"><summary>How to read this image</summary><p>The image covers about <span data-nisar="p-w"></span> km from west to east, from <span data-nisar="p-start"></span> to <span data-nisar="p-end"></span>. <span class="key key-r"></span>Red shows how much the HH radar signal changes through the year (dry dates only, so rain does not drive it), <span class="key key-g"></span>green the average HV signal, and <span class="key key-b"></span>blue the average HH signal. Fields that are planted, watered and harvested change a lot, so they turn red and pink; the desert changes little. We checked the labels against other data: <span data-nisar="p-pink"></span>% of pink pixels are cropland in USDA’s 2025 Cropland Data Layer, against <span data-nisar="p-all"></span>% of the whole image, and USGS records center-pivot or lateral-move sprinklers on <span data-nisar="p-pivot"></span>% of the basin’s irrigated acres in 2024, which is why so many fields are round. The playa reference point falls in the dark area. Image: Sinkronized, from NASA/ISRO NISAR GCOV data (Provisional and Validated releases).</p></details>
           </figcaption>
         </figure>
+        <div class="farm-split-text">
         <div class="overview-proof-grid">
           <article class="overview-proof-card">
             <span class="overview-proof-id">01 / WHERE THE CROPS ARE</span>
@@ -4511,6 +4587,8 @@ function renderGeology(slug) {
           </article>
         </div>
         <div class="viz-pair"><div class="viz" id="viz-share" hidden></div><div class="viz" id="viz-auc" hidden></div></div>
+        </div>
+        </div>
         <figure class="nisar-figure">
           <img id="nisar-farmland-img" alt="Left and middle: median NISAR HH and HV backscatter in decibels through the year for cropland, fallow land, shrubland and barren ground at Willcox. Right: bar chart of how well each measure separates cropland from desert." width="1950" height="546" loading="lazy">
           <figcaption>Willcox study box, 28 NISAR dates (Oct 2025–Nov 2026). Left and middle: the median signal for each land type. Right: how well each measure tells cropland from desert shrubland, from 0.5 (no better than chance) to 1 (perfect). The jumps that every line shares are mostly rain, not farming.</figcaption>
@@ -4709,6 +4787,11 @@ function renderGeology(slug) {
   </section>
       <footer class="page-footer"><span>NASA Space Apps 2026 <span class="footer-separator">/</span> Dancing with the SARs</span><span>Portable preview · Preliminary research</span><span class="si-note">Logo: SI-generated image, made with ChatGPT (OpenAI) from the team’s brief</span></footer>
 
+  <dialog id="image-viewer" class="image-viewer" aria-label="Full-size image">
+    <div class="viewer-bar"><strong class="viewer-title">Full-size image</strong><span class="viewer-hint">Drag to move around. Use the buttons or your trackpad to zoom.</span>
+      <div class="viewer-tools"><button type="button" data-z="-1" aria-label="Zoom out">−</button><button type="button" data-z="0">Fit</button><button type="button" data-z="1" aria-label="Zoom in">+</button><button type="button" class="viewer-close">Close ×</button></div></div>
+    <div class="viewer-stage" tabindex="0"><img alt=""></div>
+  </dialog>
   <dialog id="about-dialog" aria-labelledby="dialog-title">
     <div class="dialog-top"><span class="eyebrow">Sinkronized</span><button id="close-dialog" type="button" aria-label="Close information">Close ×</button></div>
     <h2 id="dialog-title"></h2><div id="dialog-body"></div>
