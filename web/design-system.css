@@ -964,3 +964,5 @@ details.more>summary:not(#_){min-height:44px;padding:11px 16px}
 .look-title{display:block;font:720 15px/1.3 var(--sans);color:var(--ink);margin:0 0 3px}
 .look-line{font:400 14.5px/1.55 var(--sans);color:var(--ink);margin:0}
 .look-record{font:400 12.5px/1.5 var(--sans);color:var(--slate-deep);margin:6px 0 0}
+/* One line under the report tabs: the first section in a tab panel has no top border of its own. */
+.workspace .details-panel .report-panel>.detail-section:first-child:not(#_),.workspace .details-panel .report-panel>.report-summary>.insights:first-child:not(#_){border-top:0;padding-top:14px}
