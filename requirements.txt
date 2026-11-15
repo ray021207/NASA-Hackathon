@@ -1,0 +1,13 @@
+# Processing pipeline (src/). Versions are the ones the results were produced with.
+asf_search==14.1.0
+h5py==3.16.0
+numpy==2.4.4
+scipy==1.17.1
+pyproj==3.8.0
+shapely==2.2.0
+rasterio==1.5.2
+affine==3.0.1
+Pillow==12.2.0
+requests==2.33.1
+matplotlib==3.10.8
+defusedxml==0.7.1

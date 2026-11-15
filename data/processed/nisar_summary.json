@@ -1,0 +1,96 @@
+{
+ "pattern": {
+  "r": 0.581,
+  "n_blocks": 12850,
+  "r_without_bad_date": 0.598
+ },
+ "weather_fix": {
+  "residual_before_mm": 17.82,
+  "residual_after_mm": 13.48,
+  "jump_before_mm": 23.33,
+  "jump_after_mm": 16.86,
+  "percent": 24
+ },
+ "sinking": {
+  "nisar_cm_yr": -3.87,
+  "s1_cm_yr": -2.27,
+  "n_blocks": 1404
+ },
+ "playa": {
+  "net_cm": -1.74,
+  "years": 0.99,
+  "s1_trend_cm_yr": -1.679,
+  "s1_last3y_cm_yr": -2.744
+ },
+ "overlap": {
+  "r": -0.172
+ },
+ "confirm": {
+  "willcox": {
+   "name": "Willcox basin",
+   "s1_rate_cm_yr": 2.73,
+   "years": 1.27,
+   "date": "2027-02-02",
+   "chance_at_one_year": 0.5
+  },
+  "eloy": {
+   "name": "Eloy",
+   "s1_rate_cm_yr": 1.33,
+   "years": 1.21,
+   "date": "2027-09-04",
+   "chance_at_one_year": 0.58
+  },
+  "k_sigma": 3.0,
+  "power": 0.9
+ },
+ "record": {
+  "willcox": {
+   "start": "2025-10-26",
+   "end": "2026-10-21",
+   "dates": 26,
+   "track": "128D"
+  },
+  "eloy": {
+   "start": "2026-06-19",
+   "end": "2026-10-17",
+   "dates": 10,
+   "track": "77A"
+  }
+ },
+ "figure": "nisar_vs_sentinel1_willcox.png",
+ "directions": {
+  "span_days": 108,
+  "asc_mm": -4.6,
+  "asc_lo": -7.31,
+  "asc_hi": -2.19,
+  "desc_mm": -6.16,
+  "desc_lo": -13.68,
+  "desc_hi": 0.15,
+  "expected_mm": -6.56,
+  "ew_mm": 1.56,
+  "ew_lo": -5.68,
+  "ew_hi": 9.83
+ },
+ "farmland": {
+  "crop_share_box_pct": 2.1,
+  "crop_share_sinking_pct": 7.4,
+  "enrichment": 3.56,
+  "crop_acres_sinking": 8105,
+  "rate_diff_cm_yr": -2.31,
+  "rate_diff_lo": -3.22,
+  "rate_diff_hi": -1.61,
+  "share_sinking_cropland_pct": 67,
+  "share_sinking_desert_pct": 16,
+  "auc_hh_spread": 0.878,
+  "auc_hv_spread": 0.793,
+  "auc_mean_hh": 0.503,
+  "rain_rho_hh": 0.65,
+  "rain_rho_hv": 0.79,
+  "n_dates": 28,
+  "dry_dates": 21,
+  "nisar_diff_cm_yr": -5.0,
+  "nisar_cells": 405,
+  "figure": "gcov_farmland_willcox.png"
+ },
+ "release": "NASA NISAR L2 GUNW. Willcox: Provisional (CRID P05023) except the first pair, Oct 26 to Nov 7 2025, which is Beta; re-fitting without it moves the rate from -2.82 to -3.00 cm/yr. Eloy: Provisional."
+}

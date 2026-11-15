@@ -80,3 +80,11 @@ Fields: `hotspot`, `units` ("cm"), `bounds` [[south, west], [north, east]], `vmi
 - The chart line equals the average of the pixels the pictures show; `src/export_contract.py` asserts this (difference below 0.005 cm) on every export.
 - In the app: moving along the chart shows the readout and swaps the map to that date; clicking holds a date; Play steps through all dates; arrow keys, Home, End, Space and Escape work; the two buttons under the chart put the sinking-area or stable-ground pixels on the map. If the file is missing or invalid, the chart stays a plain chart (no broken controls).
 - Paths must match `cumulative/<name>.png`; anything else is rejected by `normalizeCumulative()`.
+
+## `nisar_summary.json` and `nisar_vs_sentinel1_willcox.png` (Overview, NISAR section)
+
+Written by `src/export_nisar.py` from `nisar_vs_sentinel1.json` (`src/compare_nisar_s1.py`), `nisar_confirm.json` (`src/nisar_when.py`) and the troposphere test (`src/nisar_noise_test.py`). The Overview section `#overview-nisar` is hidden unless `cleanNisar` in `web/model.mjs` accepts the whole file (every number finite and in range, dates valid, figure name a plain `.png`). Fields: `pattern` (r, n_blocks), `weather_fix` (residual before/after in mm, percent), `sinking` (NISAR and Sentinel-1 rate relative to the rest, cm/yr), `playa` (net change, years, Sentinel-1 trends), `overlap` (r of the six-month change), `confirm.willcox` and `confirm.eloy` (Sentinel-1 rate, years for a 90% chance of 3 sigma, calendar date if no gaps, chance at one year), `figure`. The per-area plain-language NISAR sentence in `timeseries_<slug>.json` `insights` is built from the same file.
+
+## `pumping_summary.json` (Overview, pumping section)
+
+Written by `src/export_pumping.py` from `pumping_vs_sinking.json` (`src/pumping_vs_sinking.py`, which uses `src/opera_field_rates.py` for 30 m Sentinel-1 rates). The section `#overview-pumping` is hidden unless `cleanPumping` in `web/model.mjs` accepts the whole file. Fields: counts and totals from the USGS 2024 release, median sinking rate by pumping-density class (none, low, medium, high within `radius_km`), Spearman correlations with 95% ranges (pumping, pumped area only, acreage only, pumping given acreage), and the field-scale result with its coverage limits.

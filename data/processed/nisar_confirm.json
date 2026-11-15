@@ -1,0 +1,106 @@
+{
+ "note": "Years of continuous 12-day NISAR data needed for a 90% chance of confirming a rate at 3 sigma, from the random per-date error measured in our chains. Excludes reference drift, seasonal motion and LOS-vs-vertical.",
+ "k_sigma": 3.0,
+ "power": 0.9,
+ "noise": {
+  "willcox_128D": {
+   "n_dates": 26,
+   "s_d_plain_mm": 12.2,
+   "s_d_robust_mm": 9.7,
+   "lag1": -0.47
+  },
+  "eloy_077A": {
+   "n_dates": 10,
+   "s_d_plain_mm": 6.1,
+   "s_d_robust_mm": 6.7,
+   "lag1": -0.51
+  }
+ },
+ "sd_used_mm": {
+  "willcox_128D": 14.8,
+  "eloy_077A": 6.7
+ },
+ "model_check": {
+  "model_se_cm_yr": 0.93,
+  "measured_ols_se_cm_yr": 0.93
+ },
+ "per_area": {
+  "willcox": {
+   "rate_cm_yr_s1": 2.73,
+   "noise_source": "willcox_128D",
+   "s_d_mm": 14.8,
+   "years_for_90pct_chance_of_3sigma": 1.27,
+   "power_at_that_time": 0.91,
+   "power_at_1yr": 0.5,
+   "power_at_2yr": 1.0,
+   "proxy": false,
+   "confirm_by_if_no_gaps": "2027-02-02"
+  },
+  "north_willcox": {
+   "rate_cm_yr_s1": 4.89,
+   "noise_source": "willcox_128D",
+   "s_d_mm": 14.8,
+   "years_for_90pct_chance_of_3sigma": 0.86,
+   "power_at_that_time": 0.91,
+   "power_at_1yr": 0.99,
+   "power_at_2yr": 1.0,
+   "proxy": true,
+   "confirm_by_if_no_gaps": "2026-09-05"
+  },
+  "south": {
+   "rate_cm_yr_s1": 3.12,
+   "noise_source": "willcox_128D",
+   "s_d_mm": 14.8,
+   "years_for_90pct_chance_of_3sigma": 1.17,
+   "power_at_that_time": 0.9,
+   "power_at_1yr": 0.66,
+   "power_at_2yr": 1.0,
+   "proxy": true,
+   "confirm_by_if_no_gaps": "2026-12-27"
+  },
+  "east": {
+   "rate_cm_yr_s1": 2.58,
+   "noise_source": "willcox_128D",
+   "s_d_mm": 14.8,
+   "years_for_90pct_chance_of_3sigma": 1.32,
+   "power_at_that_time": 0.9,
+   "power_at_1yr": 0.44,
+   "power_at_2yr": 1.0,
+   "proxy": true,
+   "confirm_by_if_no_gaps": "2027-02-20"
+  },
+  "eloy": {
+   "rate_cm_yr_s1": 1.33,
+   "noise_source": "eloy_077A",
+   "s_d_mm": 6.7,
+   "years_for_90pct_chance_of_3sigma": 1.21,
+   "power_at_that_time": 0.92,
+   "power_at_1yr": 0.58,
+   "power_at_2yr": 1.0,
+   "proxy": false,
+   "confirm_by_if_no_gaps": "2027-09-04"
+  }
+ },
+ "generic_years": {
+  "0.5": {
+   "willcox_128D": 3.97,
+   "eloy_077A": 2.34
+  },
+  "1": {
+   "willcox_128D": 2.5,
+   "eloy_077A": 1.47
+  },
+  "2": {
+   "willcox_128D": 1.57,
+   "eloy_077A": 0.92
+  },
+  "3": {
+   "willcox_128D": 1.2,
+   "eloy_077A": 0.7
+  },
+  "5": {
+   "willcox_128D": 0.85,
+   "eloy_077A": 0.5
+  }
+ }
+}

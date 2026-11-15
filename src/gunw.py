@@ -2,12 +2,24 @@
 Sign convention d = -(lambda/4pi)*phi is the AGENTS.md assumption and is UNVERIFIED against the product spec."""
 import h5py, numpy as np
 from pyproj import Transformer
+import contextlib
+
+
+@contextlib.contextmanager
+def _h5(path):
+    """Open `path`, or reuse an already-open h5py.File (e.g. one backed by HTTP range requests, see gcov_remote.py)."""
+    if isinstance(path, h5py.File):
+        yield path
+    else:
+        with h5py.File(path, "r") as f:
+            yield f
+
 GRID = "science/LSAR/GUNW/grids/frequencyA/"
 C = 299792458.0
 
-def read_window(path, lonlat_box, subtract_iono=True, coh_min=0.4):
+def read_window(path, lonlat_box, subtract_iono=True, coh_min=0.4, dem=None):
     """lonlat_box = (west, south, east, north). Returns dict with arrays on the 80 m UTM grid cropped to the box."""
-    with h5py.File(path, "r") as f:
+    with _h5(path) as f:
         g = f[GRID + "unwrappedInterferogram/HH"]
         epsg = int(g["projection"][()])
         x, y = g["xCoordinates"][:], g["yCoordinates"][:]
@@ -29,6 +41,11 @@ def read_window(path, lonlat_box, subtract_iono=True, coh_min=0.4):
     if subtract_iono:
         valid &= np.isfinite(ion)
         ph = ph - ion
+    if dem is not None:   # NISAR hydrostatic + wet troposphere screens; sign verified by the scatter test in nisar_noise_test.py: subtract
+        import corrections as corr
+        h = corr.heights_on_grid(dem, epsg, x[xi], y[yi])
+        for n in ("hydro", "wet"):
+            ph = ph - corr.screen_on_grid(path, n, x[xi], y[yi], h)
     disp_mm = -(lam / (4 * np.pi)) * ph * 1000.0
     return dict(x=x[xi], y=y[yi], disp_mm=np.where(valid, disp_mm, np.nan), coh=coh, valid=valid, ion_unc=ionu,
                 epsg=epsg, lam=lam, temporal_days=tb, ref_date=ref, sec_date=sec, track=track, direction=direction)

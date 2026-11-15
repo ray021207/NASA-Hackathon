@@ -124,8 +124,65 @@ export function cleanTeam(raw) {
       .map(t => teamText(t, 40)).filter(Boolean).slice(0, 12);
     const links = (Array.isArray(m.links) ? m.links : []).map(l => ({ label: teamText(l?.label, 40), url: safeSourceURL(l?.url) }))
       .filter(l => l.label && l.url).slice(0, 6);
-    members.push({ name, role: teamText(m.role, 120), study: teamText(m.study, 160), bio: teamText(m.bio, 600), interests, links,
+    members.push({ name, role: teamText(m.role, 120), study: teamText(m.study, 160), education: teamText(m.education, 200), bio: teamText(m.bio, 600), interests, links,
       photo: typeof m.photo === 'string' && TEAM_PHOTO.test(m.photo) ? m.photo : null });
   }
   return members.length ? { intro: teamText(raw.intro, 400), members } : null;
+}
+// NISAR results shown in the Overview (data/processed/nisar_summary.json, written by src/export_nisar.py). Strict: any bad field hides the whole section.
+const nz = (v, lo, hi) => isNumber(v) && v >= lo && v <= hi ? v : null;
+const nisarArea = a => {
+  if (!a || typeof a !== 'object') return null;
+  const area = { name: teamText(a.name, 60), s1: nz(a.s1_rate_cm_yr, 0, 50), years: nz(a.years, 0, 50), date: validDate(a.date) ? a.date : null, chance: nz(a.chance_at_one_year, 0, 1) };
+  return Object.values(area).every(v => v !== null) ? area : null;
+};
+const cleanDirections = x => {
+  if (!x || typeof x !== 'object') return null;
+  const o = { span: nz(x.span_days, 1, 1000), asc: nz(x.asc_mm, -1000, 1000), ascLo: nz(x.asc_lo, -1000, 1000), ascHi: nz(x.asc_hi, -1000, 1000),
+    desc: nz(x.desc_mm, -1000, 1000), descLo: nz(x.desc_lo, -1000, 1000), descHi: nz(x.desc_hi, -1000, 1000), exp: nz(x.expected_mm, -1000, 1000),
+    ew: nz(x.ew_mm, -1000, 1000), ewLo: nz(x.ew_lo, -1000, 1000), ewHi: nz(x.ew_hi, -1000, 1000) };
+  return Object.values(o).every(v => v !== null) ? o : null;
+};
+const cleanFarmland = f => {
+  if (!f || typeof f !== 'object') return null;
+  const o = {
+    boxPct: nz(f.crop_share_box_pct, 0, 100), sinkPct: nz(f.crop_share_sinking_pct, 0, 100), times: nz(f.enrichment, 0, 1000), acres: nz(f.crop_acres_sinking, 0, 1e8),
+    diff: nz(f.rate_diff_cm_yr, -100, 100), lo: nz(f.rate_diff_lo, -100, 100), hi: nz(f.rate_diff_hi, -100, 100),
+    cropSink: nz(f.share_sinking_cropland_pct, 0, 100), desertSink: nz(f.share_sinking_desert_pct, 0, 100),
+    aucHH: nz(f.auc_hh_spread, 0.5, 1), aucHV: nz(f.auc_hv_spread, 0.5, 1), aucMean: nz(f.auc_mean_hh, 0.5, 1),
+    rhoHH: nz(f.rain_rho_hh, -1, 1), rhoHV: nz(f.rain_rho_hv, -1, 1), dates: nz(f.n_dates, 1, 1000), dry: nz(f.dry_dates, 0, 1000),
+    nisarDiff: nz(f.nisar_diff_cm_yr, -100, 100), nisarCells: nz(f.nisar_cells, 1, 1e9),
+    figure: typeof f.figure === 'string' && /^[A-Za-z0-9_.-]+\.png$/.test(f.figure) ? f.figure : null
+  };
+  return Object.values(o).every(v => v !== null) ? o : null;
+};
+export function cleanNisar(raw) {
+  if (!raw || typeof raw !== 'object') return null;
+  const p = raw.pattern || {}, w = raw.weather_fix || {}, s = raw.sinking || {}, y = raw.playa || {}, o = raw.overlap || {}, c = raw.confirm || {};
+  const out = {
+    pattern: { r: nz(p.r, -1, 1), blocks: nz(p.n_blocks, 1, 1e7) },
+    weather: { before: nz(w.residual_before_mm, 0, 1000), after: nz(w.residual_after_mm, 0, 1000), percent: nz(w.percent, -100, 100) },
+    sinking: { nisar: nz(s.nisar_cm_yr, -100, 100), s1: nz(s.s1_cm_yr, -100, 100), blocks: nz(s.n_blocks, 1, 1e7) },
+    playa: { net: nz(y.net_cm, -100, 100), years: nz(y.years, 0, 20), trend: nz(y.s1_trend_cm_yr, -100, 100), last3: nz(y.s1_last3y_cm_yr, -100, 100) },
+    overlap: { r: nz(o.r, -1, 1) },
+    willcox: nisarArea(c.willcox), eloy: nisarArea(c.eloy),
+    figure: typeof raw.figure === 'string' && /^[A-Za-z0-9_.-]+\.png$/.test(raw.figure) ? raw.figure : null,
+    farmland: cleanFarmland(raw.farmland),
+    directions: cleanDirections(raw.directions)
+  };
+  const ok = [out.pattern, out.weather, out.sinking, out.playa, out.overlap].every(g => Object.values(g).every(v => v !== null)) && out.willcox && out.eloy && out.figure && out.farmland && out.directions;
+  return ok ? out : null;
+}
+// Pumping-vs-sinking numbers for the Overview (data/processed/pumping_summary.json, src/export_pumping.py). Strict like cleanNisar: any bad field hides the section.
+export function cleanPumping(raw) {
+  if (!raw || typeof raw !== 'object') return null;
+  const o = {
+    fields: nz(raw.fields, 1, 1e6), acres: nz(raw.acres, 1, 1e8), acreFt: nz(raw.withdrawal_acre_ft, 1, 1e9), radius: nz(raw.radius_km, 0.1, 100),
+    none: nz(raw.rate_none, -100, 100), low: nz(raw.rate_low, -100, 100), medium: nz(raw.rate_medium, -100, 100), high: nz(raw.rate_high, -100, 100),
+    rho: nz(raw.rho, -1, 1), rhoLo: nz(raw.rho_lo, -1, 1), rhoHi: nz(raw.rho_hi, -1, 1), rhoIn: nz(raw.rho_in, -1, 1), rhoInLo: nz(raw.rho_in_lo, -1, 1), rhoInHi: nz(raw.rho_in_hi, -1, 1),
+    rhoAcres: nz(raw.rho_acres, -1, 1), partial: nz(raw.partial, -1, 1), partialLo: nz(raw.partial_lo, -1, 1), partialHi: nz(raw.partial_hi, -1, 1),
+    fieldN: nz(raw.field_n, 1, 1e6), fieldRho: nz(raw.field_rho, -1, 1), fieldLo: nz(raw.field_lo, -1, 1), fieldHi: nz(raw.field_hi, -1, 1), coherent: nz(raw.field_coherent_pct, 0, 100),
+    rowFields: nz(raw.rowcrop_fields, 1, 1e6), rowWith: nz(raw.rowcrop_with_rate, 0, 1e6)
+  };
+  return Object.values(o).every(v => v !== null) ? o : null;
 }

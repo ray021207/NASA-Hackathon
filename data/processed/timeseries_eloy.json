@@ -113,18 +113,18 @@
   ],
   "displacement": [
    0.0,
-   -1.89,
-   -3.58,
-   -2.01,
-   -0.89,
+   -1.87,
+   -1.22,
+   -1.94,
+   -2.29,
+   -2.78,
    -2.5,
-   -3.09,
-   -1.73,
-   -2.85,
-   -2.63
+   -2.21,
+   -1.52,
+   -2.69
   ],
-  "rate_cm_yr": -3.918,
-  "rate_sigma": 3.001,
+  "rate_cm_yr": -4.763,
+  "rate_sigma": 1.944,
   "n_pixels": 144315,
   "reliable": false,
   "scope": "Average over the whole study box (not only the sinking area), from consecutive pairs; very noisy.",
@@ -167,7 +167,7 @@
    },
    {
     "heading": "What about NASA's new satellite?",
-    "text": "NASA's new NISAR satellite has watched this area for under four months. That is too short, and too uncertain, to give a trustworthy speed yet, so the ten-year trend above comes from the older Sentinel-1 satellite."
+    "text": "NASA's new NISAR satellite has watched this area for under four months. That is still too short, and too uncertain, to give a trustworthy speed, so the ten-year trend above comes from the older Sentinel-1 satellite. If NISAR keeps observing, we estimate it can confirm a speed here around September 2027."
    },
    {
     "heading": "Good to know",

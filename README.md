@@ -54,7 +54,11 @@ See [Track selection and next checkpoint](docs/track_selection.md). Some pairs s
 
 ## Data
 
-MVP: NISAR GUNW (ASF), ADWR historical subsidence maps, ADWR boundaries, compiled data-center locations and a protected/riparian layer. USDA Cropland Data Layer is a stretch goal. Sentinel-1 processing and the time slider are outside the 12-hour MVP.
+NASA NISAR L2 GUNW (Provisional) and OPERA DISP-S1 (Sentinel-1) displacement, checked against Arizona Department of Water Resources (ADWR) subsidence products, with OpenStreetMap used to flag probable mines. Sources, terms and the reproduce steps are in [docs/DATA_AND_LICENSES.md](docs/DATA_AND_LICENSES.md).
+
+## Licence
+
+Code: MIT, see [LICENSE](LICENSE). Derived data in `data/processed/` may be reused with attribution to this project and its sources. Dependencies: `requirements.txt`. How to cite: `CITATION.cff`.
 
 See [AGENTS.md](AGENTS.md) for the full project brief.
 

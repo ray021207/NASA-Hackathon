@@ -9,6 +9,15 @@ import datetime as dt
 SQMI = 0.3861      # square miles per square kilometre
 INCH = 2.54        # cm per inch
 
+def _nisar_summary():
+    """data/processed/nisar_summary.json (src/export_nisar.py), or None. Run export_nisar.py before export_contract.py."""
+    import json, os
+    p = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "processed", "nisar_summary.json")
+    try:
+        return json.load(open(p, encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+
 def _years(dates):
     a, b = (dt.date.fromisoformat(dates[0]), dt.date.fromisoformat(dates[-1])); return (b - a).days / 365.25
 
@@ -70,8 +79,18 @@ def build(ts, farm, features):
     nisar = ts.get("nisar")
     if nisar:
         span = "about a year" if len(nisar["dates"]) > 15 else "under four months"
-        nis = (f"NASA's new NISAR satellite has watched this area for {span}. That is too short, and too uncertain, to give a trustworthy speed yet, "
-               "so the ten-year trend above comes from the older Sentinel-1 satellite.")
+        summ = _nisar_summary()
+        conf = (summ.get("confirm") or {}).get(ts.get("hotspot")) if summ else None
+        match = ""
+        if summ and ts.get("hotspot") == "willcox":
+            match = (f"Its map of where the ground sinks lines up with the ten-year Sentinel-1 pattern (match {summ['pattern']['r']:.2f} on a scale where 1 is perfect), "
+                     "so the two satellites broadly agree on where. ")
+        when = ""
+        if conf:
+            month = dt.date.fromisoformat(conf["date"]).strftime("%B %Y")
+            when = f" If NISAR keeps observing, we estimate it can confirm a speed here around {month}."
+        nis = (f"NASA's new NISAR satellite has watched this area for {span}. {match}That is still too short, and too uncertain, to give a trustworthy speed, "
+               f"so the ten-year trend above comes from the older Sentinel-1 satellite.{when}")
     else:
         nis = ("NASA's new NISAR satellite does not yet have a usable record for this spot, so the ten-year trend above comes from the "
                "Sentinel-1 satellite.")

@@ -1,4 +1,4 @@
-import { normalizeSeries, normalizeRate, normalizeHotspots, validateGeoJSON, safeSourceURL, formatNumber, isNumber, cleanInsights, normalizeCumulative, cleanTeam } from './model.mjs';
+import { cleanPumping, normalizeSeries, normalizeRate, normalizeHotspots, validateGeoJSON, safeSourceURL, formatNumber, isNumber, cleanInsights, normalizeCumulative, cleanTeam, cleanNisar } from './model.mjs';
 
 const $ = selector => document.querySelector(selector);
 const DATA = new URL('../data/processed/', import.meta.url);
@@ -622,11 +622,11 @@ function makeOverlay(raw, key) {
 const dialogCopy = {
   method: {
     title: 'How we measure ground motion',
-    body: '<p>A satellite sends a radar pulse down and times the echo, so it knows how far away the ground is. Flying over the same spot again and again, it can tell when the ground has moved closer or farther by a few millimetres.</p><ol><li><strong>Compare two passes.</strong> If the ground moved between two passes, the radar waves return slightly out of step. That shift tells us how far it moved.</li><li><strong>Add up many pairs.</strong> One pair is noisy, because moisture in the air and the upper atmosphere also change the signal. Chaining many pairs over years lets steady sinking add up while random noise does not.</li><li><strong>Two satellites.</strong> Sentinel-1 has flown since 2016, so it gives a ten-year trend. NASA-ISRO NISAR started in late 2025, so its record is still short. We show the Sentinel-1 trend and mark NISAR as preliminary.</li><li><strong>Two viewing directions.</strong> Satellites look at the ground from the east or from the west. When both agree, the sinking is much more likely to be real.</li><li><strong>Check against the official record.</strong> We compare our numbers with the radar results the Arizona Department of Water Resources publishes itself.</li></ol><p>We removed the effects of the Earth\u2019s tides and of the upper atmosphere. We did not remove water vapour in the lower atmosphere, which is a main source of the remaining noise. Numbers are measured along the satellite\u2019s slanted view, not straight down.</p>'
+    body: '<p>A satellite sends a radar pulse down and times the echo, so it knows how far away the ground is. Flying over the same spot again and again, it can tell when the ground has moved closer or farther by a few millimetres. Moist air and the ionosphere also delay the signal, so we subtract the corrections NISAR provides for both before measuring any movement.</p><ol><li><strong>Compare two passes.</strong> If the ground moved between two passes, the radar waves return slightly out of step. That shift tells us how far it moved.</li><li><strong>Add up many pairs.</strong> One pair is noisy, because moisture in the air and the upper atmosphere also change the signal. Chaining many pairs over years lets steady sinking add up while random noise does not.</li><li><strong>Two satellites.</strong> Sentinel-1 has flown since 2016, so it gives a ten-year trend. NASA-ISRO NISAR started in late 2025, so its record is still short. We show the Sentinel-1 trend and mark NISAR as preliminary.</li><li><strong>Two viewing directions.</strong> Satellites look at the ground from the east or from the west. When both agree, the sinking is much more likely to be real.</li><li><strong>Check against the official record.</strong> We compare our numbers with the radar results the Arizona Department of Water Resources publishes itself.</li></ol><p>We removed the effects of the Earth\u2019s tides and of the upper atmosphere. We did not remove water vapour in the lower atmosphere, which is a main source of the remaining noise. Numbers are measured along the satellite\u2019s slanted view, not straight down.</p>'
   },
   limits: {
     title: 'Read the map with its limits',
-    body: '<ul><li><strong>Pending is not zero.</strong> Empty results mean that a file is missing or has not passed the interface checks.</li><li><strong>Radar measures line-of-sight motion.</strong> A vertical sinking rate needs a justified conversion. A positive or negative value is not interpreted without its sign convention.</li><li><strong>Short records need care.</strong> Seasonal movement, atmospheric errors and the stable reference can influence a fitted rate.</li><li><strong>Data quality varies.</strong> Farming and construction can reduce coherence. Product corrections and release status must be checked.</li><li><strong>Location does not establish cause.</strong> A nearby farm or city does not prove responsibility for ground movement.</li><li><strong>Radar does not observe wildlife.</strong> Any mention of habitat comes from outside sources, not from this measurement.</li><li><strong>Mines move too.</strong> Open-pit mines and their waste piles shift for reasons unrelated to groundwater. We mark the ones we found.</li><li><strong>Blue patches are probably not real uplift.</strong> Rising values, such as on the Willcox Playa floor, most likely come from wet or swelling soil changing the radar signal. We have not verified this.</li><li><strong>Gaps are not zeros.</strong> Where the map is empty, the radar could not measure reliably (over plowed fields, for example). That does not mean the ground is stable.</li><li><strong>A study box is not a sinking zone.</strong> Outlines show the areas the team chose to investigate.</li></ul>'
+    body: '<ul><li><strong>Pending is not zero.</strong> Empty results mean that a file is missing or has not passed the interface checks.</li><li><strong>Radar measures line-of-sight motion.</strong> A vertical sinking rate needs a justified conversion. A positive or negative value is not interpreted without its sign convention.</li><li><strong>Short records need care.</strong> Seasonal movement, atmospheric errors and the stable reference can influence a fitted rate. NISAR\u2019s record is about a year at Willcox and under four months at Eloy, so we do not publish a NISAR speed; one bad acquisition date can move a one-year fit by a centimetre or more.</li><li><strong>Data quality varies.</strong> Farming and construction can reduce coherence. Product corrections and release status must be checked.</li><li><strong>Location does not establish cause.</strong> A nearby farm or city does not prove responsibility for ground movement.</li><li><strong>Radar does not observe wildlife.</strong> Any mention of habitat comes from outside sources, not from this measurement.</li><li><strong>Mines move too.</strong> Open-pit mines and their waste piles shift for reasons unrelated to groundwater. We mark the ones we found.</li><li><strong>Blue patches are probably not real uplift.</strong> Rising values, such as on the Willcox Playa floor, most likely come from wet or swelling soil changing the radar signal. We have not verified this.</li><li><strong>Gaps are not zeros.</strong> Where the map is empty, the radar could not measure reliably (over plowed fields, for example). That does not mean the ground is stable.</li><li><strong>A study box is not a sinking zone.</strong> Outlines show the areas the team chose to investigate.</li></ul>'
   },
   sources: {
     title: 'Resources · research, data and code',
@@ -645,6 +645,14 @@ const dialogCopy = {
       <li><a href="https://github.com/mansi200304/NASA-Hackathon/blob/main/docs/overview_evidence.md" target="_blank" rel="noopener noreferrer">Evidence-to-claim notes, citations and limitations</a></li>
       <li><a href="https://github.com/mansi200304/NASA-Hackathon" target="_blank" rel="noopener noreferrer">Sinkronized · code and pipeline outputs</a></li>
       <li><a href="https://nisar.jpl.nasa.gov/" target="_blank" rel="noopener noreferrer">NASA-ISRO NISAR mission information</a></li>
+      <li><a href="https://doi.org/10.5067/NIL2GUNW-P1" target="_blank" rel="noopener noreferrer">NISAR L2 Geocoded Unwrapped Interferogram (GUNW), Provisional · ASF DAAC</a> — DOI 10.5067/NIL2GUNW-P1; the NISAR data processed here.</li>
+      <li><a href="https://doi.org/10.5066/P1ZU6T5N" target="_blank" rel="noopener noreferrer">Read, A. L., Kahler, A. J., Porter, T. J. &amp; Potteiger, S. E. \u00b7 Estimated crop irrigation water use withdrawals in Willcox Groundwater Basin, Arizona for 2024 (USGS data release)</a> \u2014 DOI 10.5066/P1ZU6T5N, CC0; field polygons with modelled withdrawals (modified Blaney-Criddle consumptive-use model; no uncertainty stated).</li>
+      <li><a href="https://doi.org/10.5281/ZENODO.20075813" target="_blank" rel="noopener noreferrer">NISAR Data User Guide (Kristenson et al., 2026) · ASF</a> — DOI 10.5281/ZENODO.20075813; product definitions, maturity levels and availability used throughout this project.</li>
+      <li><a href="https://doi.org/10.48577/jpl.UD4HV3" target="_blank" rel="noopener noreferrer">NASA-ISRO SAR (NISAR) Mission Science Users’ Handbook, Second Edition (2025)</a> — DOI 10.48577/jpl.UD4HV3.</li>
+      <li><a href="https://ecommons.cornell.edu/entities/publication/5e298b2f-9ae6-4861-abfe-a8c194323c08" target="_blank" rel="noopener noreferrer">Devlin, K. (2025) · More Than Just Noise: Effects of Vegetation and Agriculture on InSAR Time Series Analysis</a> — Cornell University PhD dissertation; reports an average bias of about 2–4 cm/yr of apparent subsidence for crops such as cotton in Sentinel-1 data, and the largest C-band versus L-band differences in orchard crops.</li>
+      <li><a href="https://meetingorganizer.copernicus.org/EGU21/EGU21-3503.html" target="_blank" rel="noopener noreferrer">Saporta, Gomba &amp; De Zan (2021) · Analyzing an InSAR short-term systematic phase bias with regards to soil moisture and landcover</a> — EGU General Assembly 2021 abstract EGU21-3503; velocity biases that can reach several mm per year in Sentinel-1 data.</li>
+      <li><a href="https://doi.org/10.5067/SNWG/OPL3DISPS1-V1" target="_blank" rel="noopener noreferrer">OPERA Surface Displacement from Sentinel-1 (DISP-S1), Version 1 · ASF DAAC</a> — DOI 10.5067/SNWG/OPL3DISPS1-V1; the ten-year record, built from Copernicus Sentinel-1 data (ESA).</li>
+      <li><a href="https://registry.opendata.aws/copernicus-dem/" target="_blank" rel="noopener noreferrer">Copernicus 30 m DEM</a> — ground heights used to apply NISAR’s troposphere correction.</li>
       <li><a href="https://search.asf.alaska.edu/" target="_blank" rel="noopener noreferrer">Alaska Satellite Facility · SAR data discovery</a></li>
       <li><a href="https://www.azwater.gov/hydrology/field-services/land-subsidence-arizona" target="_blank" rel="noopener noreferrer">ADWR · Arizona land-subsidence monitoring</a></li>
       <li><a href="https://www.azwater.gov/gis" target="_blank" rel="noopener noreferrer">ADWR GIS · official subsidence areas and radar products</a></li>
@@ -775,31 +783,119 @@ function renderAbout(team) {
   const grid = $('#team-grid'), intro = $('#about-intro');
   if (!grid || !intro) return;
   grid.replaceChildren();
-  if (!team) { intro.textContent = 'Team profiles are being added.'; intro.hidden = false; return; }
-  intro.textContent = team.intro || ''; intro.hidden = !team.intro;
-  team.members.forEach(member => {
+  if (!team) {
+    intro.textContent = 'Team profiles will appear here when the project roster is available.';
+    intro.hidden = false;
+    return;
+  }
+  intro.textContent = team.intro || '';
+  intro.hidden = !team.intro;
+  team.members.forEach((member, index) => {
     const card = el('article', 'team-card');
+    const top = el('div', 'team-card-top');
+    top.append(el('span', 'team-number', String(index + 1).padStart(2, '0')));
     if (member.photo) {
       const photo = el('img', 'team-photo');
-      photo.src = new URL(member.photo, import.meta.url).href; photo.alt = 'Photo of ' + member.name; photo.loading = 'lazy'; photo.width = 84; photo.height = 84;
-      card.append(photo);
+      photo.src = new URL(member.photo, import.meta.url).href;
+      photo.alt = 'Photo of ' + member.name;
+      photo.loading = 'lazy'; photo.width = 112; photo.height = 112;
+      top.append(photo);
     } else {
-      const avatar = el('div', 'team-avatar', initials(member.name)); avatar.setAttribute('aria-hidden', 'true'); card.append(avatar);
+      const avatar = el('div', 'team-avatar', initials(member.name));
+      avatar.setAttribute('aria-hidden', 'true');
+      top.append(avatar);
     }
-    card.append(el('h3', '', member.name));
+    card.append(top, el('h3', '', member.name));
     if (member.role) card.append(el('p', 'team-role', member.role));
-    const facts = el('dl');
-    const fact = (label, node) => { const row = el('div'); row.append(el('dt', '', label), node); facts.append(row); };
-    if (member.study) fact('Studying', el('dd', '', member.study));
-    if (member.interests.length) { const dd = el('dd'), tags = el('ul', 'team-tags'); member.interests.forEach(tag => tags.append(el('li', '', tag))); dd.append(tags); fact('Interests', dd); }
-    if (member.bio) fact('About', el('dd', '', member.bio));
-    if (facts.children.length) card.append(facts); else if (!member.links.length) card.append(el('p', 'team-soon', 'Profile coming soon.'));
+    if (member.education) card.append(el('p', 'team-education', member.education));
+    if (member.bio) card.append(el('p', 'team-bio', member.bio));
+    if (member.study) {
+      const focus = el('div', 'team-specialism');
+      focus.append(el('span', 'team-specialism-label', 'Focus'), el('span', 'team-specialism-text', member.study));
+      card.append(focus);
+    }
+    if (member.interests.length) {
+      const tags = el('ul', 'team-tags');
+      member.interests.forEach(tag => tags.append(el('li', '', tag)));
+      card.append(tags);
+    }
     if (member.links.length) {
       const row = el('div', 'team-links');
-      member.links.forEach(link => { const anchor = el('a', '', link.label + ' \u2197'); anchor.href = link.url; anchor.target = '_blank'; anchor.rel = 'noopener noreferrer'; row.append(anchor); });
+      member.links.forEach(link => {
+        const anchor = el('a', '', link.label + ' ↗');
+        anchor.href = link.url; anchor.target = '_blank'; anchor.rel = 'noopener noreferrer';
+        row.append(anchor);
+      });
       card.append(row);
     }
     grid.append(card);
   });
 }
 loadTeam().then(renderAbout);
+
+// NISAR section in the Overview: filled only from validated data (data/processed/nisar_summary.json); hidden if anything is missing or malformed.
+async function loadNisar() {
+  try {
+    if (window.ATLAS_PREVIEW_DATA && 'nisar_summary.json' in window.ATLAS_PREVIEW_DATA) return cleanNisar(window.ATLAS_PREVIEW_DATA['nisar_summary.json']);
+    const response = await fetch(new URL('nisar_summary.json', DATA), { cache: 'no-cache' });
+    return response.ok ? cleanNisar(await response.json()) : null;
+  } catch { return null; }
+}
+function renderNisar(n) {
+  const section = $('#overview-nisar');
+  if (!section) return;
+  if (!n) { section.hidden = true; return; }
+  const month = iso => new Date(iso + 'T12:00:00Z').toLocaleDateString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' });
+  const one = x => (Math.round(x * 10) / 10).toFixed(1), two = x => (Math.round(x * 100) / 100).toFixed(2);
+  const sign = x => (x < 0 ? '\u2212' : '') + one(Math.abs(x));
+  const values = {
+    r: two(n.pattern.r), blocks: new Intl.NumberFormat('en-US').format(n.pattern.blocks), percent: String(Math.round(n.weather.percent)),
+    before: String(Math.round(n.weather.before)), after: String(Math.round(n.weather.after)),
+    'willcox-date': month(n.willcox.date), 'willcox-rate': one(n.willcox.s1), 'willcox-years': one(n.willcox.years), 'willcox-chance': String(Math.round(n.willcox.chance * 100)),
+    'eloy-rate': one(n.eloy.s1), 'eloy-date': month(n.eloy.date), overlap: (n.overlap.r < 0 ? '−' : '') + two(Math.abs(n.overlap.r)),
+    's-nisar': sign(n.sinking.nisar), 's-s1': sign(n.sinking.s1), net: sign(n.playa.net), trend: sign(n.playa.trend)
+  };
+  const f = n.farmland, abs1 = x => one(Math.abs(x)), mn = x => (x < 0 ? '\u2212' : '') + one(Math.abs(x));
+  const dr = n.directions, dm = x => (x < 0 ? '−' : '') + one(Math.abs(x));
+  Object.assign(values, { span: String(dr.span), asc: dm(dr.asc), 'asc-lo': dm(dr.ascLo), 'asc-hi': dm(dr.ascHi), desc: dm(dr.desc), 'desc-lo': dm(dr.descLo), 'desc-hi': dm(dr.descHi), exp: dm(dr.exp), ew: dm(dr.ew), 'ew-lo': dm(dr.ewLo), 'ew-hi': dm(dr.ewHi) });
+  Object.assign(values, {
+    dates: String(f.dates), 'box-pct': one(f.boxPct), 'sink-pct': one(f.sinkPct), times: one(f.times), acres: new Intl.NumberFormat('en-US').format(Math.round(f.acres / 100) * 100),
+    'rate-diff': abs1(f.diff), 'rate-lo': mn(f.lo), 'rate-hi': mn(f.hi), 'crop-sink': String(Math.round(f.cropSink)), 'desert-sink': String(Math.round(f.desertSink)),
+    'auc-hh': two(f.aucHH), 'auc-hv': two(f.aucHV), 'auc-mean': two(f.aucMean), 'rho-hh': two(f.rhoHH), 'rho-hv': two(f.rhoHV), dry: String(f.dry),
+    'nisar-diff': mn(f.nisarDiff), 'nisar-cells': new Intl.NumberFormat('en-US').format(f.nisarCells)
+  });
+  section.querySelectorAll('[data-nisar]').forEach(node => { node.textContent = values[node.dataset.nisar] ?? ''; });
+  const img = $('#nisar-figure-img');
+  if (img) img.src = window.ATLAS_PREVIEW_IMAGES?.[n.figure] || new URL(n.figure, DATA).href;
+  const img2 = $('#nisar-farmland-img');
+  if (img2) img2.src = window.ATLAS_PREVIEW_IMAGES?.[n.farmland.figure] || new URL(n.farmland.figure, DATA).href;
+  section.hidden = false;
+}
+loadNisar().then(renderNisar);
+
+// Pumping-vs-sinking section: filled only from validated data (data/processed/pumping_summary.json); hidden if anything is missing or malformed.
+async function loadPumping() {
+  try {
+    if (window.ATLAS_PREVIEW_DATA && 'pumping_summary.json' in window.ATLAS_PREVIEW_DATA) return cleanPumping(window.ATLAS_PREVIEW_DATA['pumping_summary.json']);
+    const response = await fetch(new URL('pumping_summary.json', DATA), { cache: 'no-cache' });
+    return response.ok ? cleanPumping(await response.json()) : null;
+  } catch { return null; }
+}
+function renderPumping(p) {
+  const section = $('#overview-pumping');
+  if (!section) return;
+  if (!p) { section.hidden = true; return; }
+  const n0 = x => new Intl.NumberFormat('en-US').format(Math.round(x)), one = x => (Math.round(x * 10) / 10).toFixed(1), two = x => (Math.round(x * 100) / 100).toFixed(2);
+  const s2 = x => (x < 0 ? '−' : '') + two(Math.abs(x)), s1 = x => (Math.round(x * 10) === 0 ? '0.0' : (x < 0 ? '−' : '') + one(Math.abs(x)));
+  const values = {
+    acft: n0(Math.round(p.acreFt / 1000) * 1000), acres: n0(p.acres), fields: n0(p.fields), radius: String(p.radius),
+    none: s1(p.none), low: s1(p.low), medium: s1(p.medium), high: s1(p.high),
+    rho: s2(p.rho), 'rho-lo': s2(p.rhoLo), 'rho-hi': s2(p.rhoHi), 'rho-in': s2(p.rhoIn), 'rho-acres': s2(p.rhoAcres),
+    partial: s2(p.partial), 'partial-lo': s2(p.partialLo), 'partial-hi': s2(p.partialHi),
+    coherent: String(Math.round(p.coherent)), 'row-fields': n0(p.rowFields), 'row-with': n0(p.rowWith), 'field-n': n0(p.fieldN),
+    'field-rho': s2(p.fieldRho), 'field-lo': s2(p.fieldLo), 'field-hi': s2(p.fieldHi)
+  };
+  section.querySelectorAll('[data-pump]').forEach(node => { node.textContent = values[node.dataset.pump] ?? ''; });
+  section.hidden = false;
+}
+loadPumping().then(renderPumping);

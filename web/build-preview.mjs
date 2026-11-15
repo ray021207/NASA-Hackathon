@@ -10,7 +10,7 @@ const [html, css, mapCSS, designCSS, leafletCSS, leaflet, model, app, motion] = 
 ]);
 const data = {}, images = {};
 for (const name of await readdir(new URL('../data/processed/', root))) {
-  if (/^(hotspots|adwr_subsidence|mines_excluded|checked_flat)\.geojson$/.test(name) || /^(timeseries_|rate_|cumulative_).*\.json$/.test(name)) {
+  if (/^(hotspots|adwr_subsidence|mines_excluded|checked_flat)\.geojson$/.test(name) || /^(timeseries_|rate_|cumulative_).*\.json$/.test(name) || name === 'nisar_summary.json' || name === 'pumping_summary.json') {
     // A malformed optional file must not silently become a valid measurement.
     try { data[name] = JSON.parse(await read('../data/processed/' + name)); }
     catch { console.warn('Skipped malformed JSON: ' + name); }
@@ -22,6 +22,10 @@ for (const feature of normalizeHotspots(data['hotspots.geojson']).features) {
   try { images[name] = 'data:image/png;base64,' + (await readFile(new URL('../data/processed/' + name, root))).toString('base64'); }
   catch (error) { if (error.code !== 'ENOENT') throw error; }
 }
+try { images['nisar_vs_sentinel1_willcox.png'] = 'data:image/png;base64,' + (await readFile(new URL('../data/processed/nisar_vs_sentinel1_willcox.png', root))).toString('base64'); }
+catch (error) { if (error.code !== 'ENOENT') throw error; }
+try { images['gcov_farmland_willcox.png'] = 'data:image/png;base64,' + (await readFile(new URL('../data/processed/gcov_farmland_willcox.png', root))).toString('base64'); }
+catch (error) { if (error.code !== 'ENOENT') throw error; }
 const json = value => JSON.stringify(value).replace(/</g, '\\u003c');
 const inlineJS = 'window.ATLAS_PREVIEW_DATA=' + json(data) + ';window.ATLAS_PREVIEW_IMAGES=' + json(images) + ';\n' +
   model.replace(/^export /gm, '') + '\n' + app.replace(/^import .*?;\r?\n/, '');

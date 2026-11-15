@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If you use this work, please cite it as below."
+title: "Sinkronized: mapping groundwater-related land subsidence in Arizona with NISAR and Sentinel-1"
+type: software
+license: MIT
+date-released: 2026-11-15
+repository-code: "https://github.com/mansi200304/NASA-Hackathon"
+url: "https://sinkronized.vercel.app"
+authors:
+  - name: "The Sinkronized team (NASA Space Apps Challenge 2026)"
+abstract: "An interactive map of land subsidence in southern Arizona from NASA NISAR and OPERA Sentinel-1 displacement data, checked against the Arizona Department of Water Resources."

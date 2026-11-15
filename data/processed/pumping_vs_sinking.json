@@ -1,0 +1,240 @@
+{
+ "coverage_by_crop": {
+  "SG": {
+   "name": "Small Grain: Oats, Rye, Barley, Millet, ",
+   "fields": 271,
+   "with_rate": 3,
+   "share": 0.01,
+   "acres": 28522
+  },
+  "ORCHM": {
+   "name": "Orchard (Mature): Producing trees (Gener",
+   "fields": 89,
+   "with_rate": 32,
+   "share": 0.36,
+   "acres": 6042
+  },
+  "VINE": {
+   "name": "Vineyard grapes. Has a dormancy period.",
+   "fields": 72,
+   "with_rate": 18,
+   "share": 0.25,
+   "acres": 596
+  },
+  "ALF": {
+   "name": "Alfalfa, may have dormancy periods or mu",
+   "fields": 60,
+   "with_rate": 1,
+   "share": 0.02,
+   "acres": 5781
+  },
+  "CV": {
+   "name": "Cover: Grains or other crops not grown f",
+   "fields": 48,
+   "with_rate": 1,
+   "share": 0.02,
+   "acres": 5093
+  },
+  "CRNS": {
+   "name": "Corn (Spring): Corn planted in the late ",
+   "fields": 40,
+   "with_rate": 0,
+   "share": 0.0,
+   "acres": 4318
+  },
+  "IDLE": {
+   "name": "Idle: A field is idle when one of the fo",
+   "fields": 37,
+   "with_rate": 26,
+   "share": 0.7,
+   "acres": 2041
+  },
+  "ORCHY": {
+   "name": "Orchard (Young): Non-producing trees (ge",
+   "fields": 33,
+   "with_rate": 24,
+   "share": 0.73,
+   "acres": 2334
+  },
+  "CRNU": {
+   "name": "Corn (Summer): Corn planted in the summe",
+   "fields": 27,
+   "with_rate": 1,
+   "share": 0.04,
+   "acres": 2806
+  },
+  "DEST": {
+   "name": "Desert Plant: Yucca, Cactus, Succulents,",
+   "fields": 22,
+   "with_rate": 9,
+   "share": 0.41,
+   "acres": 1283
+  },
+  "COT": {
+   "name": "Cotton",
+   "fields": 22,
+   "with_rate": 0,
+   "share": 0.0,
+   "acres": 2165
+  },
+  "NC": {
+   "name": "No Crop: No crop is present, but a crop ",
+   "fields": 21,
+   "with_rate": 9,
+   "share": 0.43,
+   "acres": 1416
+  },
+  "SOL": {
+   "name": "Solanales: Tomato, Potato, Eggplant, Pep",
+   "fields": 15,
+   "with_rate": 1,
+   "share": 0.07,
+   "acres": 1159
+  },
+  "PAST": {
+   "name": "Pasture: A mixture of alfalfa, grass, gr",
+   "fields": 15,
+   "with_rate": 1,
+   "share": 0.07,
+   "acres": 678
+  },
+  "SGF": {
+   "name": "Small Grain (Fall): Oats, Rye, Barley, M",
+   "fields": 14,
+   "with_rate": 1,
+   "share": 0.07,
+   "acres": 1900
+  }
+ },
+ "n_fields": 828,
+ "acres_total": 68890,
+ "withdrawal_total_acre_ft": 161782,
+ "n_fields_with_rate": 128,
+ "field_scale": {
+  "n": 92,
+  "spearman_depth_vs_rate": -0.119,
+  "ci95": [
+   -0.37,
+   0.21
+  ],
+  "tiles": 27,
+  "depth_quartiles": [
+   {
+    "depth_range_ft": [
+     0.25,
+     1.08
+    ],
+    "n": 23,
+    "median_rate": -0.43
+   },
+   {
+    "depth_range_ft": [
+     1.08,
+     2.13
+    ],
+    "n": 23,
+    "median_rate": -2.73
+   },
+   {
+    "depth_range_ft": [
+     2.13,
+     2.66
+    ],
+    "n": 23,
+    "median_rate": -4.91
+   },
+   {
+    "depth_range_ft": [
+     2.66,
+     4.02
+    ],
+    "n": 23,
+    "median_rate": -0.38
+   }
+  ],
+  "spearman_total_vs_rate": -0.353,
+  "median_rate_all": -0.92
+ },
+ "by_crop": {
+  "ORCHM": {
+   "name": "Orchard (Mature): Producing trees (Generally five years old or older) that may have a dormancy period.",
+   "n": 32,
+   "median_rate": -2.85
+  },
+  "IDLE": {
+   "name": "Idle: A field is idle when one of the following occurs: No crop has been planted in the previous two years, large portions of the field are taken over by native vegetation, the irrigation system is in disrepair, or the irrigation system is removed. Idle fields can return to active cultivation in the future.",
+   "n": 26,
+   "median_rate": -0.68
+  },
+  "ORCHY": {
+   "name": "Orchard (Young): Non-producing trees (generally less than five years old) that may have a dormancy period.",
+   "n": 24,
+   "median_rate": -3.07
+  },
+  "VINE": {
+   "name": "Vineyard grapes. Has a dormancy period.",
+   "n": 18,
+   "median_rate": -0.31
+  }
+ },
+ "neighbourhood": {
+  "spearman_within_pumped_area": -0.549,
+  "ci95_within_pumped_area": [
+   -0.67,
+   -0.41
+  ],
+  "n_blocks_pumped_area": 9283,
+  "radius_km": 2.0,
+  "n_blocks": 46777,
+  "spearman_pumping_vs_rate": -0.442,
+  "ci95_pumping": [
+   -0.52,
+   -0.36
+  ],
+  "spearman_acreage_vs_rate": -0.426,
+  "ci95_acreage": [
+   -0.5,
+   -0.34
+  ],
+  "partial_pumping_given_acreage": -0.13,
+  "ci95_partial": [
+   -0.22,
+   -0.01
+  ],
+  "tiles": 208,
+  "bins": [
+   {
+    "label": "no field within 2 km",
+    "n": 37494,
+    "median_rate": 0.04
+   },
+   {
+    "label": "low pumping density",
+    "range_acre_ft_per_km2": [
+     0,
+     38
+    ],
+    "n": 3076,
+    "median_rate": -0.04
+   },
+   {
+    "label": "medium pumping density",
+    "range_acre_ft_per_km2": [
+     38,
+     126
+    ],
+    "n": 3111,
+    "median_rate": -0.4
+   },
+   {
+    "label": "high pumping density",
+    "range_acre_ft_per_km2": [
+     126,
+     778
+    ],
+    "n": 3096,
+    "median_rate": -2.25
+   }
+  ]
+ }
+}

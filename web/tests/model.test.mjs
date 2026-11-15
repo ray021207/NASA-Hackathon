@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { normalizeSeries, normalizeRate, normalizeHotspots, validateGeoJSON, safeSourceURL, formatNumber, cleanInsights, normalizeCumulative, cleanTeam } from '../model.mjs';
+import { normalizeSeries, normalizeRate, normalizeHotspots, validateGeoJSON, safeSourceURL, formatNumber, cleanInsights, normalizeCumulative, cleanTeam, cleanNisar, cleanPumping } from '../model.mjs';
 import { readFile } from 'node:fs/promises';
 
 const series = extra => ({ hotspot: 'eloy', units: 'cm', reference: 'Synthetic test reference', dates: ['2026-01-01', '2026-01-13'], displacement: [0, -1], rate_cm_yr: -2, rate_sigma: 0.2, ...extra });
@@ -139,4 +139,57 @@ test('header: name and tagline come before the navigation, and the tagline is on
   assert.ok(header.indexOf('class="wordmark"') < header.indexOf('class="project-label"') && header.indexOf('class="project-label"') < header.indexOf('<nav'));
   const label = header.match(/class="project-label">([^<]+)</)[1];
   assert.equal((label.match(/[.!?](\s|$)/g) || []).length, 1, 'exactly one sentence: ' + label);
+});
+
+test('NISAR summary: the real file validates; any bad or missing field hides the section', async () => {
+  const raw = JSON.parse(await readFile(new URL('../../data/processed/nisar_summary.json', import.meta.url), 'utf8'));
+  const n = cleanNisar(raw);
+  assert.ok(n, 'real summary is valid');
+  assert.ok(n.pattern.r > 0 && n.pattern.r <= 1 && n.pattern.blocks > 1000);
+  assert.match(n.willcox.date, /^\d{4}-\d{2}-\d{2}$/);
+  const bad = (path, value) => { const c = JSON.parse(JSON.stringify(raw)); let o = c; const k = path.split('.'); k.slice(0, -1).forEach(x => { o = o[x]; }); o[k.at(-1)] = value; return cleanNisar(c); };
+  assert.equal(bad('pattern.r', null), null);
+  assert.equal(bad('pattern.r', 3), null);
+  assert.equal(bad('confirm.willcox.date', '2027-13-45'), null);
+  assert.equal(bad('figure', '../evil.png'), null);
+  assert.equal(bad('sinking.nisar_cm_yr', 'NaN'), null);
+  assert.equal(bad('farmland.auc_hh_spread', 0.2), null);
+  assert.equal(bad('farmland.figure', 'x/../y.png'), null);
+  assert.equal(bad('farmland.rate_diff_lo', null), null);
+  assert.equal(bad('directions.asc_mm', 'x'), null);
+  assert.equal(bad('directions.span_days', null), null);
+  assert.equal(cleanNisar(null), null);
+  assert.equal(cleanNisar({}), null);
+});
+
+test('Overview: the NISAR section sits right after the hero, is hidden until data validates, and the hero links to it', async () => {
+  const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
+  const i = html.indexOf('id="overview-nisar"');
+  assert.ok(i > 0 && i < html.indexOf('id="overview-story"'));
+  assert.match(html.slice(i - 80, i + 160), /hidden/);
+  assert.match(html, /href="#overview-nisar"/);
+  const spans = [...html.matchAll(/data-nisar="([a-z0-9-]+)"/g)].map(m => m[1]);
+  assert.ok(spans.length >= 15);
+  const app = await readFile(new URL('../app.js', import.meta.url), 'utf8');
+  for (const key of new Set(spans)) assert.ok(app.includes(key === 'r' || /^[a-z]+$/.test(key) ? key : "'" + key + "'"), 'app.js fills ' + key);
+});
+
+test('Pumping summary: the real file validates; any bad or missing field hides the section', async () => {
+  const raw = JSON.parse(await readFile(new URL('../../data/processed/pumping_summary.json', import.meta.url), 'utf8'));
+  const p = cleanPumping(raw);
+  assert.ok(p, 'real summary is valid');
+  assert.ok(p.high < p.none, 'sinking is faster where pumping is highest');
+  const bad = (k, v) => cleanPumping({ ...raw, [k]: v });
+  assert.equal(bad('rho', null), null);
+  assert.equal(bad('rho', 2), null);
+  assert.equal(bad('rate_high', 'x'), null);
+  assert.equal(bad('fields', 0), null);
+  assert.equal(cleanPumping(null), null);
+  assert.equal(cleanPumping({}), null);
+  const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
+  const i = html.indexOf('id="overview-pumping"');
+  assert.ok(i > html.indexOf('id="overview-nisar"') && i < html.indexOf('id="overview-story"'));
+  assert.match(html.slice(i - 20, i + 200), /hidden/);
+  const app = await readFile(new URL('../app.js', import.meta.url), 'utf8');
+  for (const key of new Set([...html.matchAll(/data-pump="([a-z0-9-]+)"/g)].map(m => m[1]))) assert.ok(app.includes(key === 'acft' || /^[a-z]+$/.test(key) ? key : "'" + key + "'"), 'app.js fills ' + key);
 });

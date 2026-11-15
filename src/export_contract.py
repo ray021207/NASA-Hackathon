@@ -16,6 +16,7 @@ FARM = {"eloy": "yes", "willcox": "yes", "north_willcox": "unchecked", "south": 
 SIGN_S1 = "Positive values mean the ground moved toward the satellite; negative values mean it moved away (sinking). Measured along the satellite's slanted view, not straight down. (OPERA product convention.)"
 SIGN_NISAR = "NISAR sign convention not yet verified against the product specification; read with care."
 REL_NISAR = "NASA NISAR L2 GUNW, Provisional release (production CRID P05023)"
+REL_NISAR_W = "NASA NISAR L2 GUNW, Provisional release (CRID P05023); the first pair, Oct 26 to Nov 7 2025, is Beta"
 rel_s1 = lambda a, b: f"OPERA L3 DISP-S1 v1.0 (Sentinel-1), records {a} to {b}"
 REF_TEXT = {"central": "median ground of the whole Sentinel-1 frame 7091 (descending, track 27); not a hand-picked site",
             "southeast": "median ground of the whole Sentinel-1 frame 34478 (descending, track 129); not a hand-picked site"}
@@ -137,7 +138,7 @@ def main():
         json.dump({"bounds": b["bounds"], "units": "cm/yr", "vmin": -6, "vmax": 2, "colormap": "custom: red = sinking, transparent = stable, blue = rising", "track": trk,
                    "dates": dates, "crs": "EPSG:4326",
                    "sign_convention": SIGN_NISAR if name.startswith("nisar") else SIGN_S1,
-                   "data_release": REL_NISAR if name.startswith("nisar") else rel_s1(dates[0], dates[1])}, open(f"{OUT}/{out}.json", "w"), indent=1)
+                   "data_release": (REL_NISAR_W if name == "nisar_willcox" else REL_NISAR) if name.startswith("nisar") else rel_s1(dates[0], dates[1])}, open(f"{OUT}/{out}.json", "w"), indent=1)
     ex = json.load(open(f"{src_dir}/excluded.json")); fl = json.load(open(f"{src_dir}/flat.json"))
     pt = lambda lon, lat, p: {"type": "Feature", "geometry": {"type": "Point", "coordinates": [lon, lat]}, "properties": p}
     json.dump({"type": "FeatureCollection", "features": [pt(x["lon"], x["lat"], {"name": x["name"], "reason": x["why"], "source": "OpenStreetMap place and land-use lookup"}) for x in ex]},
