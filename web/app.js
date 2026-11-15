@@ -205,9 +205,11 @@ function applyTimeFrame() {
         meta.frames.forEach(path => { const preload = new Image(); preload.src = timeURL(path); });
       } else t.image.setUrl(url);
       const legend = $('#rate-legend'); legend.hidden = false; legend.replaceChildren();
-      legend.append(el('strong', '', 'Total ground change since ' + meta.dates[0]), el('div', '', 'As of ' + meta.dates[index]),
-        el('div', '', formatNumber(meta.vmin) + ' to +' + formatNumber(meta.vmax) + ' cm'),
-        el('small', '', 'Red = lower than at the start. Blank = not measured.'));
+      const scale = el('span', 'timelapse-labels');
+      scale.append(el('span', '', formatNumber(meta.vmin) + ' cm'), el('span', '', '0'), el('span', '', '+' + formatNumber(meta.vmax)));
+      const strip = el('span', 'timelapse-strip'); strip.setAttribute('aria-hidden', 'true');
+      legend.append(el('strong', '', 'Ground change since ' + monthYear(meta.dates[0])), el('div', 'legend-asof', 'As of ' + monthYear(meta.dates[index])),
+        strip, scale, el('small', '', 'Red = lower than at the start (' + meta.dates[0] + '). Blank = not measured.'));
     }
   }
   t.ui?.sync();
@@ -267,13 +269,17 @@ function makeTimeControls() {
     const wrap = el('label', 'time-check kind-' + kind), box = el('input');
     box.type = 'checkbox'; box.dataset.kind = kind;
     const swatch = el('span', 'time-swatch'); swatch.setAttribute('aria-hidden', 'true');
-    wrap.append(box, swatch, el('span', '', label));
+    const [first, ...rest] = label.split(' ');
+    const text = el('span', 'time-check-text', first);
+    if (rest.length) text.append(el('span', 'time-check-extra', ' ' + rest.join(' ')));
+    wrap.append(box, swatch, text);
     return { wrap, box };
   };
   const sink = check('Sinking area', 'sinking'), stab = check('Stable ground', 'stable');
   const back = el('button', 'time-reset', 'Back to the rate map'); back.type = 'button';
+  const chip = el('span', 'time-date'); chip.hidden = true;
   const status = el('p', 'metric-note time-status', idle); status.setAttribute('aria-live', 'polite');
-  const row = el('div', 'time-row'); row.append(play, sink.wrap, stab.wrap, back); node.append(row, status);
+  const row = el('div', 'time-row'); row.append(play, sink.wrap, stab.wrap, chip, back); node.append(row, status);
   if (!t.meta.masks.sinking) sink.wrap.hidden = true;
   if (!t.meta.masks.stable) stab.wrap.hidden = true;
   const ui = { node, home: null, sync() {
@@ -284,6 +290,7 @@ function makeTimeControls() {
     sink.box.checked = Boolean(t.masks.sinking); stab.box.checked = Boolean(t.masks.stable);
     back.hidden = t.pinned == null && !playing;
     node.classList.toggle('has-date', index != null);
+    chip.hidden = index == null; chip.textContent = index == null ? '' : monthYear(t.meta.dates[index]);
     status.textContent = index == null ? idle : 'Map: total change since ' + t.meta.dates[0] + ', as of ' + t.meta.dates[index] + (t.hover == null && t.pinned === index ? ' (held)' : '') + '.';
   } };
   play.addEventListener('click', togglePlay);

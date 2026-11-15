@@ -2030,6 +2030,32 @@ details.more>summary:not(#_){min-height:44px;padding:11px 16px}
 .map-time-bar .time-status:not(#_){font-size:12px;line-height:1.4;margin:5px 4px 1px}
 .map-time-bar .time-controls:not(.has-date) .time-status{display:none}
 @media(min-width:801px){.map-time-bar{display:none}}
+/* ---- Map on phones: slim controls on top, slim legend at the bottom, caption under the map ---- */
+.time-play:not(#_){color:#fff}
+.time-play.is-playing{background:var(--rust)}
+.time-date{flex:none;align-self:center;padding:5px 10px;border-radius:999px;background:var(--ink);color:#fff;font:700 12.5px/1.2 var(--sans);font-variant-numeric:tabular-nums}
+.time-date[hidden]{display:none}
+.map-chart .time-date{display:none}
+.rate-legend .timelapse-strip{margin:7px 0 0}
+.rate-legend .timelapse-labels{font-size:11.5px}
+.rate-legend .legend-asof{font-weight:600}
+@media(max-width:800px){
+ .workspace{--map-h:clamp(385px,55dvh,650px)}
+ .map-time-bar .time-play{width:40px;height:40px;padding:6px;justify-content:center}
+ .map-time-bar .time-play-text{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+ .map-time-bar .time-check-extra{display:none}
+ .map-time-bar .time-check{padding:0 10px 0 8px;gap:6px}
+ .map-time-bar .time-reset{font-size:12px}
+ .map-time-bar .time-row:not(#_){flex-wrap:wrap;overflow:visible}
+ .map-time-bar .time-status:not(#_){display:none}
+ .workspace .map-caption:not(#_){position:static;top:auto;bottom:auto;left:auto;right:auto;max-width:none;margin:0;padding:10px 14px;border:0;border-top:1px solid var(--rule);border-radius:0;box-shadow:none;background:var(--paper);backdrop-filter:none}
+ .workspace .rate-legend:not(#_){top:var(--map-h);bottom:auto;left:10px;right:10px;max-width:none;transform:translateY(calc(-100% - 30px));padding:8px 12px;font-size:12.5px}
+ .workspace .rate-legend:not(#_) small{display:none}
+ .workspace .rate-legend strong,.workspace .rate-legend .legend-asof{display:inline;font-size:12.5px}
+ .workspace .rate-legend .legend-asof::before{content:" \00b7 "}
+ .workspace .rate-legend .map-color-key{display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:5px}
+ .workspace .leaflet-control-zoom:not(#_){display:none}
+}
 </style>
   <script>/* @preserve
  * Leaflet 1.9.4, a JS library for interactive maps. https://leafletjs.com
@@ -2884,9 +2910,11 @@ function applyTimeFrame() {
         meta.frames.forEach(path => { const preload = new Image(); preload.src = timeURL(path); });
       } else t.image.setUrl(url);
       const legend = $('#rate-legend'); legend.hidden = false; legend.replaceChildren();
-      legend.append(el('strong', '', 'Total ground change since ' + meta.dates[0]), el('div', '', 'As of ' + meta.dates[index]),
-        el('div', '', formatNumber(meta.vmin) + ' to +' + formatNumber(meta.vmax) + ' cm'),
-        el('small', '', 'Red = lower than at the start. Blank = not measured.'));
+      const scale = el('span', 'timelapse-labels');
+      scale.append(el('span', '', formatNumber(meta.vmin) + ' cm'), el('span', '', '0'), el('span', '', '+' + formatNumber(meta.vmax)));
+      const strip = el('span', 'timelapse-strip'); strip.setAttribute('aria-hidden', 'true');
+      legend.append(el('strong', '', 'Ground change since ' + monthYear(meta.dates[0])), el('div', 'legend-asof', 'As of ' + monthYear(meta.dates[index])),
+        strip, scale, el('small', '', 'Red = lower than at the start (' + meta.dates[0] + '). Blank = not measured.'));
     }
   }
   t.ui?.sync();
@@ -2946,13 +2974,17 @@ function makeTimeControls() {
     const wrap = el('label', 'time-check kind-' + kind), box = el('input');
     box.type = 'checkbox'; box.dataset.kind = kind;
     const swatch = el('span', 'time-swatch'); swatch.setAttribute('aria-hidden', 'true');
-    wrap.append(box, swatch, el('span', '', label));
+    const [first, ...rest] = label.split(' ');
+    const text = el('span', 'time-check-text', first);
+    if (rest.length) text.append(el('span', 'time-check-extra', ' ' + rest.join(' ')));
+    wrap.append(box, swatch, text);
     return { wrap, box };
   };
   const sink = check('Sinking area', 'sinking'), stab = check('Stable ground', 'stable');
   const back = el('button', 'time-reset', 'Back to the rate map'); back.type = 'button';
+  const chip = el('span', 'time-date'); chip.hidden = true;
   const status = el('p', 'metric-note time-status', idle); status.setAttribute('aria-live', 'polite');
-  const row = el('div', 'time-row'); row.append(play, sink.wrap, stab.wrap, back); node.append(row, status);
+  const row = el('div', 'time-row'); row.append(play, sink.wrap, stab.wrap, chip, back); node.append(row, status);
   if (!t.meta.masks.sinking) sink.wrap.hidden = true;
   if (!t.meta.masks.stable) stab.wrap.hidden = true;
   const ui = { node, home: null, sync() {
@@ -2963,6 +2995,7 @@ function makeTimeControls() {
     sink.box.checked = Boolean(t.masks.sinking); stab.box.checked = Boolean(t.masks.stable);
     back.hidden = t.pinned == null && !playing;
     node.classList.toggle('has-date', index != null);
+    chip.hidden = index == null; chip.textContent = index == null ? '' : monthYear(t.meta.dates[index]);
     status.textContent = index == null ? idle : 'Map: total change since ' + t.meta.dates[0] + ', as of ' + t.meta.dates[index] + (t.hover == null && t.pinned === index ? ' (held)' : '') + '.';
   } };
   play.addEventListener('click', togglePlay);

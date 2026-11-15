@@ -792,3 +792,29 @@ details.more>summary:not(#_){min-height:44px;padding:11px 16px}
 .map-time-bar .time-status:not(#_){font-size:12px;line-height:1.4;margin:5px 4px 1px}
 .map-time-bar .time-controls:not(.has-date) .time-status{display:none}
 @media(min-width:801px){.map-time-bar{display:none}}
+/* ---- Map on phones: slim controls on top, slim legend at the bottom, caption under the map ---- */
+.time-play:not(#_){color:#fff}
+.time-play.is-playing{background:var(--rust)}
+.time-date{flex:none;align-self:center;padding:5px 10px;border-radius:999px;background:var(--ink);color:#fff;font:700 12.5px/1.2 var(--sans);font-variant-numeric:tabular-nums}
+.time-date[hidden]{display:none}
+.map-chart .time-date{display:none}
+.rate-legend .timelapse-strip{margin:7px 0 0}
+.rate-legend .timelapse-labels{font-size:11.5px}
+.rate-legend .legend-asof{font-weight:600}
+@media(max-width:800px){
+ .workspace{--map-h:clamp(385px,55dvh,650px)}
+ .map-time-bar .time-play{width:40px;height:40px;padding:6px;justify-content:center}
+ .map-time-bar .time-play-text{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+ .map-time-bar .time-check-extra{display:none}
+ .map-time-bar .time-check{padding:0 10px 0 8px;gap:6px}
+ .map-time-bar .time-reset{font-size:12px}
+ .map-time-bar .time-row:not(#_){flex-wrap:wrap;overflow:visible}
+ .map-time-bar .time-status:not(#_){display:none}
+ .workspace .map-caption:not(#_){position:static;top:auto;bottom:auto;left:auto;right:auto;max-width:none;margin:0;padding:10px 14px;border:0;border-top:1px solid var(--rule);border-radius:0;box-shadow:none;background:var(--paper);backdrop-filter:none}
+ .workspace .rate-legend:not(#_){top:var(--map-h);bottom:auto;left:10px;right:10px;max-width:none;transform:translateY(calc(-100% - 30px));padding:8px 12px;font-size:12.5px}
+ .workspace .rate-legend:not(#_) small{display:none}
+ .workspace .rate-legend strong,.workspace .rate-legend .legend-asof{display:inline;font-size:12.5px}
+ .workspace .rate-legend .legend-asof::before{content:" \00b7 "}
+ .workspace .rate-legend .map-color-key{display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:5px}
+ .workspace .leaflet-control-zoom:not(#_){display:none}
+}
