@@ -235,3 +235,16 @@ test('footer text is dark enough for the light footer background (it was pale sa
   assert.equal(last('background'), 'var(--canvas)');
   assert.equal(last('color'), 'var(--ink)', 'the final footer text colour must be the dark ink, not the pale surface colour');
 });
+
+test('navigation items share one style (no pill, no odd colour), and the current view is marked', async () => {
+  const css = await readFile(new URL('../design-system.css', import.meta.url), 'utf8');
+  const i = css.indexOf('.masthead nav>a[href],.masthead nav>button[type]{font:');
+  assert.ok(i > 0, 'one shared rule for every nav link and button');
+  const rule = css.slice(i, css.indexOf('}', i));
+  for (const part of ['font:600 13px/1.25 var(--sans)', 'color:var(--ink)', 'background:none', 'border-radius:0']) assert.ok(rule.includes(part), part);
+  assert.ok(i > css.lastIndexOf('.masthead nav .nav-explore{'), 'the shared rule comes after the old pill rule');
+  assert.match(css, /\.masthead nav>a\[href\]\[aria-current=page\]\{color:var\(--rust\)/);
+  const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
+  const nav = html.slice(html.indexOf('<nav aria-label="Site navigation">'), html.indexOf('</nav>', html.indexOf('<nav aria-label="Site navigation">')));
+  assert.equal((nav.match(/<a /g) || []).length + (nav.match(/<button /g) || []).length, 7, 'Overview, Evidence, Study regions, How we measured, Limits, About us, Resources');
+});

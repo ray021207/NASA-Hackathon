@@ -285,3 +285,91 @@
     });
   }
 })();
+
+/* Scroll motion: word-by-word text reveal, rising cards and charts, figure unmask, soft hero parallax, progress line.
+   Decorative only; it never touches measurements. Skipped for reduced motion. The page-wide class (scroll-fx) is added LAST, so a failure leaves normal, fully readable text. */
+(() => {
+  'use strict';
+  try {
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (!reduced || reduced.matches) return;
+    const root = document.documentElement;
+    const visible = el => !!(el.offsetParent || el.getClientRects().length);
+    const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+
+    // progress line
+    const bar = document.createElement('div');
+    bar.className = 'scroll-progress';
+    bar.setAttribute('aria-hidden', 'true');
+    document.body.append(bar);
+
+    // word-by-word reveal (text is kept as is; each word is wrapped in a span)
+    const items = [];
+    const skip = 'button, a, script, style, [data-nisar], [data-pump]';
+    const split = el => {
+      const words = [];
+      const walk = node => {
+        [...node.childNodes].forEach(child => {
+          if (child.nodeType === 3) {
+            const frag = document.createDocumentFragment();
+            child.textContent.split(/(\s+)/).forEach(part => {
+              if (!part) return;
+              if (/^\s+$/.test(part)) { frag.append(part); return; }
+              const s = document.createElement('span');
+              s.className = 'w';
+              s.textContent = part;
+              frag.append(s);
+              words.push(s);
+            });
+            child.replaceWith(frag);
+          } else if (child.nodeType === 1 && !child.matches(skip)) walk(child);
+        });
+      };
+      walk(el);
+      return words;
+    };
+    document.querySelectorAll('.overview-lede, .overview-subcopy, .evidence-head p, .overview-narrative-head > p, .overview-purpose-header > p, .overview-proof-heading > p, .nisar-surface-lede, .overview-lede-note')
+      .forEach(el => { const words = split(el); if (words.length > 3) items.push({ el, words, shown: -1 }); });
+
+    // rise-in cards and charts, figure unmask
+    const rises = [...document.querySelectorAll('.quick-answers li, .viz, .nisar-figure figcaption')];
+    const masks = [...document.querySelectorAll('.nisar-figure img')];
+    rises.forEach(el => el.classList.add('fx-reveal'));
+    masks.forEach(el => el.classList.add('fx-mask'));
+    rises.forEach((el, i) => el.style.setProperty('--d', (i % 3) * 80 + 'ms'));
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver(entries => entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('fx-in'); io.unobserve(e.target); } }), { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+      [...rises, ...masks].forEach(el => io.observe(el));
+    } else [...rises, ...masks].forEach(el => el.classList.add('fx-in'));
+
+    // hero parallax and scroll-linked bits
+    const heroVisual = document.querySelector('.overview-visual');
+    let queued = false;
+    function update() {
+      queued = false;
+      const vh = window.innerHeight || 800;
+      const max = Math.max(1, root.scrollHeight - vh);
+      bar.style.transform = 'scaleX(' + clamp(window.scrollY / max, 0, 1).toFixed(4) + ')';
+      if (heroVisual && window.innerWidth > 800 && visible(heroVisual)) heroVisual.style.translate = '0 ' + clamp(window.scrollY * 0.12, 0, 70).toFixed(1) + 'px';
+      items.forEach(it => {
+        if (!visible(it.el)) return;
+        const r = it.el.getBoundingClientRect();
+        const p = clamp((0.92 * vh - r.top) / (0.5 * vh), 0, 1);
+        const n = Math.round(p * it.words.length);
+        if (n === it.shown) return;
+        it.words.forEach((w, i) => w.classList.toggle('on', i < n));
+        it.shown = n;
+      });
+    }
+    const queue = () => { if (!queued) { queued = true; requestAnimationFrame(update); } };
+    window.addEventListener('scroll', queue, { passive: true });
+    window.addEventListener('resize', queue);
+    window.addEventListener('hashchange', () => { queue(); setTimeout(queue, 200); setTimeout(queue, 700); });
+    document.addEventListener('click', () => { setTimeout(queue, 60); setTimeout(queue, 400); });
+    reduced.addEventListener?.('change', () => { if (reduced.matches) root.classList.remove('scroll-fx'); });
+    update();
+    root.classList.add('scroll-fx');           // last: until here everything is plain, readable text
+  } catch (error) {
+    document.documentElement.classList.remove('scroll-fx');
+  }
+})();
