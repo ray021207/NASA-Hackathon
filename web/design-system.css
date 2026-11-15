@@ -966,3 +966,12 @@ details.more>summary:not(#_){min-height:44px;padding:11px 16px}
 .look-record{font:400 12.5px/1.5 var(--sans);color:var(--slate-deep);margin:6px 0 0}
 /* One line under the report tabs: the first section in a tab panel has no top border of its own. */
 .workspace .details-panel .report-panel>.detail-section:first-child:not(#_),.workspace .details-panel .report-panel>.report-summary>.insights:first-child:not(#_){border-top:0;padding-top:14px}
+/* Header on one row when there is room: name and tagline on the left, navigation on the right. Narrower screens keep two rows. */
+@media(min-width:1200px){
+ .masthead:not(#_){grid-template-columns:auto auto minmax(0,1fr);grid-template-areas:"brand tagline nav";column-gap:14px;padding:10px var(--page-gutter)}
+ .masthead .project-label:not(#_){padding-left:14px;white-space:normal;max-width:16em;line-height:1.35}
+ .masthead nav:not(#_){margin:0;padding:0;border-top:0;justify-content:flex-end;gap:4px clamp(14px,1.5vw,28px)}
+ html{scroll-padding-top:92px}
+ .farm-split .nisar-portrait:not(#_){top:100px}
+}
+@media(min-width:1700px){.masthead .project-label:not(#_){white-space:nowrap;max-width:none}}
