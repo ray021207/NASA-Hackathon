@@ -974,4 +974,9 @@ details.more>summary:not(#_){min-height:44px;padding:11px 16px}
  html{scroll-padding-top:92px}
  .farm-split .nisar-portrait:not(#_){top:100px}
 }
-@media(min-width:1700px){.masthead .project-label:not(#_){white-space:nowrap;max-width:none}}
+@media(min-width:1300px){.masthead .project-label:not(#_){white-space:nowrap;max-width:none}}
+@media(min-width:1200px){
+ .masthead:not(#_){border-bottom:0}
+ .masthead nav>a[href]:not(#_),.masthead nav>button[type]:not(#_){font-size:12.5px}
+ .masthead nav:not(#_){gap:4px clamp(12px,1.3vw,24px)}
+}
