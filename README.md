@@ -2,67 +2,87 @@
 
 *The desert sinks, and the radar keeps the beat.*
 
-**Live site: https://sinkronized.vercel.app** (goes live after the fork is synced, see `web/DESIGN_DIRECTION.md`)
+**Live site: https://sinkronized.vercel.app/web/**
 
-NASA Space Apps 2026 — **Dancing with the SARs** (NISAR). 
+NASA Space Apps 2026, challenge **Dancing with the SARs** (NISAR).
 
-Arizona's aquifers are being pumped faster than they refill, and the ground is sinking. NISAR's L-band radar can measure that motion to the millimetre. This project maps where central Arizona is sinking, how fast, and what sits on top of it: farms, new data centers, and wildlife habitat.
+Arizona's aquifers are being pumped faster than they refill, so the ground is sinking, and much of that loss is permanent. Sinkronized is a free, interactive website that shows where southern Arizona is sinking, how fast, how sure we are, and what lies beneath. It uses ten years of Sentinel-1 radar as the long record and tests NASA's new NISAR L-band radar on its first year.
 
-## Study areas
+## What we found
 
-| Hotspot | Story |
-|---|---|
-| Eloy / Casa Grande | Decades of farm pumping. Validation site: our rates are checked against ADWR's published values. |
-| Buckeye / Goodyear | Data-center growth in the West Valley, where few measurements are published. |
-| Willcox | Fastest subsidence in Arizona, next to Willcox Playa sandhill crane habitat. |
+Rates are along the satellite's line of sight; negative means sinking. Every number is on the site with its uncertainty and limits.
 
-## Current radar decision
+| Study area | Rate, 2016-2026 (cm/yr) | Look directions |
+|---|---|---|
+| Fort Grant Road, north of Willcox | -4.9 +/- 0.6 | both agree |
+| Elfrida area, south of Willcox | -3.1 +/- 0.5 | both agree |
+| Willcox basin (386 km2) | -2.7 +/- 0.4 | both agree |
+| Bowie - San Simon, east of Willcox | -2.6 +/- 0.6 | one only (unconfirmed) |
+| Eloy - Picacho | -1.3 +/- 0.4 | both agree |
 
-Track 128 descending misses the Eloy/Casa Grande core in the recorded test-file checks. Test track 077 ascending / frame 018 over Eloy first, with 056 descending / frame 072 as the alternative. Selection remains pending a raw-file quality and reference-area check. Keep 128 descending for Willcox.
+- The four Willcox-area maps match Arizona Department of Water Resources (ADWR) radar products (pattern correlation 0.94 to 0.99). Eloy matches only moderately with ADWR's Sentinel-1 (0.59) and weakly with its RADARSAT-2 (0.18).
+- NISAR's first year: removing its own troposphere error cut the scatter by 24%; its pattern matches the ten-year Sentinel-1 pattern across 12,850 map blocks (correlation 0.58). One year is too short for a trustworthy speed, so we publish none; we estimate NISAR can confirm Willcox around February 2027.
+- Cropland is 2.1% of the Willcox study box but 7.4% of its sinking area. Where estimated pumping is highest the ground sinks a median 2.3 cm/yr; in 236 wells the water table fell a median 69 feet over 31 years, and where it fell faster the ground sinks faster (rank correlation -0.41). This shows association, not cause.
+- We first looked at the West Valley, where data centers are being built. Ten years of radar show it is steady (within about 0.5 cm/yr), so it is marked as checked and is not a study area.
 
-See [Track selection and next checkpoint](docs/track_selection.md). Some pairs span 24 days, and the track-077 late-2025 and mid-2026 segments are disconnected; use actual acquisition dates and do not chain across the missing interval.
+## What the website offers
+
+- Plain-language questions that lead to a chart and a short answer, with the reasoning one click away.
+- A map of the five study areas with ten years of ground motion, NISAR's first year, ADWR's official sinking zones, probable mines and places we checked and found steady.
+- A report for each study area: headline rate and ranking, a 2016-2026 time-lapse, whether both satellite look directions agree, what lies beneath (basin, clay layers, falling water table, mapped earth fissures, whether the ground can come back), and the methods and checks.
+- A side-by-side geology comparison of all five areas, "How we measured", "Limits", and every source.
+- It works by keyboard and screen reader, and on phones.
 
 ## Method
 
-1. Read NISAR L2 GUNW (geocoded unwrapped interferogram) products from ASF.
-2. Convert unwrapped phase to line-of-sight displacement: `d = -(λ / 4π) · φ`, with λ and the sign convention read from the file metadata.
-3. Mask low-coherence pixels and unreliable connected components.
-4. Reference to a stable area.
-5. Deduplicate processing versions, then chain connected acquisition pairs from one track/frame using their actual dates (12- or 24-day pairs in the current catalogue). Fit a rate with uncertainty over the supported interval.
-6. Validate at Eloy against ADWR InSAR rates, then repeat for the other hotspots.
-7. Overlay ADWR's official subsidence areas, probable mines and places checked with no sinking, and publish an interactive web map.
+1. Read NISAR L2 GUNW (geocoded unwrapped interferograms) and GCOV (backscatter) from ASF, streaming only the window needed from each large file.
+2. Convert unwrapped phase to line-of-sight displacement, `d = -(wavelength / 4 pi) * phase`, with the wavelength and sign convention read from the file.
+3. Mask low-coherence pixels and unreliable connected components; remove the ionosphere and troposphere; reference to stable ground.
+4. Chain connected pairs on one track, fit rates with uncertainty from spatial block resampling, and never mix ascending and descending tracks directly.
+5. Combine with NASA JPL's OPERA Sentinel-1 displacement (2016-2026), USDA cropland, USGS pumping estimates and USGS/ADWR well measurements.
+6. Compare with ADWR's InSAR products and with the opposite satellite look direction.
+7. Add geology from USGS reports and earth fissures mapped by the Arizona Geological Survey (data as of 2016).
+8. Publish as a static site. Every value is loaded through strict checks that hide a section rather than show a wrong number.
 
-## Progress
+## Repository layout
 
-- [x] Stage 1: opened a test GUNW file (track 128, descending, Oct 9 → Oct 21 2026). Grid: EPSG:32612, 80 m pixels, wavelength 24.2 cm (1 rad ≈ 19.25 mm of line-of-sight motion), mean coherence 0.68 over valid pixels.
-- [x] Stage 1b: valid-pixel rule, ionosphere check (phase still contains it, correlation 0.98), coverage check (track 128 misses Eloy core; covers Willcox).
-- [x] Stage 2: one-pair displacement; ionosphere correction cuts the spread about 3x
-- [x] Stage 3: NISAR stacks built after the coverage checks (Willcox: track 128 D, 25 pairs; Eloy: track 077 A, 9 pairs; 056 D not used). Rates are not yet reliable (noise, short record)
-- [x] Stage 4: rates compared with ADWR's own InSAR products (strong in the southeast, weak at Eloy); see `docs/adwr_validation.md`
-- [ ] Stage 5: other hotspots
-- [ ] Stage 6: overlays
-- [x] Stage 7 (v0): data contract for the front end in `data/processed/` (see `docs/UI_DATA_CONTRACT.md`)
+```
+web/            the website (static: HTML, CSS, JavaScript, Leaflet)
+data/processed/ the data the website reads (rates, time series, tiles, summaries)
+src/            the processing pipeline (Python)
+docs/           the story, submission text, sources, fact-check log, method notes
+```
+
+Start with [docs/PROJECT_NARRATIVE.md](docs/PROJECT_NARRATIVE.md) for the whole story, [docs/PROJECT_SUBMISSION.md](docs/PROJECT_SUBMISSION.md) for the submission text, and [docs/REFERENCES.md](docs/REFERENCES.md) for sources. Raw downloads (`data/raw/`) are not stored in the repository.
 
 ## Limits
 
-- The catalogue spans about a year, but the connected provisional Eloy candidates currently cover only June–October 2026. Report that shorter interval explicitly; annualised short-record rates are preliminary.
-- Sinking indicates groundwater stress. It does not prove which user caused it.
-- Radar loses coherence over plowed fields and construction.
-- Radar measures line-of-sight motion; we assume motion is mostly vertical.
-- Radar cannot see wildlife; habitat links come from outside maps.
-- NISAR data is Provisional / Uncalibrated, so numbers are preliminary.
+- NISAR's record is about a year, too short for a trusted speed. Its first year is a test, not the headline.
+- Radar measures slanted line-of-sight motion, not straight down.
+- C-band radar can over-read sinking over farmland.
+- Pumping figures are model estimates; well data come from two programs.
+- Sinking that matches farming and wells does not prove who caused it.
+- Mapped earth-fissure data are as of 2016; no mapped fissure is not proof of none.
+- "Can the ground come back?" is a study result for Eloy and Willcox only; for the other areas it is our inference and is labelled that way.
+- NISAR data are Provisional, so numbers are preliminary.
 
 ## Data
 
-NASA NISAR L2 GUNW (Provisional) and OPERA DISP-S1 (Sentinel-1) displacement, checked against Arizona Department of Water Resources (ADWR) subsidence products, with OpenStreetMap used to flag probable mines. Sources, terms and the reproduce steps are in [docs/DATA_AND_LICENSES.md](docs/DATA_AND_LICENSES.md).
+NASA NISAR L2 GUNW and GCOV (Provisional), OPERA DISP-S1 (Sentinel-1), checked against ADWR subsidence products, with USDA cropland, USGS pumping estimates and well measurements, Arizona Geological Survey fissure maps, and OpenStreetMap to flag probable mines. Sources, terms and licences: [docs/DATA_AND_LICENSES.md](docs/DATA_AND_LICENSES.md).
+
+## Use of AI
+
+An AI coding assistant helped write and debug code and draft text. The logo was generated with ChatGPT and is labelled on the site; the phone background illustration is AI-assisted artwork and is labelled. No measured value came from an AI tool. Details: [AI_USAGE.md](AI_USAGE.md).
+
+## Team
+
+Reshma Panibhate (radar processing and validation), Mansi Ganga Nayak (interactive map and engineering), Ritam Bhabak (design and regional storytelling). An independent team project, not an official NASA or agency product.
 
 ## Licence
 
 Code: MIT, see [LICENSE](LICENSE). Derived data in `data/processed/` may be reused with attribution to this project and its sources. Dependencies: `requirements.txt`. How to cite: `CITATION.cff`.
 
-See [AGENTS.md](AGENTS.md) for the full project brief.
-
-## Run the map locally
+## Run the website locally
 
 From the repository root:
 
@@ -70,6 +90,4 @@ From the repository root:
 python -m http.server 8765
 ```
 
-Open http://localhost:8765/web/index.html. The app reads its data from `data/processed/`, so the server must be started at the repository root.
-
-To rebuild the data files from the processed cubes: `python src/export_web.py` then `python src/export_contract.py`.
+Open http://localhost:8765/web/index.html. The site reads its data from `data/processed/`, so the server must be started at the repository root. To rebuild the data files from the processed cubes: `python src/export_web.py` then `python src/export_contract.py`.

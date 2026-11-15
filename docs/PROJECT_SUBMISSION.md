@@ -124,7 +124,7 @@ Select every option that applies. This answer is not shown to judges.
 | OpenStreetMap contributors (ODbL) | https://www.openstreetmap.org/copyright |
 | Esri basemap tiles (Esri, Maxar, Earthstar Geographics, HERE, Garmin, USGS, NGA, EPA, USDA, NPS) | https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer |
 | Leaflet 1.9.4 (BSD-2-Clause) | https://leafletjs.com/ |
-| Google Fonts: DM Sans and Space Grotesk | https://fonts.google.com/ |
+| Google Fonts: DM Sans | https://fonts.google.com/specimen/DM+Sans |
 | Python libraries (asf_search, h5py, NumPy, SciPy, rasterio, pyproj, Shapely, pyshp, Matplotlib, Pillow, requests, defusedxml) | https://github.com/mansi200304/NASA-Hackathon/blob/main/requirements.txt |
 | Epstein (1987), land subsidence near Eloy, USGS WRI 87-4143 | https://doi.org/10.3133/wri874143 |
 | Pool, Carruth & Meehan (2001), Hydrogeology of Picacho Basin, USGS WRI 00-4277 | https://pubs.usgs.gov/publication/wri004277 |

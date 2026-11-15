@@ -293,7 +293,7 @@ dialog p,dialog li{font-size:15px;line-height:1.7}
    Space Grotesk is a display face; DM Sans stays legible for long scientific copy. */
 :root{
   --sans:"DM Sans","Segoe UI",Arial,sans-serif;
-  --display:"Space Grotesk","Avenir Next","Segoe UI",sans-serif;
+  --display: var(--sans);
 }
 .masthead .wordmark,.overview h1,.overview h1 em,
 .overview-narrative-head h2,.overview-purpose-header h2,.overview-proof-heading h2,
@@ -1004,3 +1004,6 @@ body{overflow-x:hidden}
 .arrow-icon{display:block;flex:none;width:16px;height:16px}
 .overview-primary .arrow-icon{transition:transform .25s cubic-bezier(.2,.8,.2,1)}
 .overview-primary:hover .arrow-icon{transform:translate(2px,-2px)}
+/* Finding cards: the 'How we know' button sits at the bottom of every card, so a row of cards lines up. */
+.overview-proof-card>details.more:not(#_){margin-top:auto;padding-top:14px}
+.overview-proof-card>details.more>summary{margin-top:0}

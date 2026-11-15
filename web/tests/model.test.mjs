@@ -349,3 +349,16 @@ test('study report top strip is readable: light text on the slate bar', async ()
   const css = await readFile(new URL('../design-system.css', import.meta.url), 'utf8');
   assert.match(css, /\.workspace \.details-panel \.detail-kicker:not\(#_\)\{color:var\(--canvas\)/);
 });
+
+test('deep links to Evidence tabs survive late-loading data: the router remembers a hidden target and selects it when it appears', async () => {
+  const app = await readFile(new URL('../app.js', import.meta.url), 'utf8');
+  assert.match(app, /pending = hit && hit\.hidden \? hit : null;/, 'route remembers a hidden target tab');
+  assert.match(app, /if \(pending && !pending\.hidden && rootEl\.dataset\.currentView === 'evidence'\) \{ selectPanel\(pending\); pending = null; \}/, 'syncTabs selects it once it is available');
+});
+
+test('one typeface: DM Sans only (Space Grotesk is gone)', async () => {
+  const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
+  const css = await readFile(new URL('../design-system.css', import.meta.url), 'utf8');
+  assert.ok(!/Space[ +]Grotesk/.test(html) && !/Space Grotesk/.test(css.replace(/\/\*[\s\S]*?\*\//g, '')), 'no second typeface');
+  assert.match(css, /--display:\s*var\(--sans\)/);
+});

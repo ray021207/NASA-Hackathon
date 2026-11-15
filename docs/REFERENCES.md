@@ -52,7 +52,7 @@ Sections 1-5 are the paste block. Section 6 lists what the team made itself.
 20. Code: Python 3 with asf_search, h5py, NumPy, SciPy, pyproj, Shapely, pyshp, rasterio, affine, Pillow, requests, Matplotlib and defusedxml (versions in `requirements.txt`). Our code is MIT-licensed (`LICENSE`).
 21. Leaflet 1.9.4 (c) 2010-2023 Volodymyr Agafonkin, BSD-2-Clause (`web/vendor/LICENSE-leaflet`).
 22. Basemap tiles from Esri, shown with their attribution on the map: "Esri, HERE, Garmin, USGS, NGA, EPA, USDA, NPS" and "Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community".
-23. Fonts DM Sans and Space Grotesk, served by Google Fonts. Both are open-source licensed (SIL Open Font License per the designers' and Google Fonts' descriptions; the licence line on Google's own DM Sans page was not retrieved).
+23. Font DM Sans, served by Google Fonts. Open-source licensed (SIL Open Font License per the designers' and Google Fonts' descriptions; the licence line on Google's own DM Sans page was not retrieved).
 24. Hosting: GitHub (source) and Vercel (website).
 25. NISAR product downloads and searches via the Alaska Satellite Facility (https://search.asf.alaska.edu/) and NASA Earthdata.
 

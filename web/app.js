@@ -1247,8 +1247,10 @@ function barChart(host, { title, sub, rows, note, min = 0, max }) {
     const navFor = { overview: '#overview', evidence: '#evidence', map: '#atlas', about: '#about' };   // the Evidence view now has four tabs
     const rootEl = document.documentElement;
     const available = () => tabs.filter((t, i) => !panels[i].hidden);
+    let pending = null;   // a deep link to a tab whose data has not arrived yet (its panel starts hidden)
     function syncTabs() {
       tabs.forEach((t, i) => { t.hidden = panels[i].hidden; });
+      if (pending && !pending.hidden && rootEl.dataset.currentView === 'evidence') { selectPanel(pending); pending = null; }
       const active = panels.findIndex(p => p.classList.contains('is-active'));
       if (active >= 0 && panels[active].hidden) { const first = available()[0]; if (first) selectPanel(panels[tabs.indexOf(first)]); }
     }
@@ -1269,6 +1271,7 @@ function barChart(host, { title, sub, rows, note, min = 0, max }) {
       if (name === 'evidence') {
         const hit = target && panels.find(p => p === target || p.contains(target));
         const pick = hit && !hit.hidden ? hit : panels.find(p => !p.hidden) || panels[0];
+        pending = hit && hit.hidden ? hit : null;
         selectPanel(pick);
       }
       document.querySelectorAll('.masthead nav a[href^="#"]').forEach(link => {
@@ -1396,7 +1399,8 @@ function renderGeoCompare() {
     const fz = el('span', '', formatNumber(f.confirmed) + ' km confirmed' + (f.reported > 0 ? ' + ' + formatNumber(f.reported) + ' km reported' : ''));
     td(4, fz, f.areas.length ? el('small', '', f.areas.join(', ')) : null);
     const r = g.recovery;
-    td(5, el('span', 'recovery-chip ' + r.status, r.status === 'studied' ? 'Studied here' : 'Not studied here'), el('span', 'recovery-text', r.text + ' '), cite(g, r.source));
+    const answer = r.status === 'inferred' ? r.text.replace(/^Not studied here(, and unclear)?\. /, (m, u) => u ? 'Unclear. ' : '') : r.text;   // the chip already says "Not studied here"
+    td(5, el('span', 'recovery-chip ' + r.status, r.status === 'studied' ? 'Studied here' : 'Not studied here'), el('span', 'recovery-text', answer + ' '), cite(g, r.source));
     body.append(tr);
   });
   table.append(body); wrap.append(table); box.append(wrap);
