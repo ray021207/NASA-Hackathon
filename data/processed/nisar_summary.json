@@ -92,7 +92,18 @@
   "dry_dates": 21,
   "nisar_diff_cm_yr": -5.0,
   "nisar_cells": 405,
-  "figure": "gcov_farmland_willcox.png"
+  "figure": "gcov_farmland_willcox.png",
+  "portrait": {
+   "file": "nisar_radar_portrait_willcox.jpg",
+   "dates": 28,
+   "start": "2025-10-26",
+   "end": "2026-11-14",
+   "width_km": 47.6,
+   "pink_cropland_pct": 88,
+   "pivot_acre_pct": 82,
+   "image_cropland_pct": 8,
+   "checks_passed": true
+  }
  },
  "release": "NASA NISAR L2 GUNW. Willcox: Provisional (CRID P05023) except the first pair, Oct 26 to Nov 7 2025, which is Beta; re-fitting without it moves the rate from -2.82 to -3.00 cm/yr. Eloy: Provisional."
 }

@@ -11,6 +11,7 @@ noise = json.load(open(f"{P}/cache/nisar_noise_test.json"))["variants"]
 b, a = noise["iono only"], noise["+hydro+wet"]
 gc = json.load(open(f"{P}/gcov_farmland.json"))
 td = json.load(open(f"{P}/nisar_two_directions.json"))
+pt = json.load(open(f"{P}/nisar_portrait.json"))
 wx, eloy = json.load(open(f"{P}/stack_willcox_128D.json")), json.load(open(f"{P}/stack_eloy_77A.json"))
 
 
@@ -42,7 +43,9 @@ out = dict(
         auc_mean_hh=gc["separability_auc_dry_dates_only"]["mean HH (dB)"], auc_mean_hv=gc["separability_auc_dry_dates_only"]["mean HV (dB)"], auc_hvhh=gc["separability_auc_dry_dates_only"]["mean HV-HH (dB)"],
         rain_rho_hh=gc["rain"]["spearman_3d_hh"], rain_rho_hv=gc["rain"]["spearman_3d_hv"], n_dates=gc["n_dates"], dry_dates=gc["rain"]["dry_dates"],
         nisar_diff_cm_yr=gc["rate_by_class_nisar"]["cropland_minus_shrubland_cm_yr"], nisar_cells=gc["rate_by_class_nisar"]["n_cropland"],
-        figure="gcov_farmland_willcox.png"),
+        figure="gcov_farmland_willcox.png",
+        portrait=dict(file=pt["file"], dates=pt["dates"], start=pt["start"], end=pt["end"], width_km=pt["width_km"],
+                      pink_cropland_pct=round(pt["pink_cropland_share"] * 100), pivot_acre_pct=round(pt["pivot_acre_share"] * 100), image_cropland_pct=round(pt["image_cropland_share"] * 100), checks_passed=bool(pt["playa_check"] and pt["pink_cropland_share"] > 0.7))),
     release="NASA NISAR L2 GUNW. Willcox: Provisional (CRID P05023) except the first pair, Oct 26 to Nov 7 2025, which is Beta; re-fitting without it moves the rate from -2.82 to -3.00 cm/yr. Eloy: Provisional.",
 )
 json.dump(out, open(f"{P}/nisar_summary.json", "w"), indent=1)

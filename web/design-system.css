@@ -631,3 +631,9 @@ details.more-block>p.overview-proof-qualifier{margin-top:12px}
 .masthead nav>a[href]:hover,.masthead nav>button[type]:hover{color:var(--rust);background:none;transform:none}
 .masthead nav>a[href][aria-current=page]{color:var(--rust);border-bottom-color:var(--rust)}
 @media(max-width:700px){.masthead nav>a[href],.masthead nav>button[type]{font-size:14px;padding:12px 2px}}
+/* NISAR radar portrait: a tall data image, kept to a readable width */
+.nisar-portrait{max-width:820px;margin:8px auto 28px}
+.nisar-portrait img{background:var(--ink)}
+.nisar-portrait figcaption{font-size:14px}
+.key{display:inline-block;width:10px;height:10px;border-radius:2px;margin:0 5px 0 2px;vertical-align:baseline}
+.key-r{background:#d23c3c}.key-g{background:#3aa66a}.key-b{background:#3f6fd1}

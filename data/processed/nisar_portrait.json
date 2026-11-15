@@ -1,0 +1,18 @@
+{
+ "file": "nisar_radar_portrait_willcox.jpg",
+ "dates": 28,
+ "dry_dates": 21,
+ "start": "2025-10-26",
+ "end": "2026-11-14",
+ "width_km": 47.6,
+ "height_km": 55.8,
+ "playa_check": true,
+ "pink_cropland_share": 0.88,
+ "image_cropland_share": 0.08,
+ "pivot_acre_share": 0.82,
+ "channels": {
+  "red": "yearly swing of HH (dry dates)",
+  "green": "average HV",
+  "blue": "average HH"
+ }
+}

@@ -870,6 +870,11 @@ function renderNisar(n) {
   if (img) img.src = window.ATLAS_PREVIEW_IMAGES?.[n.figure] || new URL(n.figure, DATA).href;
   const img2 = $('#nisar-farmland-img');
   if (img2) img2.src = window.ATLAS_PREVIEW_IMAGES?.[n.farmland.figure] || new URL(n.farmland.figure, DATA).href;
+  const pr = n.farmland.portrait;
+  Object.entries({ 'p-dates': String(pr.dates), 'p-w': String(Math.round(pr.width)), 'p-start': month(pr.start), 'p-end': month(pr.end), 'p-pink': String(pr.pink), 'p-pivot': String(pr.pivot), 'p-all': String(pr.all) })
+    .forEach(([key, text]) => document.querySelectorAll('[data-nisar="' + key + '"]').forEach(node => { node.textContent = text; }));
+  const img3 = $('#nisar-portrait-img');
+  if (img3) img3.src = window.ATLAS_PREVIEW_IMAGES?.[pr.file] || new URL(pr.file, DATA).href;
   section.hidden = false;
   if (farm) farm.hidden = false;
   const fl = n.farmland, mm = x => (x < 0 ? '\u2212' : x > 0 ? '+' : '') + one(Math.abs(x)) + ' mm';

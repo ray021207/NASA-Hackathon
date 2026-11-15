@@ -152,8 +152,17 @@ const cleanFarmland = f => {
     aucHH: nz(f.auc_hh_spread, 0.5, 1), aucHV: nz(f.auc_hv_spread, 0.5, 1), aucMean: nz(f.auc_mean_hh, 0.5, 1), aucMeanHV: nz(f.auc_mean_hv, 0.5, 1), aucRatio: nz(f.auc_hvhh, 0.5, 1),
     rhoHH: nz(f.rain_rho_hh, -1, 1), rhoHV: nz(f.rain_rho_hv, -1, 1), dates: nz(f.n_dates, 1, 1000), dry: nz(f.dry_dates, 0, 1000),
     nisarDiff: nz(f.nisar_diff_cm_yr, -100, 100), nisarCells: nz(f.nisar_cells, 1, 1e9),
-    figure: typeof f.figure === 'string' && /^[A-Za-z0-9_.-]+\.png$/.test(f.figure) ? f.figure : null
+    figure: typeof f.figure === 'string' && /^[A-Za-z0-9_.-]+\.png$/.test(f.figure) ? f.figure : null,
+    portrait: cleanPortrait(f.portrait)
   };
+  return Object.values(o).every(v => v !== null) ? o : null;
+};
+// The radar portrait is shown only if its caption checks passed in src/gcov_portrait.py (playa location, pink = cropland).
+const cleanPortrait = p => {
+  if (!p || typeof p !== 'object' || p.checks_passed !== true) return null;
+  const o = { file: typeof p.file === 'string' && /^[A-Za-z0-9_.-]+\.(png|jpe?g)$/.test(p.file) ? p.file : null, dates: nz(p.dates, 1, 1000),
+    start: validDate(p.start) ? p.start : null, end: validDate(p.end) ? p.end : null, width: nz(p.width_km, 1, 1000),
+    pink: nz(p.pink_cropland_pct, 0, 100), pivot: nz(p.pivot_acre_pct, 0, 100), all: nz(p.image_cropland_pct, 0, 100) };
   return Object.values(o).every(v => v !== null) ? o : null;
 };
 export function cleanNisar(raw) {
