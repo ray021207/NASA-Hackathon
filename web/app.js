@@ -339,7 +339,8 @@ function renderDetails() {
   root.append(kicker, el('h1', '', p.name), el('p', 'story-name', p.tagline));
   const studyContext = el('div', 'study-context'); studyContext.append(explainButton('study')); root.append(studyContext);
   if (p.confirmation) root.append(el('p', 'confirmation-chip' + (p.confirmation === 'single look direction' ? ' unconfirmed' : ''), p.confirmation === 'single look direction' ? 'Unconfirmed · ' + p.confirmation : p.confirmation));
-  renderInsights(root, series);
+  const summaryPanel = el('div', 'report-summary');
+  renderInsights(summaryPanel, series);
   const hasRate = series && isNumber(series.rate_cm_yr);
   const metric = el('section', 'metric' + (hasRate ? '' : ' pending'));
   metric.append(el('p', 'metric-label', 'Reported displacement rate · line of sight'));
@@ -373,11 +374,8 @@ function renderDetails() {
   const chartFooter = el('a', 'map-chart-details', 'Read the full ' + p.name + ' study report ↓');
   chartFooter.href = '#details';
   chartTarget.append(chartFooter);
-  const technical = el('details', 'report-technical');
-  const technicalSummary = el('summary', 'report-technical-toggle');
-  technicalSummary.append(el('span', 'report-technical-title', 'Methods, measurements & validation'),
-    el('span', 'report-technical-hint', 'Source records, observations, comparisons and limitations'));
-  technical.append(technicalSummary);
+  const technical = el('div', 'report-methods');
+  technical.append(el('p', 'report-technical-hint', 'Source records, observations, the official comparison and the limits of this measurement.'));
   const technicalGrid = el('div', 'report-technical-grid');
   technical.append(technicalGrid);
   const record = section('Measurement record', 'record');
@@ -436,14 +434,47 @@ function renderDetails() {
   story.append(el('p', 'detail-copy', p.story));
   if (typeof p.land_use_note === 'string' && p.land_use_note.trim()) story.append(note(p.land_use_note));
   story.classList.add('report-why');
-  root.append(story);
-  if (geology) root.append(geology);
-  root.append(technical);
+  summaryPanel.append(story);
+  reportTabs(root, [
+    ['summary', 'Summary', summaryPanel],
+    ['beneath', 'What lies beneath', geology],
+    ['methods', 'Methods & checks', technical]
+  ]);
   const bottom = el('div', 'detail-bottom');
   bottom.append(el('div', '', 'Radar measures motion along the satellite’s line of sight. A vertical rate requires a justified conversion.'));
   const button = el('button', '', 'Read the measurement limits');
   button.type = 'button'; button.addEventListener('click', () => openDialog('limits'));
   bottom.append(button); root.append(bottom);
+}
+// Study report tabs. The chosen tab is kept when another study area is opened, so areas can be compared section by section.
+function reportTabs(root, entries) {
+  const list = entries.filter(entry => entry[2]);
+  if (!list.some(([id]) => id === state.reportTab)) state.reportTab = list[0][0];
+  const bar = el('div', 'report-tabs');
+  bar.setAttribute('role', 'tablist'); bar.setAttribute('aria-label', 'Study report sections');
+  const tabs = [], panels = [];
+  list.forEach(([id, label, body]) => {
+    const tab = el('button', '', label); tab.type = 'button'; tab.id = 'report-tab-' + id;
+    tab.setAttribute('role', 'tab'); tab.setAttribute('aria-controls', 'report-panel-' + id);
+    const panel = el('div', 'report-panel'); panel.id = 'report-panel-' + id; panel.dataset.tab = id;
+    panel.setAttribute('role', 'tabpanel'); panel.setAttribute('aria-labelledby', tab.id); panel.tabIndex = 0;
+    panel.append(body); tabs.push(tab); panels.push(panel);
+  });
+  const select = (index, focus) => {
+    state.reportTab = list[index][0];
+    tabs.forEach((tab, i) => { const on = i === index; tab.setAttribute('aria-selected', String(on)); tab.tabIndex = on ? 0 : -1; panels[i].hidden = !on; });
+    if (focus) tabs[index].focus();
+  };
+  tabs.forEach((tab, i) => {
+    tab.addEventListener('click', () => select(i, false));
+    tab.addEventListener('keydown', ev => {
+      const n = { ArrowRight: (i + 1) % tabs.length, ArrowLeft: (i - 1 + tabs.length) % tabs.length, Home: 0, End: tabs.length - 1 }[ev.key];
+      if (n !== undefined) { ev.preventDefault(); select(n, true); }
+    });
+  });
+  bar.append(...tabs);
+  root.append(bar, ...panels);
+  select(list.findIndex(([id]) => id === state.reportTab), false);
 }
 function renderHotspots() {
   const list = $('#hotspot-list'); list.replaceChildren();
