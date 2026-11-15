@@ -27,3 +27,8 @@ Python dependencies are listed with versions in `requirements.txt`.
 ## Arizona Geological Survey earth fissure maps
 
 - Source: GeoJSON in https://github.com/azgs/EarthFissureViewer (gh-pages/data), published by the Arizona Geological Survey with its Earth Fissure Viewer; data last updated 2016-02-04. The repository states no licence. We do not redistribute the raw lines; we publish only per-study-area totals (`data/processed/fissures_summary.json`), credited to the AZGS, with the data date.
+
+## Phone Overview backdrop (photograph)
+
+- `web/assets/desert-backdrop.webp` is a heavily processed silhouette (cropped, flattened to a tint, shown at 22% strength) traced from a desert-sunset photograph supplied by the team. The photograph is not stored in the repository.
+- **Photographer, source and licence: TO BE CONFIRMED by the team before submission.** If it cannot be confirmed, remove the backdrop (delete the `.overview-hero::before` rule in `web/design-system.css`) or replace it with the drawn illustration in the git history.

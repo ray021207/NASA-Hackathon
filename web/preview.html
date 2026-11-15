@@ -2220,11 +2220,12 @@ details.more>summary:not(#_){min-height:44px;padding:11px 16px}
 }
 /* hero-ai-note: shown on phones only */
 .hero-ai-note{display:none}
-/* Phones: the large logo is replaced by a soft Arizona scene (mountains, sun, saguaros) behind the opening text, in very pale tints so the text stays easy to read; the action buttons are centred. */
+/* Phones: the large logo is replaced by a soft silhouette of a desert sunset (saguaros, barrel cactus, hills; traced from a photograph, see src/make_backdrop.py) behind the opening text, shown at 22% strength so every line keeps at least 4.5:1 contrast (grey text darkened a shade here); the action buttons are centred. */
 @media(max-width:700px){
  .overview-visual:not(#_){display:none}
  .overview-hero:not(#_){position:relative}
- .overview-hero::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:url("./assets/arizona-backdrop.svg") center calc(100% - 64px) / 100% auto no-repeat;-webkit-mask-image:linear-gradient(to bottom,#000 calc(100% - 210px),transparent calc(100% - 64px));mask-image:linear-gradient(to bottom,#000 calc(100% - 210px),transparent calc(100% - 64px))}
+ .overview-hero::before{content:"";position:absolute;top:0;bottom:0;left:-20px;right:-20px;z-index:-1;pointer-events:none;background:url("./assets/desert-backdrop.webp") center / cover no-repeat;opacity:.22;-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 14%,#000 84%,transparent 100%);mask-image:linear-gradient(to bottom,transparent 0,#000 14%,#000 84%,transparent 100%)}
+ .overview-hero .overview-subcopy,.overview-hero .hero-ai-note{color:#3f484d}
  .hero-ai-note:not(#_){display:block;text-align:center;margin:10px 0 0;font:600 11px/1.3 var(--sans);letter-spacing:.07em;text-transform:uppercase;color:var(--slate-deep)}
  .overview-actions:not(#_){display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:6px 26px}
  .overview-primary:not(#_){display:flex;width:100%;justify-content:center;gap:10px;text-align:center}
@@ -4456,7 +4457,7 @@ function renderGeology(slug) {
           <a class="overview-story-link" href="#overview-nisar">What NISAR shows <span aria-hidden="true">↓</span></a>
           <a class="overview-story-link" href="#overview-story">Read our story <span aria-hidden="true">↓</span></a>
         </div>
-        <p class="hero-ai-note">Background art: AI-assisted illustration</p>
+        <p class="hero-ai-note">Background: silhouette traced from a photograph</p>
       </div>
       <div class="overview-visual" aria-hidden="true">
         <canvas class="overview-fluid" aria-hidden="true"></canvas>
