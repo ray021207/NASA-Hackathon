@@ -248,7 +248,7 @@ test('navigation items share one style (no pill, no odd colour), and the current
   assert.ok(i > css.lastIndexOf('.masthead nav .nav-explore{'), 'the shared rule comes after the old pill rule');
   assert.match(css, /\.masthead nav>a\[href\]\[aria-current=page\]\{color:var\(--rust\)/);
   const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
-  const nav = html.slice(html.indexOf('<nav aria-label="Site navigation">'), html.indexOf('</nav>', html.indexOf('<nav aria-label="Site navigation">')));
+  const nav = html.slice(html.indexOf('<nav id="site-nav" aria-label="Site navigation">'), html.indexOf('</nav>', html.indexOf('<nav id="site-nav" aria-label="Site navigation">')));
   assert.equal((nav.match(/<a /g) || []).length + (nav.match(/<button /g) || []).length, 7, 'Overview, Evidence, Study regions, How we measured, Limits, About us, Resources');
 });
 
@@ -276,7 +276,20 @@ test('images are never hidden by the scroll script (figures showed as blank whit
 
 test('navigation order: Overview, Evidence, Study regions, About us, How we measured, Limits, Resources', async () => {
   const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
-  const nav = html.slice(html.indexOf('<nav aria-label="Site navigation">'), html.indexOf('</nav>', html.indexOf('<nav aria-label="Site navigation">')));
+  const nav = html.slice(html.indexOf('<nav id="site-nav" aria-label="Site navigation">'), html.indexOf('</nav>', html.indexOf('<nav id="site-nav" aria-label="Site navigation">')));
   const labels = [...nav.matchAll(/<(?:a|button)[^>]*>([^<]+)/g)].map(m => m[1].trim());
   assert.deepEqual(labels, ['Overview', 'Evidence', 'Study regions', 'About us', 'How we measured', 'Limits', 'Resources']);
+});
+
+test('phone menu: a labelled toggle controls the nav, collapsing is gated on the script, desktop stays on one line', async () => {
+  const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
+  assert.match(html, /<button type="button" class="nav-toggle" aria-controls="site-nav" aria-expanded="false" aria-label="Open menu">/);
+  assert.match(html, /<nav id="site-nav" aria-label="Site navigation">/);
+  const css = await readFile(new URL('../design-system.css', import.meta.url), 'utf8');
+  assert.match(css, /html\.nav-js \.masthead nav\{display:none\}/, 'menu collapses only once the script has run');
+  assert.ok(!/@media\(max-width:860px\)\{[^]*?\n  \.masthead nav\{display:none/.test(css), 'no ungated collapse');
+  assert.match(css, /@media\(min-width:861px\)\{\.masthead nav\{flex-wrap:nowrap/, 'one line on wide screens');
+  assert.match(css, /:hover[^{]*\{color:var\(--rust\);background-image:linear-gradient/, 'hover sets its own underline (an older rule clears backgrounds)');
+  const app = await readFile(new URL('../app.js', import.meta.url), 'utf8');
+  assert.match(app, /classList\.add\('nav-js'\)/);
 });

@@ -1873,6 +1873,35 @@ details.more-block>p.overview-proof-qualifier{margin-top:12px}
 .nisar-portrait figcaption{font-size:14px}
 .key{display:inline-block;width:10px;height:10px;border-radius:2px;margin:0 5px 0 2px;vertical-align:baseline}
 .key-r{background:#d23c3c}.key-g{background:#3aa66a}.key-b{background:#3f6fd1}
+
+/* ---- Navigation layout: one straight line on laptops and desktops; a menu button on phones and small tablets (860px and narrower).
+   The menu only collapses once the script has wired the button (html.nav-js), so without the script the full menu stays visible. ---- */
+.nav-toggle{display:none}
+@media(min-width:861px){.masthead nav{flex-wrap:nowrap;white-space:nowrap}}
+/* hover and focus: an orange underline sweeps out wide from the centre; the current view keeps the full underline */
+.masthead nav>a[href],.masthead nav>button[type]{background-image:linear-gradient(var(--rust),var(--rust));background-repeat:no-repeat;background-position:50% 100%;background-size:0% 2px;transition:background-size .28s ease,color .2s ease}
+.masthead nav>a[href]:hover,.masthead nav>button[type]:hover,.masthead nav>a[href]:focus-visible,.masthead nav>button[type]:focus-visible{color:var(--rust);background-image:linear-gradient(var(--rust),var(--rust));background-repeat:no-repeat;background-position:50% 100%;background-size:100% 2px}
+.masthead nav>a[href][aria-current=page]{color:var(--rust);background-size:100% 2px;border-bottom-color:transparent}
+/* the menu button: rust, turning ink with wider lines on hover; the lines become an X when open */
+.nav-toggle{align-items:center;justify-content:center;flex-direction:column;gap:5px;width:46px;height:42px;padding:0;border:0;border-radius:12px;background:var(--rust);cursor:pointer;transition:background .2s ease}
+.nav-toggle span{display:block;width:20px;height:2px;border-radius:2px;background:var(--canvas);transition:width .22s ease,transform .25s ease,opacity .2s ease}
+.nav-toggle:hover{background:var(--ink)}
+.nav-toggle:hover span{width:26px}
+.nav-toggle:focus-visible{outline:2px solid var(--rust);outline-offset:3px}
+.masthead.nav-open .nav-toggle span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.masthead.nav-open .nav-toggle span:nth-child(2){opacity:0}
+.masthead.nav-open .nav-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+@media(max-width:860px){
+  .masthead{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"brand toggle" "tagline tagline" "nav nav"}
+  html.nav-js .nav-toggle{display:inline-flex;grid-area:toggle;align-self:center;justify-self:end}
+  html.nav-js .masthead nav{display:none}
+  html.nav-js .masthead.nav-open nav{display:flex}
+  .masthead nav{flex-direction:column;align-items:stretch;flex-wrap:nowrap;gap:0;margin-top:10px;padding:2px 0 10px}
+  .masthead nav>a[href],.masthead nav>button[type]{display:block;width:100%;text-align:left;font-size:15px;padding:14px 6px;border-bottom:1px solid var(--rule);background-size:0 0}
+  .masthead nav>a[href]:hover,.masthead nav>button[type]:hover,.masthead nav>a[href]:focus-visible,.masthead nav>button[type]:focus-visible{background-size:0 0;background-color:var(--faint)}
+  .masthead nav>a[href][aria-current=page]{background-size:0 0;box-shadow:inset 3px 0 0 var(--rust);padding-left:14px}
+  .masthead nav>button[data-dialog=limits]{display:block}
+}
 </style>
   <script>/* @preserve
  * Leaflet 1.9.4, a JS library for interactive maps. https://leafletjs.com
@@ -3542,14 +3571,37 @@ function renderGroundwater(g) {
     note: 'Water levels: USGS and ADWR well measurements. Sinking: ten-year Sentinel-1 rate. Association, not cause.' });
   section.hidden = false;
 }
-loadGroundwater().then(renderGroundwater);</script>
+loadGroundwater().then(renderGroundwater);
+
+// Menu button for phones and small tablets: opens and closes the navigation; closes on choosing an item, tapping outside or Escape.
+// The CSS only collapses the menu once html.nav-js is set here, so if this fails the full menu stays visible.
+(function initMenu() {
+  try {
+    const head = document.querySelector('.masthead'), btn = document.querySelector('.nav-toggle'), nav = document.getElementById('site-nav');
+    if (!head || !btn || !nav) return;
+    const set = open => {
+      head.classList.toggle('nav-open', open);
+      btn.setAttribute('aria-expanded', String(open));
+      btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    };
+    btn.addEventListener('click', () => set(!head.classList.contains('nav-open')));
+    nav.addEventListener('click', ev => { if (ev.target.closest('a, button')) set(false); });
+    document.addEventListener('keydown', ev => { if (ev.key === 'Escape' && head.classList.contains('nav-open')) { set(false); btn.focus(); } });
+    document.addEventListener('click', ev => { if (head.classList.contains('nav-open') && !head.contains(ev.target)) set(false); });
+    window.matchMedia?.('(min-width: 861px)')?.addEventListener?.('change', ev => { if (ev.matches) set(false); });
+    document.documentElement.classList.add('nav-js');
+  } catch (error) {
+    document.documentElement.classList.remove('nav-js');
+  }
+})();</script>
 </head>
 <body>
   <a class="skip-link" href="#details">Skip to study details</a>
   <header class="masthead">
     <a class="wordmark" href="./" aria-label="Sinkronized, home"><img class="logo" src="./assets/logo.png" alt="" width="46" height="46"><span>Sinkronized</span></a>
     <span class="project-label">The desert sinks, and the radar keeps the beat.</span>
-    <nav aria-label="Site navigation">
+    <button type="button" class="nav-toggle" aria-controls="site-nav" aria-expanded="false" aria-label="Open menu"><span></span><span></span><span></span></button>
+    <nav id="site-nav" aria-label="Site navigation">
       <a class="nav-overview" href="#overview">Overview</a>
       <a class="nav-evidence" href="#evidence">Evidence</a>
       <a class="nav-explore" href="#atlas">Study regions</a>

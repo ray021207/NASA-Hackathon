@@ -1066,3 +1066,25 @@ function renderGroundwater(g) {
   section.hidden = false;
 }
 loadGroundwater().then(renderGroundwater);
+
+// Menu button for phones and small tablets: opens and closes the navigation; closes on choosing an item, tapping outside or Escape.
+// The CSS only collapses the menu once html.nav-js is set here, so if this fails the full menu stays visible.
+(function initMenu() {
+  try {
+    const head = document.querySelector('.masthead'), btn = document.querySelector('.nav-toggle'), nav = document.getElementById('site-nav');
+    if (!head || !btn || !nav) return;
+    const set = open => {
+      head.classList.toggle('nav-open', open);
+      btn.setAttribute('aria-expanded', String(open));
+      btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    };
+    btn.addEventListener('click', () => set(!head.classList.contains('nav-open')));
+    nav.addEventListener('click', ev => { if (ev.target.closest('a, button')) set(false); });
+    document.addEventListener('keydown', ev => { if (ev.key === 'Escape' && head.classList.contains('nav-open')) { set(false); btn.focus(); } });
+    document.addEventListener('click', ev => { if (head.classList.contains('nav-open') && !head.contains(ev.target)) set(false); });
+    window.matchMedia?.('(min-width: 861px)')?.addEventListener?.('change', ev => { if (ev.matches) set(false); });
+    document.documentElement.classList.add('nav-js');
+  } catch (error) {
+    document.documentElement.classList.remove('nav-js');
+  }
+})();
