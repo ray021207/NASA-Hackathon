@@ -265,3 +265,11 @@ test('Groundwater summary: the real file validates; bad fields hide the tab', as
   const app = await readFile(new URL('../app.js', import.meta.url), 'utf8');
   for (const key of new Set([...html.matchAll(/data-gw="([a-z0-9-]+)"/g)].map(m => m[1]))) assert.ok(app.includes(/^[a-z]+$/.test(key) ? key + ':' : "'" + key + "'"), 'app.js fills ' + key);
 });
+
+test('images are never hidden by the scroll script (figures showed as blank white boxes)', async () => {
+  const motion = await readFile(new URL('../motion.js', import.meta.url), 'utf8');
+  const css = await readFile(new URL('../design-system.css', import.meta.url), 'utf8');
+  assert.ok(!/fx-mask/.test(motion) && !/\.fx-mask\{clip-path/.test(css), 'no clip-path mask on images');
+  assert.ok(!/querySelectorAll\('[^']*img[^']*'\)\.forEach\(el => el\.classList\.add\('fx-reveal'\)/.test(motion), 'images are not given the hidden-until-revealed class');
+  assert.match(motion, /const sweep = \(\) =>/, 'a safety net reveals anything on screen even if the observer never fires');
+});

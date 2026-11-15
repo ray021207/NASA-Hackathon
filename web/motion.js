@@ -333,14 +333,27 @@
 
     // rise-in cards and charts, figure unmask
     const rises = [...document.querySelectorAll('.quick-answers li, .viz, .nisar-figure figcaption')];
-    const masks = [...document.querySelectorAll('.nisar-figure img')];
+    // Images are never hidden by this script (an earlier clip-path "unmask" could leave figures blank if the browser never reported them visible).
     rises.forEach(el => el.classList.add('fx-reveal'));
-    masks.forEach(el => el.classList.add('fx-mask'));
     rises.forEach((el, i) => el.style.setProperty('--d', (i % 3) * 80 + 'ms'));
+    const reveal = el => el.classList.add('fx-in');
     if ('IntersectionObserver' in window) {
-      const io = new IntersectionObserver(entries => entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('fx-in'); io.unobserve(e.target); } }), { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-      [...rises, ...masks].forEach(el => io.observe(el));
-    } else [...rises, ...masks].forEach(el => el.classList.add('fx-in'));
+      const io = new IntersectionObserver(entries => entries.forEach(e => { if (e.isIntersecting) { reveal(e.target); io.unobserve(e.target); } }), { threshold: 0.05 });
+      rises.forEach(el => io.observe(el));
+    } else rises.forEach(reveal);
+    // Safety net: anything on screen that is still hidden gets revealed, whether or not the observer fired.
+    const sweep = () => {
+      const vh = window.innerHeight || 800;
+      document.querySelectorAll('.fx-reveal:not(.fx-in)').forEach(el => {
+        if (!visible(el)) return;
+        const r = el.getBoundingClientRect();
+        if (r.top < vh && r.bottom > 0) reveal(el);
+      });
+    };
+    setTimeout(sweep, 1200);
+    window.addEventListener('hashchange', () => setTimeout(sweep, 900));
+    document.addEventListener('click', () => setTimeout(sweep, 900));
+    window.addEventListener('scroll', () => { clearTimeout(sweep.t); sweep.t = setTimeout(sweep, 250); }, { passive: true });
 
     // hero parallax and scroll-linked bits
     const heroVisual = document.querySelector('.overview-visual');
