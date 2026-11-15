@@ -980,3 +980,15 @@ details.more>summary:not(#_){min-height:44px;padding:11px 16px}
  .masthead nav>a[href]:not(#_),.masthead nav>button[type]:not(#_){font-size:12.5px}
  .masthead nav:not(#_){gap:4px clamp(12px,1.3vw,24px)}
 }
+/* Phones: a small logo beside the headline replaces the large logo and rings; the action buttons are centred. */
+.hero-mini-logo{display:none}
+@media(max-width:700px){
+ .overview-visual:not(#_){display:none}
+ .overview-headline{display:flex;align-items:flex-start;gap:12px}
+ .overview-headline h1{flex:1;min-width:0}
+ .hero-mini-logo{display:block;position:relative;flex:none;width:46px;margin-top:6px}
+ .hero-mini-logo img{display:block;width:46px;height:46px;border-radius:50%}
+ .overview-actions:not(#_){display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:6px 26px}
+ .overview-primary:not(#_){display:flex;width:100%;justify-content:center;gap:10px;text-align:center}
+ .overview-story-link:not(#_){text-align:center}
+}

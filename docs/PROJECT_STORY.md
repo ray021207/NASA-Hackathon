@@ -88,8 +88,8 @@ Arizona's aquifers are being pumped faster than they refill, so the ground is si
 ## Before submitting (deadline Sunday 15 November 2026, 11:59 pm Arizona time)
 
 - [ ] Demo link: slides (7 or fewer) or a video (30 seconds or less), public, no login.
-- [ ] Project name: RaySAR or Sinkronized. Use the name registered, the same as the site.
+- [x] Project name: Sinkronized (decided).
 - [ ] Paste the Summary, Project Details, SI answers and the two link tables from `docs/PROJECT_SUBMISSION.md`.
-- [ ] Team registered on the Space Apps portal.
-- [ ] Team portraits: if AI-generated or AI-stylised, add the visible label.
+- [x] Team registered on the Space Apps portal (done).
+- [ ] Team portraits: use the real photographs on the About us page (no SI label needed).
 - [ ] Open the live site once on a phone and once on a laptop.

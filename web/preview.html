@@ -2218,6 +2218,18 @@ details.more>summary:not(#_){min-height:44px;padding:11px 16px}
  .masthead nav>a[href]:not(#_),.masthead nav>button[type]:not(#_){font-size:12.5px}
  .masthead nav:not(#_){gap:4px clamp(12px,1.3vw,24px)}
 }
+/* Phones: a small logo beside the headline replaces the large logo and rings; the action buttons are centred. */
+.hero-mini-logo{display:none}
+@media(max-width:700px){
+ .overview-visual:not(#_){display:none}
+ .overview-headline{display:flex;align-items:flex-start;gap:12px}
+ .overview-headline h1{flex:1;min-width:0}
+ .hero-mini-logo{display:block;position:relative;flex:none;width:46px;margin-top:6px}
+ .hero-mini-logo img{display:block;width:46px;height:46px;border-radius:50%}
+ .overview-actions:not(#_){display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:6px 26px}
+ .overview-primary:not(#_){display:flex;width:100%;justify-content:center;gap:10px;text-align:center}
+ .overview-story-link:not(#_){text-align:center}
+}
 </style>
   <script>/* @preserve
  * Leaflet 1.9.4, a JS library for interactive maps. https://leafletjs.com
@@ -4436,7 +4448,10 @@ function renderGeology(slug) {
         <rect width="1520" height="670" fill="url(#sonoran-reading)"/>
       </svg>
       <div class="overview-copy">
-        <h1 id="overview-title"><span>Arizona is our home.</span><em>What happens beneath it matters.</em></h1>
+        <div class="overview-headline">
+          <span class="hero-mini-logo" aria-hidden="true"><img src="./assets/logo.png" alt="" width="46" height="46"><span class="si-chip">AI</span></span>
+          <h1 id="overview-title"><span>Arizona is our home.</span><em>What happens beneath it matters.</em></h1>
+        </div>
         <p class="overview-lede">Our cities, farms and desert communities depend on groundwater that lies out of sight. When water levels decline, the land above can slowly sink.</p>
         <p class="overview-subcopy">Sinkronized puts NASA’s new NISAR radar satellite to work on Arizona: we test its first year of data against a decade of older satellite records and published groundwater research, so the evidence is easier to explore—and its limits easier to understand.</p>
         <div class="overview-actions">
