@@ -1928,6 +1928,17 @@ html.motion-paused .ticker-track{animation-play-state:paused}
 .plan-sources h4{font:700 14px/1.3 var(--sans);margin:0 0 8px;color:var(--ink)}
 .plan-sources ul{margin:0;padding:0 0 0 18px;display:grid;gap:6px}
 .plan-sources li{font:400 14px/1.5 var(--sans)}
+/* ---- Readability and touch floor (UI audit, Nov 15 2026). Small labels were 10-11.5px (about 8% of visible text) and several controls were 17-40px tall.
+   ':not(#_)' raises precedence so these win over the many older rules without !important; nothing is hidden or removed. ---- */
+:is(.overview-proof-id,.overview-mission-label,.overview-narrative-index,.overview-audiences span,.overview-topline span,.eyebrow,.overview-kicker,.team-specialism-label,.overview-visual-label,.detail-kicker,.layer-group,.layer-state,.map-color-key,.chart-tip,.hotspot-button .index):not(#_){font-size:12.5px}
+:is(.hotspot-button .tagline,.layer-desc,.layer-note,.opacity-control,.map-caption,.map-caption span,.rate-legend small,.study-label small,.confidence-pill small):not(#_){font-size:13px}
+:is(.return-overview,.back-to-map):not(#_){display:inline-flex;align-items:center;min-height:44px;padding:8px 2px;font-size:14px;font-weight:700;color:var(--rust)}
+:is(.workspace .map-toolbar button,.mobile-layer-toggle):not(#_){font-size:13px;min-height:44px}
+details.more>summary:not(#_){min-height:44px;padding:11px 16px}
+.evidence-tabs [role=tab]:not(#_){min-height:44px}
+.nav-toggle:not(#_){width:48px;height:44px}
+.leaflet-control-zoom a:not(#_){width:44px!important;height:44px!important;line-height:44px!important}
+:is(.overview-proof-card a,.plan-sources a):not(#_){display:inline-block;padding:3px 0}
 </style>
   <script>/* @preserve
  * Leaflet 1.9.4, a JS library for interactive maps. https://leafletjs.com
@@ -4082,7 +4093,7 @@ loadGroundwater().then(renderGroundwater);
     <section id="details" class="details-panel" tabindex="-1" aria-label="Selected study report">
       <div class="study-details-head">
         <span class="eyebrow">STUDY REGION / FIELD REPORT</span>
-        <a href="#atlas">↑ Back to the map</a>
+        <a class="back-to-map" href="#atlas">↑ Back to the map</a>
       </div>
       <div id="detail-content" aria-live="polite">
         <div class="study-empty">
