@@ -2,7 +2,7 @@
 
 *The desert sinks, and the radar keeps the beat.*
 
-**Live site: https://sinkronized.vercel.app** (updates by itself a few minutes after a merge into `main`)
+**Live site: https://sinkronized.vercel.app** (goes live after the fork is synced, see `web/DESIGN_DIRECTION.md`)
 
 NASA Space Apps 2026 — **Dancing with the SARs** (NISAR). 
 

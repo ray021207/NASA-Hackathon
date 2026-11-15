@@ -53,7 +53,7 @@ The brand remains **Sinkronized**, with the existing Arizona logo, original Sono
 4. Check source links, links to resources, and text/controls over the muted desert artwork.
 5. Refresh `web/preview.html` using `node web/build-preview.mjs` after source changes.
 
-**Deployment:** The public site (https://sinkronized.vercel.app) deploys from the fork `ray021207/NASA-Hackathon`, which Vercel is connected to. A workflow that exists only on that fork (`.github/workflows/sync-upstream.yml`) merges new commits from this repository's `main` into the fork every 5 minutes, and Vercel redeploys on every fork change. So **a merge here reaches the live site automatically, usually within 5 to 10 minutes. Nobody needs to sync anything by hand.** Do not push to the fork directly.
+**Deployment:** The public site (https://sinkronized.vercel.app) deploys from the fork `ray021207/NASA-Hackathon`, which Vercel is connected to. A merge into this repository's `main` does **not** reach the live site by itself: the fork has a workflow (`.github/workflows/sync-upstream.yml`) with a 5-minute schedule, but on Nov 15 2026 the schedule never ran (only manual runs were recorded; cause not verified). After merging into `main`, publish with: `gh workflow run sync-upstream.yml -R ray021207/NASA-Hackathon` (or GitHub > fork > Actions > "Sync from the main repo" > Run workflow); Vercel then redeploys within about a minute. Do not push to the fork directly. Check the result by fetching https://sinkronized.vercel.app/web/ and comparing with the repo.
 
 ## Study report after laptop screenshot review
 
