@@ -553,6 +553,7 @@ html.views-on .evidence [role=tabpanel]:not(.is-active){display:none!important}
 [data-view]:focus{outline:none}
 .evidence{padding:26px var(--page-gutter) 40px;background:var(--canvas)}
 .evidence-head{max-width:760px;margin:6px 0 22px}
+.sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 .evidence-head h2{font:730 clamp(30px,3.2vw,46px)/1.12 var(--sans);letter-spacing:-.05em;margin:9px 0 10px;color:var(--ink)}
 .evidence-head p{font:400 16px/1.6 var(--sans);color:var(--slate-deep);margin:0}
 .evidence-tabs{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 6px;position:sticky;top:0;z-index:30;background:var(--canvas);padding:10px 0}
