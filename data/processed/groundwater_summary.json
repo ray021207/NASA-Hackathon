@@ -1,0 +1,47 @@
+{
+ "wells": 236,
+ "decline_ft_yr": 2.17,
+ "total_drop_ft": 68.7,
+ "years": 31.0,
+ "share_deeper_pct": 92,
+ "rho": -0.406,
+ "rho_lo": -0.55,
+ "rho_hi": -0.23,
+ "tiles": 88,
+ "q": [
+  {
+   "lo": -7.19,
+   "hi": 0.88,
+   "n": 59,
+   "rate": -0.08,
+   "sinking_pct": 14
+  },
+  {
+   "lo": 0.88,
+   "hi": 2.17,
+   "n": 59,
+   "rate": -0.9,
+   "sinking_pct": 47
+  },
+  {
+   "lo": 2.17,
+   "hi": 2.92,
+   "n": 59,
+   "rate": -1.84,
+   "sinking_pct": 68
+  },
+  {
+   "lo": 2.92,
+   "hi": 8.75,
+   "n": 59,
+   "rate": -1.81,
+   "sinking_pct": 56
+  }
+ ],
+ "ratio_pct": 4.5,
+ "baseline_from": 1980,
+ "baseline_to": 1996,
+ "recent_from": 2015,
+ "recent_to": 2025,
+ "source": "USGS Water Data OGC API (parameter 72019, incl. ADWR measurements) and ADWR Groundwater Site Inventory; Sentinel-1 OPERA DISP-S1"
+}

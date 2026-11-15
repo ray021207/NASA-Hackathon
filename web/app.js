@@ -1,4 +1,4 @@
-import { cleanPumping, normalizeSeries, normalizeRate, normalizeHotspots, validateGeoJSON, safeSourceURL, formatNumber, isNumber, cleanInsights, normalizeCumulative, cleanTeam, cleanNisar } from './model.mjs';
+import { cleanGroundwater, cleanPumping, normalizeSeries, normalizeRate, normalizeHotspots, validateGeoJSON, safeSourceURL, formatNumber, isNumber, cleanInsights, normalizeCumulative, cleanTeam, cleanNisar } from './model.mjs';
 
 const $ = selector => document.querySelector(selector);
 const DATA = new URL('../data/processed/', import.meta.url);
@@ -646,7 +646,7 @@ const dialogCopy = {
       <li><a href="https://github.com/mansi200304/NASA-Hackathon" target="_blank" rel="noopener noreferrer">Sinkronized · code and pipeline outputs</a></li>
       <li><a href="https://nisar.jpl.nasa.gov/" target="_blank" rel="noopener noreferrer">NASA-ISRO NISAR mission information</a></li>
       <li><a href="https://doi.org/10.5067/NIL2GUNW-P1" target="_blank" rel="noopener noreferrer">NISAR L2 Geocoded Unwrapped Interferogram (GUNW), Provisional · ASF DAAC</a> — DOI 10.5067/NIL2GUNW-P1; the NISAR data processed here.</li>
-      <li><a href="https://doi.org/10.5066/P1ZU6T5N" target="_blank" rel="noopener noreferrer">Read, A. L., Kahler, A. J., Porter, T. J. &amp; Potteiger, S. E. \u00b7 Estimated crop irrigation water use withdrawals in Willcox Groundwater Basin, Arizona for 2024 (USGS data release)</a> \u2014 DOI 10.5066/P1ZU6T5N, CC0; field polygons with modelled withdrawals (modified Blaney-Criddle consumptive-use model; no uncertainty stated).</li>
+      <li><a href="https://api.waterdata.usgs.gov/ogcapi/v0/collections/field-measurements" target="_blank" rel="noopener noreferrer">U.S. Geological Survey \u00b7 Water Data API, groundwater field measurements</a> \u2014 depth to water below land surface (parameter 72019), including measurements by the Arizona Department of Water Resources; used for 1980\u20132000 resting water levels.</li>\n      <li><a href="https://services3.arcgis.com/iuNbZYJOrAYBrPyC/ArcGIS/rest/services/Well_Sites/FeatureServer" target="_blank" rel="noopener noreferrer">Arizona Department of Water Resources \u00b7 Groundwater Site Inventory (GWSI) well sites</a> \u2014 each well\u2019s latest water level, used for the recent end of the comparison.</li>\n      <li><a href="https://doi.org/10.5066/P1ZU6T5N" target="_blank" rel="noopener noreferrer">Read, A. L., Kahler, A. J., Porter, T. J. &amp; Potteiger, S. E. \u00b7 Estimated crop irrigation water use withdrawals in Willcox Groundwater Basin, Arizona for 2024 (USGS data release)</a> \u2014 DOI 10.5066/P1ZU6T5N, CC0; field polygons with modelled withdrawals (modified Blaney-Criddle consumptive-use model; no uncertainty stated).</li>
       <li><a href="https://doi.org/10.5281/ZENODO.20075813" target="_blank" rel="noopener noreferrer">NISAR Data User Guide (Kristenson et al., 2026) · ASF</a> — DOI 10.5281/ZENODO.20075813; product definitions, maturity levels and availability used throughout this project.</li>
       <li><a href="https://doi.org/10.48577/jpl.UD4HV3" target="_blank" rel="noopener noreferrer">NASA-ISRO SAR (NISAR) Mission Science Users’ Handbook, Second Edition (2025)</a> — DOI 10.48577/jpl.UD4HV3.</li>
       <li><a href="https://ecommons.cornell.edu/entities/publication/5e298b2f-9ae6-4861-abfe-a8c194323c08" target="_blank" rel="noopener noreferrer">Devlin, K. (2025) · More Than Just Noise: Effects of Vegetation and Agriculture on InSAR Time Series Analysis</a> — Cornell University PhD dissertation; reports an average bias of about 2–4 cm/yr of apparent subsidence for crops such as cotton in Sentinel-1 data, and the largest C-band versus L-band differences in orchard crops.</li>
@@ -977,7 +977,7 @@ function barChart(host, { title, sub, rows, note, min = 0, max }) {
     const tabs = [...document.querySelectorAll('.evidence [role=tab]')];
     const panels = tabs.map(t => document.getElementById(t.getAttribute('aria-controls')));
     if (views.length < 4 || !tabs.length || panels.some(p => !p)) return;
-    const navFor = { overview: '#overview', evidence: '#evidence', map: '#atlas', about: '#about' };
+    const navFor = { overview: '#overview', evidence: '#evidence', map: '#atlas', about: '#about' };   // the Evidence view now has four tabs
     const rootEl = document.documentElement;
     const available = () => tabs.filter((t, i) => !panels[i].hidden);
     function syncTabs() {
@@ -996,7 +996,7 @@ function barChart(host, { title, sub, rows, note, min = 0, max }) {
     function route(hash, user) {
       const id = decodeURIComponent((hash || '').replace(/^#/, ''));
       const target = id ? document.getElementById(id) : null;
-      const viewEl = (target && target.closest('[data-view]')) || views.find(v => v.dataset.view === 'overview');
+      const viewEl = (target && views.find(v => v.contains(target))) || views.find(v => v.dataset.view === 'overview');
       const name = viewEl.dataset.view;
       views.forEach(v => v.classList.toggle('is-active', v === viewEl));
       if (name === 'evidence') {
@@ -1007,7 +1007,7 @@ function barChart(host, { title, sub, rows, note, min = 0, max }) {
       document.querySelectorAll('.masthead nav a[href^="#"]').forEach(link => {
         if (link.getAttribute('href') === navFor[name]) link.setAttribute('aria-current', 'page'); else link.removeAttribute('aria-current');
       });
-      rootEl.dataset.view = name;
+      rootEl.dataset.currentView = name;            // not data-view: that attribute marks the views themselves
       if (typeof map !== 'undefined' && map) setTimeout(() => map.invalidateSize({ pan: false }), 60);
       const goTop = !target || target === viewEl;
       requestAnimationFrame(() => {
@@ -1038,3 +1038,31 @@ function barChart(host, { title, sub, rows, note, min = 0, max }) {
     document.documentElement.classList.remove('views-on');   // fall back to the full page
   }
 })();
+
+// Water-levels tab: filled only from validated data (data/processed/groundwater_summary.json); hidden if anything is missing or malformed.
+async function loadGroundwater() {
+  try {
+    if (window.ATLAS_PREVIEW_DATA && 'groundwater_summary.json' in window.ATLAS_PREVIEW_DATA) return cleanGroundwater(window.ATLAS_PREVIEW_DATA['groundwater_summary.json']);
+    const response = await fetch(new URL('groundwater_summary.json', DATA), { cache: 'no-cache' });
+    return response.ok ? cleanGroundwater(await response.json()) : null;
+  } catch { return null; }
+}
+function renderGroundwater(g) {
+  const section = $('#overview-groundwater');
+  if (!section) return;
+  if (!g) { section.hidden = true; return; }
+  const one = x => (Math.round(x * 10) / 10).toFixed(1), two = x => (Math.round(x * 100) / 100).toFixed(2);
+  const s1 = x => (Math.round(x * 10) === 0 ? '0.0' : (x < 0 ? '\u2212' : '') + one(Math.abs(x))), s2 = x => (x < 0 ? '\u2212' : '') + two(Math.abs(x));
+  const values = { wells: String(g.wells), from: String(g.from), to: String(g.to), 'recent-from': String(g.recentFrom), 'recent-to': String(g.recentTo),
+    drop: String(Math.round(g.drop)), decline: one(g.decline), years: String(Math.round(g.years)), deeper: String(Math.round(g.deeper)),
+    rho: s2(g.rho), 'rho-lo': s2(g.rhoLo), 'rho-hi': s2(g.rhoHi), tiles: String(g.tiles), ratio: one(g.ratio),
+    'q0-rate': s1(g.q[0].rate), 'q1-rate': s1(g.q[1].rate), 'q2-rate': s1(g.q[2].rate), 'q3-rate': s1(g.q[3].rate), 'q0-sink': String(Math.round(g.q[0].sinking)) };
+  section.querySelectorAll('[data-gw]').forEach(node => { node.textContent = values[node.dataset.gw] ?? ''; });
+  const colors = ['#8a9a84', '#d9a58c', '#c77d5e', '#a64b2a'];
+  barChart($('#viz-groundwater'), {
+    title: 'The faster the water table falls, the faster the ground sinks', sub: 'Wells in four equal groups by how fast their water fell (feet per year). Bar: typical sinking rate around those wells (cm/yr).', max: 2.5,
+    rows: g.q.map((x, i) => ({ label: one(x.lo) + ' to ' + one(x.hi) + ' ft/yr (' + x.n + ' wells)', value: Math.max(0, -x.rate), text: s1(x.rate) + ' cm/yr', color: colors[i] })),
+    note: 'Water levels: USGS and ADWR well measurements. Sinking: ten-year Sentinel-1 rate. Association, not cause.' });
+  section.hidden = false;
+}
+loadGroundwater().then(renderGroundwater);

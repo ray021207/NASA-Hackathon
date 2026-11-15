@@ -195,3 +195,12 @@ export function cleanPumping(raw) {
   };
   return Object.values(o).every(v => v !== null) ? o : null;
 }
+// Water levels vs sinking (data/processed/groundwater_summary.json, src/export_groundwater.py). Strict: any bad field hides the tab.
+export function cleanGroundwater(raw) {
+  if (!raw || typeof raw !== 'object' || !Array.isArray(raw.q) || raw.q.length !== 4) return null;
+  const q = raw.q.map(x => ({ lo: nz(x?.lo, -100, 100), hi: nz(x?.hi, -100, 100), n: nz(x?.n, 1, 1e6), rate: nz(x?.rate, -100, 100), sinking: nz(x?.sinking_pct, 0, 100) }));
+  const o = { wells: nz(raw.wells, 1, 1e6), decline: nz(raw.decline_ft_yr, -100, 100), drop: nz(raw.total_drop_ft, -5000, 5000), years: nz(raw.years, 1, 200), deeper: nz(raw.share_deeper_pct, 0, 100),
+    rho: nz(raw.rho, -1, 1), rhoLo: nz(raw.rho_lo, -1, 1), rhoHi: nz(raw.rho_hi, -1, 1), tiles: nz(raw.tiles, 1, 1e6), ratio: nz(raw.ratio_pct, 0, 1000),
+    from: nz(raw.baseline_from, 1900, 2100), to: nz(raw.baseline_to, 1900, 2100), recentFrom: nz(raw.recent_from, 1900, 2100), recentTo: nz(raw.recent_to, 1900, 2100) };
+  return Object.values(o).every(v => v !== null) && q.every(x => Object.values(x).every(v => v !== null)) ? { ...o, q } : null;
+}

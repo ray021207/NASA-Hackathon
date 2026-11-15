@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { normalizeSeries, normalizeRate, normalizeHotspots, validateGeoJSON, safeSourceURL, formatNumber, cleanInsights, normalizeCumulative, cleanTeam, cleanNisar, cleanPumping } from '../model.mjs';
+import { normalizeSeries, normalizeRate, normalizeHotspots, validateGeoJSON, safeSourceURL, formatNumber, cleanInsights, normalizeCumulative, cleanTeam, cleanNisar, cleanPumping, cleanGroundwater } from '../model.mjs';
 import { readFile } from 'node:fs/promises';
 
 const series = extra => ({ hotspot: 'eloy', units: 'cm', reference: 'Synthetic test reference', dates: ['2026-01-01', '2026-01-13'], displacement: [0, -1], rate_cm_yr: -2, rate_sigma: 0.2, ...extra });
@@ -201,7 +201,7 @@ test('views: four views and three evidence tabs exist, every tab has its panel, 
   const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
   for (const v of ['overview', 'evidence', 'map', 'about']) assert.equal((html.match(new RegExp('data-view="' + v + '"', 'g')) || []).length, 1, v);
   const tabs = [...html.matchAll(/role="tab" id="tab-[a-z]+" aria-controls="([a-z-]+)"/g)].map(m => m[1]);
-  assert.deepEqual(tabs, ['overview-nisar', 'overview-farmland', 'overview-pumping']);
+  assert.deepEqual(tabs, ['overview-nisar', 'overview-farmland', 'overview-pumping', 'overview-groundwater']);
   for (const id of tabs) assert.match(html, new RegExp('<section id="' + id + '"[^>]*role="tabpanel"'));
   const css = await readFile(new URL('../design-system.css', import.meta.url), 'utf8');
   assert.match(css, /html\.views-on \[data-view\]:not\(\.is-active\)\{display:none/, 'hiding is gated on html.views-on, so a failed script leaves the full page');
@@ -250,4 +250,18 @@ test('navigation items share one style (no pill, no odd colour), and the current
   const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
   const nav = html.slice(html.indexOf('<nav aria-label="Site navigation">'), html.indexOf('</nav>', html.indexOf('<nav aria-label="Site navigation">')));
   assert.equal((nav.match(/<a /g) || []).length + (nav.match(/<button /g) || []).length, 7, 'Overview, Evidence, Study regions, How we measured, Limits, About us, Resources');
+});
+
+test('Groundwater summary: the real file validates; bad fields hide the tab', async () => {
+  const raw = JSON.parse(await readFile(new URL('../../data/processed/groundwater_summary.json', import.meta.url), 'utf8'));
+  const g = cleanGroundwater(raw);
+  assert.ok(g, 'real summary is valid');
+  assert.ok(g.wells > 100 && g.rho < 0 && g.rhoHi < 0, 'a negative link whose range excludes zero');
+  assert.equal(cleanGroundwater({ ...raw, rho: 2 }), null);
+  assert.equal(cleanGroundwater({ ...raw, q: raw.q.slice(0, 3) }), null);
+  assert.equal(cleanGroundwater({ ...raw, wells: null }), null);
+  assert.equal(cleanGroundwater(null), null);
+  const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
+  const app = await readFile(new URL('../app.js', import.meta.url), 'utf8');
+  for (const key of new Set([...html.matchAll(/data-gw="([a-z0-9-]+)"/g)].map(m => m[1]))) assert.ok(app.includes(/^[a-z]+$/.test(key) ? key + ':' : "'" + key + "'"), 'app.js fills ' + key);
 });

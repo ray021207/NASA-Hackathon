@@ -113,6 +113,7 @@
         <li><a href="#overview-nisar"><strong>What does NASA’s NISAR show?</strong><span>Its first year, tested</span></a></li>
         <li><a href="#overview-farmland"><strong>What is on top of it?</strong><span>Farmland and desert, seen by radar</span></a></li>
         <li><a href="#overview-pumping"><strong>Is it the pumping?</strong><span>Farm water use against sinking</span></a></li>
+        <li><a href="#overview-groundwater"><strong>Is the water table falling?</strong><span>Wells measured for 30 years</span></a></li>
         <li><button type="button" data-dialog="limits"><strong>How sure are we?</strong><span>Read the limits</span></button></li>
         <li><button type="button" data-dialog="method"><strong>How does radar measure the ground?</strong><span>A plain-language guide</span></button></li>
       </ul>
@@ -229,6 +230,7 @@
       <button type="button" role="tab" id="tab-nisar" aria-controls="overview-nisar" aria-selected="true">What NISAR shows</button>
       <button type="button" role="tab" id="tab-farmland" aria-controls="overview-farmland" aria-selected="false" tabindex="-1">Farms and the radar</button>
       <button type="button" role="tab" id="tab-pumping" aria-controls="overview-pumping" aria-selected="false" tabindex="-1">Pumping and sinking</button>
+      <button type="button" role="tab" id="tab-groundwater" aria-controls="overview-groundwater" aria-selected="false" tabindex="-1">Water levels</button>
     </div>
     <section id="overview-nisar" class="overview-proof overview-nisar" aria-labelledby="nisar-title" role="tabpanel" hidden>
       <div class="overview-proof-heading">
@@ -332,6 +334,35 @@
       </div>
       <div class="viz" id="viz-pump" hidden></div>
       <details class="more more-block"><summary>What this does not show</summary><p class="overview-proof-qualifier"> Matching places is not proof of cause: the pumping is a 2024 model estimate while the radar rate averages ten years, and C-band radar can over-read sinking over farmland (see above). The field-by-field test is inconclusive: only <span data-pump="coherent"></span>% of fields kept a usable 30 m radar reading, mostly idle land, orchards and vineyards, while almost all of the <span data-pump="row-fields"></span> field-crop fields (small grains, cover crops, alfalfa, corn and cotton) lost it (<span data-pump="row-with"></span> kept), so the heaviest pumpers are missing. Across the <span data-pump="field-n"></span> pumped fields that did keep one, pumping per acre and sinking were barely related (<span data-pump="field-rho"></span>, range <span data-pump="field-lo"></span> to <span data-pump="field-hi"></span>). Water levels in wells, geology and the depth of the clay layers are not included. <button type="button" data-dialog="sources">See the data source ↗</button></p></details>
+    </section>
+    <section id="overview-groundwater" class="overview-proof overview-nisar" aria-labelledby="groundwater-title" role="tabpanel" hidden>
+      <div class="overview-proof-heading">
+        <span class="overview-mission-label">GROUNDWATER / THE AQUIFER ITSELF</span>
+        <h2 id="groundwater-title">Where the water table has fallen most, the ground sinks fastest.</h2>
+        <p>We matched <span data-gw="wells"></span> wells measured in <span data-gw="from"></span>–<span data-gw="to"></span> with the Arizona Department of Water Resources’ latest readings (<span data-gw="recent-from"></span>–<span data-gw="recent-to"></span>) and compared how far the water fell with how fast the ground above it sinks. <strong>These are measurements in real wells, not model estimates.</strong></p>
+      </div>
+      <div class="overview-proof-grid">
+        <article class="overview-proof-card">
+          <span class="overview-proof-id">01 / THE WATER TABLE</span>
+          <strong class="overview-proof-number"><span data-gw="drop"></span> <small>ft deeper</small></strong>
+          <h3>The water table fell about <span data-gw="decline"></span> feet a year.</h3>
+          <details class="more"><summary>How we know</summary><p>In the typical well, water now stands <span data-gw="drop"></span> feet deeper than in its first readings, over about <span data-gw="years"></span> years. <span data-gw="deeper"></span>% of the wells got deeper. Depth to water is measured from the land surface; the early readings are the ones marked as resting (not pumping) water levels.</p></details>
+        </article>
+        <article class="overview-proof-card">
+          <span class="overview-proof-id">02 / WHERE IT SINKS</span>
+          <strong class="overview-proof-number"><span data-gw="q3-rate"></span> <small>cm/yr where water fell fastest</small></strong>
+          <h3>Faster-falling water, faster-sinking ground.</h3>
+          <details class="more"><summary>How we know</summary><p>Sorting the wells into four equal groups by how fast their water fell: where it fell least, the ground around the wells reads <span data-gw="q0-rate"></span> cm/yr (<span data-gw="q0-sink"></span>% of wells on sinking ground); then <span data-gw="q1-rate"></span>, <span data-gw="q2-rate"></span> and <span data-gw="q3-rate"></span> cm/yr. Beyond about 2 feet a year the sinking stops increasing: how much the ground sinks also depends on how much clay lies below, which these wells do not record.</p></details>
+        </article>
+        <article class="overview-proof-card">
+          <span class="overview-proof-id">03 / HOW STRONG</span>
+          <strong class="overview-proof-number"><span data-gw="rho"></span> <small>correlation</small></strong>
+          <h3>A clear link from two independent measurements.</h3>
+          <details class="more"><summary>How we know</summary><p>Ranking wells by water-table decline and by the Sentinel-1 rate around them gives <span data-gw="rho"></span> (95% range <span data-gw="rho-lo"></span> to <span data-gw="rho-hi"></span>, resampling <span data-gw="tiles"></span> separate 5 km areas so nearby wells do not count twice). Where the ground is sinking, it sinks by about <span data-gw="ratio"></span>% of the rate at which the water table falls.</p></details>
+        </article>
+      </div>
+      <div class="viz" id="viz-groundwater" hidden></div>
+      <details class="more more-block"><summary>What this does not show</summary><p class="overview-proof-qualifier">The early and recent readings come from different programs, and the recent reading is a single latest value without a resting-or-pumping flag in the service we used. Wells differ in depth and in which layer of the aquifer they tap. The water-level record spans about 30 years while the radar rate covers ten. A link between falling water and sinking ground matches the documented mechanism (pumped-out clays compact), but these numbers alone do not show which wells or users caused it. <button type="button" data-dialog="sources">See the data sources ↗</button></p></details>
     </section>
   </section>
 

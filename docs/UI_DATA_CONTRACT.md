@@ -88,3 +88,7 @@ Written by `src/export_nisar.py` from `nisar_vs_sentinel1.json` (`src/compare_ni
 ## `pumping_summary.json` (Overview, pumping section)
 
 Written by `src/export_pumping.py` from `pumping_vs_sinking.json` (`src/pumping_vs_sinking.py`, which uses `src/opera_field_rates.py` for 30 m Sentinel-1 rates). The section `#overview-pumping` is hidden unless `cleanPumping` in `web/model.mjs` accepts the whole file. Fields: counts and totals from the USGS 2024 release, median sinking rate by pumping-density class (none, low, medium, high within `radius_km`), Spearman correlations with 95% ranges (pumping, pumped area only, acreage only, pumping given acreage), and the field-scale result with its coverage limits.
+
+## `groundwater_summary.json` (Evidence, Water levels tab)
+
+Written by `src/export_groundwater.py` from `groundwater_vs_sinking.json`. The tab `#overview-groundwater` is hidden unless `cleanGroundwater` accepts the whole file: well count, median decline (ft/yr) and total drop (ft), years, share of wells deeper, Spearman with 95% range and tile count, four decline quartiles (range, n, median sinking rate, share on sinking ground), sinking-to-decline ratio, baseline and recent year ranges.
