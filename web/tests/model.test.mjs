@@ -273,3 +273,10 @@ test('images are never hidden by the scroll script (figures showed as blank whit
   assert.ok(!/querySelectorAll\('[^']*img[^']*'\)\.forEach\(el => el\.classList\.add\('fx-reveal'\)/.test(motion), 'images are not given the hidden-until-revealed class');
   assert.match(motion, /const sweep = \(\) =>/, 'a safety net reveals anything on screen even if the observer never fires');
 });
+
+test('navigation order: Overview, Evidence, Study regions, About us, How we measured, Limits, Resources', async () => {
+  const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
+  const nav = html.slice(html.indexOf('<nav aria-label="Site navigation">'), html.indexOf('</nav>', html.indexOf('<nav aria-label="Site navigation">')));
+  const labels = [...nav.matchAll(/<(?:a|button)[^>]*>([^<]+)/g)].map(m => m[1].trim());
+  assert.deepEqual(labels, ['Overview', 'Evidence', 'Study regions', 'About us', 'How we measured', 'Limits', 'Resources']);
+});
