@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 440" preserveAspectRatio="xMidYMax slice" role="presentation" aria-hidden="true">
+  <!-- A soft Arizona scene in the site's own colours: low sun, layered mountains, mesas, two saguaros. Decorative only; very low contrast so text stays readable. -->
+  <circle cx="300" cy="150" r="64" fill="none" stroke="#a64b2a" stroke-opacity=".10" stroke-width="1.5"/>
+  <circle cx="300" cy="150" r="44" fill="#c97b4a" fill-opacity=".15"/>
+  <path d="M0 312 L36 276 L74 302 L122 250 L176 296 L228 262 L286 304 L338 270 L400 300 L400 440 L0 440Z" fill="#52664b" fill-opacity=".10"/>
+  <path d="M0 356 L0 338 L58 334 L72 308 L148 306 L164 332 L228 336 L248 318 L332 316 L348 340 L400 342 L400 440 L0 440Z" fill="#a64b2a" fill-opacity=".09"/>
+  <path d="M0 402 Q100 374 200 394 T400 386 L400 440 L0 440Z" fill="#b98f62" fill-opacity=".16"/>
+  <g fill="none" stroke="#52664b" stroke-opacity=".24" stroke-linecap="round" stroke-linejoin="round">
+    <g stroke-width="11"><path d="M40 404 V314"/><path d="M40 360 H22 V332"/><path d="M40 346 H58 V322"/></g>
+    <g stroke-width="8.5"><path d="M362 396 V340"/><path d="M362 366 H349 V350"/><path d="M362 358 H374 V346"/></g>
+  </g>
+  <g stroke="#52664b" stroke-opacity=".20" stroke-width="2" stroke-linecap="round"><path d="M150 404 l-6 -12 M150 404 l0 -14 M150 404 l6 -12"/><path d="M252 400 l-5 -10 M252 400 l0 -12 M252 400 l5 -10"/></g>
+</svg>
