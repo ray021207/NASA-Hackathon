@@ -326,6 +326,7 @@ function explainButton(key) {
 }
 function renderDetails() {
   resetTimeView();
+  if (state.miniMap) { clearInterval(state.miniMap.timer); state.miniMap.map?.remove(); state.miniMap = null; }
   const feature = state.hotspots.features.find(f => f.properties.slug === state.selected);
   const p = feature.properties;
   const result = state.series.get(state.selected);
@@ -353,7 +354,11 @@ function renderDetails() {
   if (hasRate) metric.append(note(series.sign_convention || 'Sign convention not supplied. This value is not labelled as vertical sinking.'));
   const rateHelp = explainButton('rate'); rateHelp.textContent = 'Explain this rate ↗';
   metric.append(rateHelp);
-  root.append(metric);
+  const topRow = el('div', 'report-top');
+  topRow.append(metric);
+  const compare = renderCompare(state.selected);
+  if (compare) topRow.append(compare); else topRow.classList.add('single');
+  root.append(topRow);
   const chartSection = section('Displacement through time', 'chart');
   if (series?.hasData) {
     const cumulative = state.cumulative.get(state.selected);
@@ -434,9 +439,13 @@ function renderDetails() {
   story.append(el('p', 'detail-copy', p.story));
   if (typeof p.land_use_note === 'string' && p.land_use_note.trim()) story.append(note(p.land_use_note));
   story.classList.add('report-why');
-  summaryPanel.append(story);
+  const timelapse = renderTimelapse(state.selected, p.name);
+  const summaryRow = el('div', 'report-summary-row' + (timelapse ? '' : ' single'));
+  summaryRow.append(story);
+  if (timelapse) summaryRow.append(timelapse.node);
+  summaryPanel.append(summaryRow);
   reportTabs(root, [
-    ['summary', 'Summary', summaryPanel],
+    ['summary', 'Summary', summaryPanel, timelapse?.show],
     ['beneath', 'What lies beneath', geology],
     ['methods', 'Methods & checks', technical]
   ]);
@@ -445,6 +454,93 @@ function renderDetails() {
   const button = el('button', '', 'Read the measurement limits');
   button.type = 'button'; button.addEventListener('click', () => openDialog('limits'));
   bottom.append(button); root.append(bottom);
+}
+// Next to the headline rate: the same rate for every study area, so a reader sees at once where this place stands.
+function renderCompare(selected) {
+  const rows = state.slugs.map(slug => {
+    const r = state.series.get(slug), s = r?.status === 'ready' ? r.value : null;
+    const f = state.hotspots.features.find(x => x.properties.slug === slug);
+    return { slug, name: f.properties.name, rate: s && isNumber(s.rate_cm_yr) ? s.rate_cm_yr : null };
+  }).filter(r => r.rate !== null).sort((x, y) => x.rate - y.rate);
+  if (rows.length < 2 || !rows.some(r => r.slug === selected)) return null;
+  const box = el('section', 'report-compare');
+  box.append(el('p', 'metric-label', 'How it compares'));
+  const max = Math.max(...rows.map(r => Math.abs(r.rate)));
+  const list = el('ol', 'compare-bars');
+  rows.forEach(r => {
+    const li = el('li', r.slug === selected ? 'is-current' : '');
+    const btn = el('button', 'compare-row'); btn.type = 'button';
+    if (r.slug === selected) btn.setAttribute('aria-current', 'true');
+    btn.setAttribute('aria-label', r.name + ': ' + formatNumber(r.rate) + ' centimetres a year' + (r.slug === selected ? ' (this area)' : '. Open this study area'));
+    const bar = el('span', 'compare-bar'); const fill = el('i'); fill.style.width = Math.max(4, Math.abs(r.rate) / max * 100).toFixed(1) + '%'; bar.append(fill);
+    btn.append(el('span', 'compare-name', r.name), bar, el('span', 'compare-value', formatNumber(r.rate)));
+    if (r.slug !== selected) btn.addEventListener('click', () => selectHotspot(r.slug));
+    li.append(btn); list.append(li);
+  });
+  const rank = rows.findIndex(r => r.slug === selected) + 1;
+  const allSinking = rows.every(r => r.rate < 0);
+  const where = rank === 1 ? 'Fastest of the ' + rows.length + ' study areas.'
+    : rank === rows.length ? 'Slowest of the ' + rows.length + ' study areas' + (allSinking ? ', though all of them are sinking.' : '.')
+    : ordinal(rank) + ' fastest of the ' + rows.length + ' study areas.';
+  box.append(list, note(where + ' cm/yr, Sentinel-1 2016\u20132026, line of sight. Select a bar to open that area.'));
+  return box;
+}
+const ordinal = n => n + ({ 1: 'st', 2: 'nd', 3: 'rd' }[n] || 'th');
+// Summary tab: a small satellite view that plays our dated Sentinel-1 pictures (total change since the first date). Plays only when asked.
+const SATELLITE_TILES = { url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', attribution: 'Imagery &copy; Esri, Maxar, Earthstar Geographics' };
+const monthYear = d => new Date(d + 'T00:00:00Z').toLocaleDateString('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' });
+function renderTimelapse(slug, name) {
+  const result = state.cumulative.get(slug);
+  if (result?.status !== 'ready' || typeof L === 'undefined') return null;
+  const meta = result.value, last = meta.dates.length - 1;
+  const feature = state.hotspots.features.find(f => f.properties.slug === slug);
+  const fig = el('figure', 'timelapse');
+  fig.append(el('p', 'metric-label', 'From above, ' + meta.dates[0].slice(0, 4) + '–' + meta.dates[last].slice(0, 4)));
+  const box = el('div', 'timelapse-map');
+  box.setAttribute('role', 'img');
+  box.setAttribute('aria-label', 'Satellite view of ' + name + ' coloured by how much lower the ground is than in ' + monthYear(meta.dates[0]));
+  const controls = el('div', 'timelapse-controls');
+  const playLabel = 'Play ' + meta.dates[0].slice(0, 4) + ' \u2192 ' + meta.dates[last].slice(0, 4);
+  const play = el('button', 'timelapse-play', playLabel); play.type = 'button'; play.setAttribute('aria-pressed', 'false');
+  const range = el('input', 'timelapse-range'); range.type = 'range'; range.min = '0'; range.max = String(last); range.step = '1'; range.value = String(last);
+  range.setAttribute('aria-label', 'Date shown');
+  const date = el('output', 'timelapse-date', monthYear(meta.dates[last]));
+  controls.append(play, range, date);
+  const legend = el('div', 'timelapse-legend');
+  const strip = el('span', 'timelapse-strip'); strip.setAttribute('aria-hidden', 'true');
+  const labels = el('span', 'timelapse-labels'); labels.append(el('span', '', formatNumber(meta.vmin) + ' cm'), el('span', '', '0'), el('span', '', '+' + formatNumber(meta.vmax)));
+  legend.append(strip, labels);
+  fig.append(box, controls, legend, el('figcaption', '', 'Red: ground lower than in ' + monthYear(meta.dates[0]) + ', measured along the satellite\u2019s slanted view (Sentinel-1). Blank: not measured at every date, not zero. White line: study outline.'));
+  const view = { map: null, image: null, timer: null, index: last };
+  const showFrame = i => {
+    view.index = i; range.value = String(i); date.textContent = monthYear(meta.dates[i]);
+    range.setAttribute('aria-valuetext', monthYear(meta.dates[i]));
+    view.image?.setUrl(timeURL(meta.frames[i]));
+  };
+  const stopPlay = () => { clearInterval(view.timer); view.timer = null; play.textContent = playLabel; play.setAttribute('aria-pressed', 'false'); };
+  play.addEventListener('click', () => {
+    if (view.timer) { stopPlay(); return; }
+    meta.frames.forEach(path => { const pre = new Image(); pre.src = timeURL(path); });
+    if (view.index >= last) showFrame(0);
+    play.textContent = 'Pause'; play.setAttribute('aria-pressed', 'true');
+    view.timer = setInterval(() => { if (view.index >= last) stopPlay(); else showFrame(view.index + 1); }, 550);
+  });
+  range.addEventListener('input', () => { stopPlay(); showFrame(Number(range.value)); });
+  const fit = () => { if (!view.map) return; view.map.invalidateSize(); view.map.fitBounds(meta.bounds, { padding: [4, 4] }); };
+  const show = () => {
+    if (view.map) { requestAnimationFrame(fit); return; }
+    try {
+      view.map = L.map(box, { zoomControl: false, dragging: false, scrollWheelZoom: false, doubleClickZoom: false, boxZoom: false, keyboard: false, touchZoom: false, tap: false, attributionControl: true });
+      view.map.attributionControl.setPrefix(false);
+      L.tileLayer(SATELLITE_TILES.url, { attribution: SATELLITE_TILES.attribution, maxZoom: 18 }).addTo(view.map);
+      view.image = L.imageOverlay(timeURL(meta.frames[view.index]), meta.bounds, { opacity: 0.9, interactive: false }).addTo(view.map);
+      if (feature) L.geoJSON(feature, { interactive: false, style: { color: '#ffffff', weight: 2, fill: false, opacity: 0.95 } }).addTo(view.map);
+      view.map.fitBounds(meta.bounds, { padding: [4, 4] });
+      requestAnimationFrame(fit);
+    } catch (error) { fig.hidden = true; }
+  };
+  state.miniMap = view;
+  return { node: fig, show };
 }
 // Study report tabs. The chosen tab is kept when another study area is opened, so areas can be compared section by section.
 function reportTabs(root, entries) {
@@ -464,6 +560,7 @@ function reportTabs(root, entries) {
     state.reportTab = list[index][0];
     tabs.forEach((tab, i) => { const on = i === index; tab.setAttribute('aria-selected', String(on)); tab.tabIndex = on ? 0 : -1; panels[i].hidden = !on; });
     if (focus) tabs[index].focus();
+    if (typeof list[index][3] === 'function') list[index][3]();
   };
   tabs.forEach((tab, i) => {
     tab.addEventListener('click', () => select(i, false));
@@ -1151,13 +1248,14 @@ function renderGeology(slug) {
     column.append(li);
   });
   figure.append(column, el('figcaption', '', 'Schematic order of layers from the sources below, not to scale.'));
-  box.append(figure);
+  const grid = el('div', 'geo-grid'), side = el('div', 'geo-side');
+  grid.append(figure, side); box.append(grid);
   const m = g.measured;
   const facts = [];
   if (isNumber(m.rate)) facts.push(['Ground motion', formatNumber(m.rate) + ' cm/yr (Sentinel-1, 2016\u20132026, line of sight)']);
   facts.push(['Water table', isNumber(m.decline) ? 'falling about ' + formatNumber(m.decline) + ' ft a year (median of ' + m.wells + ' wells, 1980s\u201390s to 2015\u201325)' : 'no wells in our water-level data for this area']);
-  box.append(el('h3', 'geo-subhead', 'What we measured here'), factList(facts));
-  box.append(el('h3', 'geo-subhead', 'What the studies say'));
+  side.append(el('h3', 'geo-subhead', 'What we measured here'), factList(facts));
+  side.append(el('h3', 'geo-subhead', 'What the studies say'));
   const list = el('ul', 'geo-facts');
   g.facts.forEach(f => {
     const li = el('li', '', f.text + ' ');
@@ -1165,13 +1263,13 @@ function renderGeology(slug) {
     if (src) { const link = el('a', 'geo-cite', '(' + src.short + ')'); link.href = src.url; link.target = '_blank'; link.rel = 'noopener noreferrer'; li.append(link); }
     list.append(li);
   });
-  box.append(list);
-  if (g.caveat) box.append(note(g.caveat));
+  side.append(list);
+  if (g.caveat) side.append(note(g.caveat));
   const more = el('details', 'more');
   more.append(el('summary', '', 'Sources for this area'));
   const srcList = el('ul', 'geo-sources');
   g.sources.forEach(s => { const li = el('li'); const link = el('a', '', s.label); link.href = s.url; link.target = '_blank'; link.rel = 'noopener noreferrer'; li.append(link); srcList.append(li); });
   more.append(srcList);
-  box.append(more);
+  side.append(more);
   return box;
 }
