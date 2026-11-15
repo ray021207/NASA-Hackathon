@@ -732,6 +732,8 @@ details.more>summary:not(#_){min-height:44px;padding:11px 16px}
 .report-top,.report-summary-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:22px;align-items:stretch}
 .report-top.single,.report-summary-row.single{grid-template-columns:1fr}
 .workspace .details-panel .report-top>.metric{margin:0}
+/* An older rule gives the rate card 'span 6'; inside this two-card row each card takes one column. */
+.workspace .details-panel .report-top>.metric:not(#_),.workspace .details-panel .report-top>.report-compare:not(#_){grid-column:auto;min-width:0}
 .report-compare{background:var(--paper);border:1px solid #e6e0d6;border-radius:15px;padding:22px 24px}
 .report-compare .metric-label{margin:0 0 12px}
 .compare-bars{list-style:none;margin:0 0 10px;padding:0;display:grid;gap:2px}
@@ -839,7 +841,6 @@ details.more>summary:not(#_){min-height:44px;padding:11px 16px}
 @media(min-width:801px){
  .workspace .map-chart.has-w:not(#_){width:var(--chart-w);max-width:calc(100% - 40px)}
  .workspace .map-chart.is-max:not(#_){max-height:calc(100% - 95px)}
- .workspace .map-chart.is-max .chart svg{max-height:calc(100vh - 360px)}
  .workspace .map-chart.is-resizing{user-select:none;transition:none}
  .chart-tools{display:flex;align-items:center;gap:4px;margin:-6px -6px 6px 0}
  .chart-tools-title{margin-right:auto;font:700 11px/1 var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--slate-deep)}

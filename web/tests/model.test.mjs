@@ -335,3 +335,12 @@ test('Per-area geology: every study area has its own basin, layers and sourced f
   assert.equal(cleanGeology(bad).areas.eloy, undefined, 'an area whose facts cite unknown sources is dropped');
   assert.equal(cleanGeology(null), null);
 });
+
+test('rate card and comparison sit side by side: the row is two columns and neither card spans both', async () => {
+  const css = await readFile(new URL('../design-system.css', import.meta.url), 'utf8');
+  assert.match(css, /\.report-top,\.report-summary-row\{display:grid;grid-template-columns:minmax\(0,1fr\) minmax\(0,1fr\)/);
+  assert.match(css, /\.report-top>\.metric:not\(#_\),\.workspace \.details-panel \.report-top>\.report-compare:not\(#_\)\{grid-column:auto/);
+  assert.ok(!/@media[^{]*\{[^@]*\.report-top[,{][^}]*grid-template-columns:1fr/.test(css.replace(/\.report-top\.single/g, '')), 'no breakpoint stacks the two cards');
+  const app = await readFile(new URL('../app.js', import.meta.url), 'utf8');
+  assert.ok(!app.includes('What this number means'), 'rate notes shown directly, not behind a button');
+});

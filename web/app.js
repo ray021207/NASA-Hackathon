@@ -72,20 +72,26 @@ function svgNode(tag, attrs = {}, text) {
   if (text != null) node.textContent = text;
   return node;
 }
+// The graph is drawn W units wide (300 by default, the original drawing). When the panel is widened, W grows instead of the
+// drawing being scaled up, so the text keeps its normal size.
+const CHART_BASE_W = 300, CHART_PX_PER_UNIT = 1.3;
 function makeChart(series, hooks = null) {
   const wrap = el('div', 'chart');
-  const svg = svgNode('svg', { viewBox: '0 0 300 170', role: 'img', 'aria-label': 'Cumulative displacement in centimetres relative to ' + series.reference });
+  let svg = null, W = CHART_BASE_W;
   const valid = series.points.filter(p => isNumber(p.value));
   const stable = series.stablePoints.filter(p => isNumber(p.value));
+  const build = () => {
+  const drawn = svgNode('svg', { viewBox: '0 0 ' + W + ' 170', role: 'img', 'aria-label': 'Cumulative displacement in centimetres relative to ' + series.reference });
+  const svg = drawn;
   const start = Date.parse(series.dates[0]), end = Date.parse(series.dates.at(-1));
   const extent = [...valid, ...stable].map(p => p.value);
   let lo = Math.min(...extent), hi = Math.max(...extent);
   const pad = Math.max((hi - lo) * 0.15, 0.1);
   lo -= pad; hi += pad;
-  const x = date => 42 + (Date.parse(date) - start) / (end - start || 1) * 244;
+  const x = date => 42 + (Date.parse(date) - start) / (end - start || 1) * (W - 56);
   const y = value => 130 - (value - lo) / (hi - lo) * 112;
   [lo, (lo + hi) / 2, hi].forEach(value => {
-    svg.append(svgNode('line', { x1: 42, x2: 286, y1: y(value), y2: y(value), stroke: '#C9C0B2', 'stroke-width': 0.7 }));
+    svg.append(svgNode('line', { x1: 42, x2: W - 14, y1: y(value), y2: y(value), stroke: '#C9C0B2', 'stroke-width': 0.7 }));
     svg.append(svgNode('text', { x: 35, y: y(value) + 3, 'text-anchor': 'end', class: 'chart-label' }, formatNumber(value)));
   });
   svg.append(svgNode('text', { x: 8, y: 12, class: 'chart-label' }, 'cm'));
@@ -109,9 +115,20 @@ function makeChart(series, hooks = null) {
   }
   valid.forEach(p => svg.append(svgNode('circle', { cx: x(p.date), cy: y(p.value), r: 2.5, fill: COLORS.rust })));
   svg.append(svgNode('text', { x: 42, y: 153, class: 'chart-label' }, series.dates[0]));
-  if (series.dates.length > 1) svg.append(svgNode('text', { x: 286, y: 168, 'text-anchor': 'end', class: 'chart-label' }, series.dates.at(-1)));
-  if (hooks) addChartScrubbing(wrap, svg, series, x, y, sinkPath, stablePath, hooks);
+  if (series.dates.length > 1) svg.append(svgNode('text', { x: W - 14, y: 168, 'text-anchor': 'end', class: 'chart-label' }, series.dates.at(-1)));
+  if (hooks) addChartScrubbing(wrap, drawn, series, x, y, sinkPath, stablePath, hooks, W);
+  return drawn;
+  };
+  svg = build();
   wrap.append(svg);
+  // Called when the graph panel is resized: redraw at the new width, keeping the normal text size.
+  wrap.resizeTo = width => {
+    const nextW = Math.round(Math.max(CHART_BASE_W, (width || 0) / CHART_PX_PER_UNIT));
+    if (nextW === W) return false;
+    W = nextW;
+    const fresh = build(); svg.replaceWith(fresh); svg = fresh;
+    return true;
+  };
   if (stable.length) wrap.append(note('Solid rust: sinking-pixel average · Dashed slate: stable ground (measurement noise). Both are line-of-sight displacement.'));
   const details = el('details');
   details.append(el('summary', '', 'View observations as a table'));
@@ -124,7 +141,7 @@ function makeChart(series, hooks = null) {
   return wrap;
 }
 // Hover or touch along the chart: a cursor, a readout, and the map follows (see applyTimeFrame). Keyboard works too.
-function addChartScrubbing(wrap, svg, series, x, y, sinkPath, stablePath, hooks) {
+function addChartScrubbing(wrap, svg, series, x, y, sinkPath, stablePath, hooks, W = 300) {
   const n = series.points.length;
   const hidden = { visibility: 'hidden', 'pointer-events': 'none' };
   const cursor = svgNode('line', { y1: 12, y2: 130, stroke: COLORS.ink, 'stroke-width': 0.8, 'stroke-dasharray': '2 2', ...hidden });
@@ -134,7 +151,7 @@ function addChartScrubbing(wrap, svg, series, x, y, sinkPath, stablePath, hooks)
   const tipBox = svgNode('rect', { rx: 2, fill: '#F4EFE6', stroke: '#C9C0B2', 'stroke-width': 0.7, opacity: 0.96 });
   const tipText = svgNode('text', { class: 'chart-tip' });
   tip.append(tipBox, tipText);
-  const hit = svgNode('rect', { x: 42, y: 8, width: 244, height: 126, fill: 'transparent', style: 'touch-action:pan-y;cursor:crosshair' });
+  const hit = svgNode('rect', { x: 42, y: 8, width: W - 56, height: 126, fill: 'transparent', style: 'touch-action:pan-y;cursor:crosshair' });
   svg.append(hit, cursor, dotSink, dotStable, tip);
   svg.setAttribute('role', 'slider'); svg.setAttribute('tabindex', '0');
   svg.setAttribute('aria-label', 'Move through time. Left and right arrow keys step through the dates; Space plays; Escape clears.');
@@ -148,7 +165,7 @@ function addChartScrubbing(wrap, svg, series, x, y, sinkPath, stablePath, hooks)
     const s = series.stablePoints[index];
     if (s && isNumber(s.value)) { dotStable.setAttribute('cx', px); dotStable.setAttribute('cy', y(s.value)); dotStable.setAttribute('visibility', 'visible'); lines.push('Stable ground  ' + formatNumber(s.value) + ' cm'); } else hide(dotStable);
     tipText.replaceChildren();
-    const w = Math.max(...lines.map(t => t.length)) * 4.9 + 14, h = lines.length * 11 + 7, tx = px > 160 ? px - w - 7 : px + 7;
+    const w = Math.max(...lines.map(t => t.length)) * 4.9 + 14, h = lines.length * 11 + 7, tx = px > W / 2 + 10 ? px - w - 7 : px + 7;
     lines.forEach((t, i) => tipText.append(svgNode('tspan', { x: tx + 7, y: 29 + i * 11 }, t)));
     tipBox.setAttribute('x', tx); tipBox.setAttribute('y', 18); tipBox.setAttribute('width', w); tipBox.setAttribute('height', h);
     tip.setAttribute('visibility', 'visible');
@@ -159,7 +176,7 @@ function addChartScrubbing(wrap, svg, series, x, y, sinkPath, stablePath, hooks)
     if (stablePath) stablePath.setAttribute('stroke-width', kind === 'stable' ? 3 : 1.5);
   };
   const nearest = clientX => {
-    const r = svg.getBoundingClientRect(), px = (clientX - r.left) / (r.width || 300) * 300;
+    const r = svg.getBoundingClientRect(), px = (clientX - r.left) / (r.width || W) * W;
     let best = 0, bestDistance = Infinity;
     series.points.forEach((p, i) => { const d = Math.abs(x(p.date) - px); if (d < bestDistance) { bestDistance = d; best = i; } });
     return best;
@@ -276,6 +293,16 @@ function chartPanelTools(panel) {
     handle.hidden = size.mode === 'min';
     const now = Math.round(panel.getBoundingClientRect().width) || CHART_MIN_W;
     handle.setAttribute('aria-valuemin', String(CHART_MIN_W)); handle.setAttribute('aria-valuemax', String(maxWidth())); handle.setAttribute('aria-valuenow', String(now));
+    const chart = panel.querySelector('.chart');
+    if (chart?.resizeTo) {
+      const redraw = () => {
+        const resized = panel.classList.contains('has-w') && !panel.classList.contains('is-min');
+        if (!chart.resizeTo(resized ? chart.clientWidth : 0)) return;
+        const t = state.time;
+        if (t?.chart === chart) { chart.setCursor?.(t.hover ?? t.pinned); chart.emphasise?.(t.masks.sinking ? 'sinking' : t.masks.stable ? 'stable' : null); }
+      };
+      if (panel.classList.contains('is-resizing')) redraw(); else requestAnimationFrame(redraw);
+    }
   };
   minBtn.addEventListener('click', () => { size.mode = size.mode === 'min' ? 'normal' : 'min'; apply(); });
   maxBtn.addEventListener('click', () => { size.mode = size.mode === 'max' ? 'normal' : 'max'; apply(); });
@@ -429,16 +456,10 @@ function renderDetails() {
   const value = el('div', 'metric-value', hasRate ? formatNumber(series.rate_cm_yr) : 'Measurement pending');
   if (hasRate) value.append(el('small', '', (isNumber(series.rate_sigma) ? '± ' + formatNumber(series.rate_sigma) + ' ' : '') + 'cm/yr'));
   metric.append(value);
-  if (hasRate) {
-    // One plain line on the card; the full uncertainty and sign-convention notes sit behind a toggle so the card stays compact.
-    const sign = series.sign_convention || '';
-    metric.append(note(/negative values mean it moved away \(sinking\)/i.test(sign) ? 'Negative means sinking, measured along the satellite’s slanted view.' : 'Sign convention not supplied. This value is not labelled as vertical sinking.'));
-    const more = el('details', 'more metric-more');
-    more.append(el('summary', '', 'What this number means'),
-      note(isNumber(series.rate_sigma) ? (series.rate_sigma_note || 'Uncertainty supplied by the processing pipeline.') : 'Uncertainty has not been supplied.'));
-    if (sign) more.append(note(sign));
-    metric.append(more);
-  } else metric.append(note(dataError(result, 'Awaiting a referenced time series and fitted rate.')));
+  metric.append(note(hasRate
+    ? (isNumber(series.rate_sigma) ? (series.rate_sigma_note || 'Uncertainty supplied by the processing pipeline.') : 'Uncertainty has not been supplied.')
+    : dataError(result, 'Awaiting a referenced time series and fitted rate.')));
+  if (hasRate) metric.append(note(series.sign_convention || 'Sign convention not supplied. This value is not labelled as vertical sinking.'));
   const rateHelp = explainButton('rate'); rateHelp.textContent = 'Explain this rate ↗';
   metric.append(rateHelp);
   const topRow = el('div', 'report-top');
