@@ -763,7 +763,22 @@ details.more>summary:not(#_){min-height:44px;padding:11px 16px}
 .geo-grid{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:26px;align-items:start}
 .geo-grid .geo-figure{margin:0}
 .geo-side>.geo-subhead:first-child{margin-top:0}
-@media(max-width:860px){.report-top,.report-summary-row,.geo-grid{grid-template-columns:1fr}}
+@media(max-width:860px){.report-summary-row,.geo-grid{grid-template-columns:1fr}}
+/* Rate and comparison stay side by side at every width; on narrow screens both cards get compact. */
+@media(max-width:860px){
+ .report-top:not(.single){gap:12px}
+ .workspace .details-panel .report-top>.metric:not(#_),.report-compare:not(#_){padding:14px 14px 12px;border-radius:13px}
+ .workspace .details-panel .report-top .metric-value:not(#_){font-size:clamp(24px,6.4vw,34px);line-height:1.15}
+ .workspace .details-panel .report-top .metric-value small{display:block;font-size:13px;margin-top:2px}
+ .workspace .details-panel .report-top .metric-label:not(#_){font-size:11px;letter-spacing:.04em}
+ .workspace .details-panel .report-top .metric-note:not(#_){font-size:12.5px;line-height:1.5}
+ .report-compare .metric-label{margin-bottom:8px}
+ .compare-row:not(#_){grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"name name" "bar value";row-gap:3px;column-gap:8px;min-height:44px;padding:3px 4px;font-size:12.5px}
+ .compare-name{grid-area:name}
+ .compare-bar{grid-area:bar;height:9px}
+ .compare-value{grid-area:value;font-size:12px}
+}
+
 @media(prefers-reduced-motion:reduce){.compare-bar i{animation:none}}
 /* ---- Compact time controls: round play button, checkboxes with map-colour squares ---- */
 .time-controls .time-row:not(#_){display:flex;flex-wrap:wrap;align-items:center;gap:8px}
@@ -817,4 +832,49 @@ details.more>summary:not(#_){min-height:44px;padding:11px 16px}
  .workspace .rate-legend .legend-asof::before{content:" \00b7 "}
  .workspace .rate-legend .map-color-key{display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:5px}
  .workspace .leaflet-control-zoom:not(#_){display:none}
+}
+/* ---- Graph panel tools (laptops): minimize, expand, drag to resize ---- */
+.chart-tools{display:none}
+.chart-resize{display:none}
+@media(min-width:801px){
+ .workspace .map-chart.has-w:not(#_){width:var(--chart-w);max-width:calc(100% - 40px)}
+ .workspace .map-chart.is-max:not(#_){max-height:calc(100% - 95px)}
+ .workspace .map-chart.is-max .chart svg{max-height:calc(100vh - 360px)}
+ .workspace .map-chart.is-resizing{user-select:none;transition:none}
+ .chart-tools{display:flex;align-items:center;gap:4px;margin:-6px -6px 6px 0}
+ .chart-tools-title{margin-right:auto;font:700 11px/1 var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--slate-deep)}
+ .chart-tool{width:30px;height:30px;display:inline-grid;place-items:center;border:1px solid var(--rule);border-radius:8px;background:var(--paper);color:var(--ink);cursor:pointer;padding:0}
+ .chart-tool:hover{border-color:var(--rust);color:var(--rust)}
+ .chart-tool:focus-visible,.chart-resize:focus-visible{outline:2px solid var(--rust);outline-offset:2px}
+ .chart-tool-icon{position:relative;width:12px;height:12px;display:block}
+ .tool-min .chart-tool-icon::before{content:"";position:absolute;left:0;right:0;bottom:2px;height:2px;background:currentColor;border-radius:1px}
+ .map-chart.is-min .tool-min .chart-tool-icon::before{bottom:auto;top:0;height:12px;background:none;border:2px solid currentColor;border-radius:2px;box-sizing:border-box}
+ .tool-max .chart-tool-icon::before,.tool-max .chart-tool-icon::after{content:"";position:absolute;width:5px;height:5px;border:2px solid currentColor}
+ .tool-max .chart-tool-icon::before{top:0;right:0;border-left:0;border-bottom:0}
+ .tool-max .chart-tool-icon::after{bottom:0;left:0;border-right:0;border-top:0}
+ .map-chart.is-max .tool-max .chart-tool-icon::before{top:auto;right:auto;bottom:6px;left:6px;border:2px solid currentColor;border-left:0;border-bottom:0;transform:rotate(180deg)}
+ .map-chart.is-max .tool-max .chart-tool-icon::after{bottom:auto;left:auto;top:6px;right:6px;border:2px solid currentColor;border-right:0;border-top:0;transform:rotate(180deg)}
+ .chart-resize{display:block;position:absolute;left:0;top:14px;bottom:14px;width:10px;cursor:ew-resize;z-index:2}
+ .chart-resize[hidden]{display:none}
+ .chart-resize::after{content:"";position:absolute;left:3px;top:50%;width:4px;height:42px;margin-top:-21px;border-radius:2px;background:var(--rule)}
+ .chart-resize:hover::after,.map-chart.is-resizing .chart-resize::after{background:var(--rust)}
+ .workspace .map-chart.is-min:not(#_){width:auto;min-width:0;padding:10px 12px;overflow:hidden}
+ .map-chart.is-min>:not(.chart-tools){display:none}
+ .map-chart.is-min .chart-tools{margin:0;gap:8px}
+ .map-chart.is-min .chart-tools-title{margin-right:6px}
+ /* compact time controls inside the graph panel */
+ .map-chart .time-play:not(#_){width:34px;height:34px;min-height:34px;padding:4px;justify-content:center}
+ .map-chart .time-play-icon{width:26px;height:26px}
+ .map-chart .time-play-icon::before{left:10px;top:7px}
+ .map-chart .time-play.is-playing .time-play-icon::before{left:8px;top:8px}
+ .map-chart .time-play-text{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+ .map-chart .time-check:not(#_){min-height:34px;padding:0 10px 0 8px;gap:6px;font-size:12.5px}
+ .map-chart .time-check input{width:16px;height:16px}
+ .map-chart .time-check-extra{display:none}
+ .map-chart .time-reset:not(#_){min-height:34px;font-size:12px}
+ .map-chart .time-row:not(#_){gap:6px}
+ .map-chart .time-status:not(#_){font-size:12px;margin-top:6px}
+ /* smaller map toolbar */
+ .workspace .basemap-options button:not(#_){min-height:32px;padding:6px 12px;font-size:12.5px}
+ .workspace .map-toolbar #fit-study:not(#_){min-height:32px;padding:6px 12px;font-size:12.5px}
 }

@@ -248,6 +248,55 @@ function timeHooks() {
     clear: () => { stop(); t.pinned = null; t.hover = null; applyTimeFrame(); }
   };
 }
+// Graph panel on the map (laptops): minimize to a slim bar, expand to the map's width, or drag the left edge to any width.
+// The size is kept when another study area is opened. Phones show the graph under the map, so these tools are hidden there.
+const CHART_MIN_W = 280;
+function chartPanelTools(panel) {
+  const size = state.chartSize || (state.chartSize = { mode: 'normal', width: null });
+  const tools = el('div', 'chart-tools');
+  tools.append(el('span', 'chart-tools-title', 'Graph'));
+  const btn = (cls, label) => { const b = el('button', 'chart-tool ' + cls); b.type = 'button'; b.setAttribute('aria-label', label); b.title = label; const i = el('span', 'chart-tool-icon'); i.setAttribute('aria-hidden', 'true'); b.append(i); return b; };
+  const minBtn = btn('tool-min', 'Minimize graph'), maxBtn = btn('tool-max', 'Expand graph');
+  tools.append(minBtn, maxBtn);
+  const handle = el('div', 'chart-resize');
+  handle.setAttribute('role', 'separator'); handle.setAttribute('aria-orientation', 'vertical'); handle.tabIndex = 0;
+  handle.setAttribute('aria-label', 'Resize graph. Use the left and right arrow keys, or drag.');
+  panel.prepend(handle, tools);
+  const maxWidth = () => Math.max(CHART_MIN_W, (panel.parentElement?.clientWidth || 900) - 40);
+  const apply = () => {
+    panel.classList.toggle('is-min', size.mode === 'min');
+    panel.classList.toggle('is-max', size.mode === 'max');
+    const w = size.mode === 'max' ? maxWidth() : size.width;
+    if (w && size.mode !== 'min') { panel.style.setProperty('--chart-w', Math.round(Math.min(maxWidth(), Math.max(CHART_MIN_W, w))) + 'px'); panel.classList.add('has-w'); }
+    else { panel.style.removeProperty('--chart-w'); panel.classList.remove('has-w'); }
+    minBtn.setAttribute('aria-label', size.mode === 'min' ? 'Show graph' : 'Minimize graph'); minBtn.title = minBtn.getAttribute('aria-label');
+    minBtn.setAttribute('aria-expanded', String(size.mode !== 'min'));
+    maxBtn.setAttribute('aria-label', size.mode === 'max' ? 'Return graph to normal size' : 'Expand graph'); maxBtn.title = maxBtn.getAttribute('aria-label');
+    maxBtn.setAttribute('aria-pressed', String(size.mode === 'max'));
+    handle.hidden = size.mode === 'min';
+    const now = Math.round(panel.getBoundingClientRect().width) || CHART_MIN_W;
+    handle.setAttribute('aria-valuemin', String(CHART_MIN_W)); handle.setAttribute('aria-valuemax', String(maxWidth())); handle.setAttribute('aria-valuenow', String(now));
+  };
+  minBtn.addEventListener('click', () => { size.mode = size.mode === 'min' ? 'normal' : 'min'; apply(); });
+  maxBtn.addEventListener('click', () => { size.mode = size.mode === 'max' ? 'normal' : 'max'; apply(); });
+  const setWidth = w => { size.mode = 'normal'; size.width = Math.min(maxWidth(), Math.max(CHART_MIN_W, w)); apply(); };
+  handle.addEventListener('keydown', ev => {
+    const w = panel.getBoundingClientRect().width || size.width || 400;
+    if (ev.key === 'ArrowLeft') { ev.preventDefault(); setWidth(w + 40); }
+    else if (ev.key === 'ArrowRight') { ev.preventDefault(); setWidth(w - 40); }
+    else if (ev.key === 'Home') { ev.preventDefault(); setWidth(CHART_MIN_W); }
+    else if (ev.key === 'End') { ev.preventDefault(); setWidth(maxWidth()); }
+  });
+  handle.addEventListener('pointerdown', ev => {
+    ev.preventDefault();
+    const startX = ev.clientX, startW = panel.getBoundingClientRect().width;
+    panel.classList.add('is-resizing');
+    const move = e => setWidth(startW + (startX - e.clientX));
+    const up = () => { panel.classList.remove('is-resizing'); window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up); };
+    window.addEventListener('pointermove', move); window.addEventListener('pointerup', up);
+  });
+  apply();
+}
 // Compact controls: a round play button and two real checkboxes whose colour squares match the map.
 // On phones they float on the map itself, so the effect is visible where you tap (no scrolling back and forth).
 const PHONE = window.matchMedia ? window.matchMedia('(max-width: 800px)') : { matches: false };
@@ -380,10 +429,16 @@ function renderDetails() {
   const value = el('div', 'metric-value', hasRate ? formatNumber(series.rate_cm_yr) : 'Measurement pending');
   if (hasRate) value.append(el('small', '', (isNumber(series.rate_sigma) ? '± ' + formatNumber(series.rate_sigma) + ' ' : '') + 'cm/yr'));
   metric.append(value);
-  metric.append(note(hasRate
-    ? (isNumber(series.rate_sigma) ? (series.rate_sigma_note || 'Uncertainty supplied by the processing pipeline.') : 'Uncertainty has not been supplied.')
-    : dataError(result, 'Awaiting a referenced time series and fitted rate.')));
-  if (hasRate) metric.append(note(series.sign_convention || 'Sign convention not supplied. This value is not labelled as vertical sinking.'));
+  if (hasRate) {
+    // One plain line on the card; the full uncertainty and sign-convention notes sit behind a toggle so the card stays compact.
+    const sign = series.sign_convention || '';
+    metric.append(note(/negative values mean it moved away \(sinking\)/i.test(sign) ? 'Negative means sinking, measured along the satellite’s slanted view.' : 'Sign convention not supplied. This value is not labelled as vertical sinking.'));
+    const more = el('details', 'more metric-more');
+    more.append(el('summary', '', 'What this number means'),
+      note(isNumber(series.rate_sigma) ? (series.rate_sigma_note || 'Uncertainty supplied by the processing pipeline.') : 'Uncertainty has not been supplied.'));
+    if (sign) more.append(note(sign));
+    metric.append(more);
+  } else metric.append(note(dataError(result, 'Awaiting a referenced time series and fitted rate.')));
   const rateHelp = explainButton('rate'); rateHelp.textContent = 'Explain this rate ↗';
   metric.append(rateHelp);
   const topRow = el('div', 'report-top');
@@ -412,6 +467,7 @@ function renderDetails() {
   const chartFooter = el('a', 'map-chart-details', 'Read the full ' + p.name + ' study report ↓');
   chartFooter.href = '#details';
   chartTarget.append(chartFooter);
+  chartPanelTools(chartTarget);
   const technical = el('div', 'report-methods');
   technical.append(el('p', 'report-technical-hint', 'Source records, observations, the official comparison and the limits of this measurement.'));
   const technicalGrid = el('div', 'report-technical-grid');
