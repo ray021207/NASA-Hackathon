@@ -980,14 +980,21 @@ details.more>summary:not(#_){min-height:44px;padding:11px 16px}
  .masthead nav>a[href]:not(#_),.masthead nav>button[type]:not(#_){font-size:12.5px}
  .masthead nav:not(#_){gap:4px clamp(12px,1.3vw,24px)}
 }
-/* Phones: a small logo beside the headline replaces the large logo and rings; the action buttons are centred. */
-.hero-mini-logo{display:none}
+/* hero-ai-note: shown on phones only */
+.hero-ai-note{display:none}
+/* Phones: the logo and its rings become a faint watermark behind the opening text (the small 'AI-generated logo' label stays readable); the action buttons are centred. */
 @media(max-width:700px){
- .overview-visual:not(#_){display:none}
- .overview-headline{display:flex;align-items:flex-start;gap:12px}
- .overview-headline h1{flex:1;min-width:0}
- .hero-mini-logo{display:block;position:relative;flex:none;width:46px;margin-top:6px}
- .hero-mini-logo img{display:block;width:46px;height:46px;border-radius:50%}
+ .overview-hero{position:relative}
+ .overview-visual:not(#_){position:absolute;inset:0;z-index:0;display:flex;align-items:center;justify-content:center;height:auto;max-height:none;aspect-ratio:auto;pointer-events:none;overflow:hidden}
+ .overview-copy{position:relative;z-index:1}
+ .overview-visual .overview-fluid{visibility:hidden}
+ .overview-visual .overview-visual-label{display:none}
+ .overview-visual .overview-rings:not(#_){width:min(86vw,340px);opacity:1}
+ .overview-visual .overview-rings img:not(#_){width:78%;opacity:.14!important;filter:none;animation:none}
+ .overview-visual .overview-ring,.overview-visual .overview-orbit-dot{display:none}
+ .overview-visual .overview-rings:after,.overview-visual:before,.overview-visual::before{display:none}
+ .overview-visual .si-badge:not(#_){display:none}
+ .hero-ai-note:not(#_){display:block;text-align:center;margin:10px 0 0;font:600 11px/1.3 var(--sans);letter-spacing:.07em;text-transform:uppercase;color:var(--slate-deep)}
  .overview-actions:not(#_){display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:6px 26px}
  .overview-primary:not(#_){display:flex;width:100%;justify-content:center;gap:10px;text-align:center}
  .overview-story-link:not(#_){text-align:center}
