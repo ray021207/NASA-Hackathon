@@ -94,7 +94,7 @@ function makeChart(series, hooks = null) {
     svg.append(svgNode('line', { x1: 42, x2: W - 14, y1: y(value), y2: y(value), stroke: '#C9C0B2', 'stroke-width': 0.7 }));
     svg.append(svgNode('text', { x: 35, y: y(value) + 3, 'text-anchor': 'end', class: 'chart-label' }, formatNumber(value)));
   });
-  svg.append(svgNode('text', { x: 8, y: 12, class: 'chart-label' }, 'cm'));
+  svg.append(svgNode('text', { x: 35, y: 8, 'text-anchor': 'end', class: 'chart-label chart-unit' }, 'cm'));
   let path = '', next = true;
   series.points.forEach(p => {
     if (p.value === null) { next = true; return; }

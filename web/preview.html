@@ -2181,6 +2181,11 @@ details.more>summary:not(#_){min-height:44px;padding:11px 16px}
 .viewer-stage.dragging{cursor:grabbing}
 .viewer-stage img{display:block;max-width:none;height:auto;user-select:none;-webkit-user-drag:none}
 @media(max-width:600px){.viewer-hint{display:none}.image-viewer{width:100vw;height:100dvh;border-radius:0}}
+/* Graph panel typography matches the rest of the site: DM Sans, near-black heading, slate axis labels. */
+.workspace .map-chart .detail-section h2:not(#_){font:720 17px/1.3 var(--sans);letter-spacing:-.02em;color:var(--ink)}
+.chart .chart-label:not(#_){font-family:var(--sans);font-weight:600;font-size:10px;fill:var(--slate-deep);letter-spacing:0}
+.chart .chart-unit:not(#_){font-weight:700}
+.chart .chart-tip:not(#_){font-family:var(--sans);font-weight:600;fill:var(--ink)}
 </style>
   <script>/* @preserve
  * Leaflet 1.9.4, a JS library for interactive maps. https://leafletjs.com
@@ -2932,7 +2937,7 @@ function makeChart(series, hooks = null) {
     svg.append(svgNode('line', { x1: 42, x2: W - 14, y1: y(value), y2: y(value), stroke: '#C9C0B2', 'stroke-width': 0.7 }));
     svg.append(svgNode('text', { x: 35, y: y(value) + 3, 'text-anchor': 'end', class: 'chart-label' }, formatNumber(value)));
   });
-  svg.append(svgNode('text', { x: 8, y: 12, class: 'chart-label' }, 'cm'));
+  svg.append(svgNode('text', { x: 35, y: 8, 'text-anchor': 'end', class: 'chart-label chart-unit' }, 'cm'));
   let path = '', next = true;
   series.points.forEach(p => {
     if (p.value === null) { next = true; return; }
