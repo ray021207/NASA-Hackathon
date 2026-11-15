@@ -382,7 +382,7 @@ function renderInsights(root, series) {
   const box = el('section', 'insights report-highlights');
   const header = el('div', 'insights-header'), heading = el('div', 'insights-heading');
   heading.append(el('span', 'report-eyebrow', 'AT A GLANCE'), el('h2', 'insights-title', 'What the satellites show'));
-  const help = explainButton('confidence'); help.textContent = 'Explain confidence ↗';
+  const help = explainButton('confidence'); help.textContent = 'Explain confidence ↗︎';
   header.append(heading, help); box.append(header);
   const lead = el('div', 'insights-lead');
   lead.append(el('p', 'insights-summary', ins.summary));
@@ -427,7 +427,7 @@ function showFieldNote(title, description, footnote = '') {
   $('#explain-drawer').hidden = false;
 }
 function explainButton(key) {
-  const button = el('button', 'explain-trigger', 'Explain ↗'); button.type = 'button';
+  const button = el('button', 'explain-trigger', 'Explain ↗︎'); button.type = 'button';
   button.setAttribute('aria-label', 'Explain: ' + FIELD_NOTES[key][0]);
   button.addEventListener('click', () => showFieldNote(...FIELD_NOTES[key]));
   return button;
@@ -461,7 +461,7 @@ function renderDetails() {
     ? (isNumber(series.rate_sigma) ? (series.rate_sigma_note || 'Uncertainty supplied by the processing pipeline.') : 'Uncertainty has not been supplied.')
     : dataError(result, 'Awaiting a referenced time series and fitted rate.')));
   if (hasRate) metric.append(note(series.sign_convention || 'Sign convention not supplied. This value is not labelled as vertical sinking.'));
-  const rateHelp = explainButton('rate'); rateHelp.textContent = 'Explain this rate ↗';
+  const rateHelp = explainButton('rate'); rateHelp.textContent = 'Explain this rate ↗︎';
   metric.append(rateHelp);
   const topRow = el('div', 'report-top');
   topRow.append(metric);
@@ -1089,7 +1089,7 @@ function renderAbout(team) {
     if (member.links.length) {
       const row = el('div', 'team-links');
       member.links.forEach(link => {
-        const anchor = el('a', '', link.label + ' ↗');
+        const anchor = el('a', '', link.label + ' ↗︎');
         anchor.href = link.url; anchor.target = '_blank'; anchor.rel = 'noopener noreferrer';
         row.append(anchor);
       });

@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 560" preserveAspectRatio="xMidYMax slice" role="presentation" aria-hidden="true">
+  <!-- Original flat desert-sunset illustration, wide version for laptops: sun, layered red-rock buttes, saguaros, prickly pear, agave. Decorative only; shown very faintly behind the opening text. -->
+  <defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f7c78f"/><stop offset=".55" stop-color="#f3a964"/><stop offset="1" stop-color="#ee8f4e"/></linearGradient></defs>
+  <rect width="1600" height="560" fill="url(#sky)"/>
+  <circle cx="1180" cy="200" r="132" fill="#fde7b0" fill-opacity=".30"/>
+  <circle cx="1180" cy="200" r="88" fill="#fde7b0"/>
+  <path d="M-20 120 C140 92 300 112 460 98 S760 82 920 98 L920 114 C760 108 600 128 440 122 S120 138 -20 132Z" fill="#fbd9a2" fill-opacity=".55"/>
+  <path d="M980 62 C1100 44 1260 54 1380 40 S1600 46 1640 58 L1640 72 C1500 68 1340 78 1220 74 S1020 80 980 72Z" fill="#fbd9a2" fill-opacity=".55"/>
+  <path d="M0 560 L0 297 L29 297 L46 304 L75 304 L92 329 L121 329 L138 298 L167 298 L184 301 L213 301 L230 306 L259 306 L276 279 L305 279 L322 301 L351 301 L368 309 L397 309 L414 320 L443 320 L460 272 L489 272 L506 287 L535 287 L552 272 L581 272 L598 321 L627 321 L644 313 L673 313 L690 269 L719 269 L736 333 L765 333 L782 332 L811 332 L828 310 L857 310 L874 308 L903 308 L920 277 L949 277 L966 267 L995 267 L1012 302 L1041 302 L1058 270 L1087 270 L1104 279 L1133 279 L1150 282 L1179 282 L1196 268 L1225 268 L1242 298 L1271 298 L1288 296 L1317 296 L1334 323 L1363 323 L1380 301 L1409 301 L1426 310 L1455 310 L1472 300 L1501 300 L1518 311 L1547 311 L1564 297 L1593 297 L1600 297 V560 Z" fill="#f2a362"/>
+  <path d="M40 560 L60 330 L92 318 L100 262 L152 238 L152 192 L232 186 L238 242 L302 264 L314 322 L384 340 L410 560Z" fill="#e57f45"/>
+  <path d="M1190 560 L1214 330 L1262 300 L1268 232 L1332 210 L1336 152 L1420 148 L1430 212 L1482 238 L1490 302 L1540 322 L1600 332 L1600 560Z" fill="#e57f45"/>
+  <path d="M610 560 L634 352 L696 332 L706 292 L790 284 L800 332 L880 352 L906 560Z" fill="#e57f45"/>
+  <path d="M0 430 Q200 380 400 410 T800 400 T1200 396 T1600 380 V560 H0Z" fill="#cf553b"/>
+  <g fill="none" stroke="#b04a54" stroke-linecap="round" stroke-linejoin="round" stroke-width="11">
+    <path d="M520 430 V352"/><path d="M520 410 H505 V388"/><path d="M520 398 H534 V376"/>
+    <path d="M1000 424 V344"/><path d="M1000 402 H985 V380"/>
+    <path d="M1540 416 V340"/><path d="M1540 396 H1526 V374"/><path d="M1540 386 H1554 V362"/>
+  </g>
+  <rect y="420" width="1600" height="140" fill="#cf553b"/>
+  <path d="M0 470 Q300 430 640 458 T1280 450 T1600 440 V560 H0Z" fill="#a2404a"/>
+  <path d="M0 512 Q400 482 800 502 T1600 490 V560 H0Z" fill="#59303c"/>
+  <g fill="none" stroke="#59303c" stroke-linecap="round" stroke-linejoin="round">
+    <g stroke-width="20"><path d="M170 522 V330"/><path d="M170 450 H138 V400"/><path d="M170 420 H206 V366"/></g>
+    <g stroke-width="19"><path d="M760 516 V300"/><path d="M760 440 H728 V392"/><path d="M760 410 H794 V352"/></g>
+    <g stroke-width="21"><path d="M1390 516 V296"/><path d="M1390 450 H1356 V398"/><path d="M1390 418 H1426 V362"/></g>
+  </g>
+  <g fill="#59303c">
+    <ellipse cx="1500" cy="500" rx="20" ry="26" transform="rotate(-8 1500 500)"/>
+    <ellipse cx="1534" cy="474" rx="18" ry="24" transform="rotate(14 1534 474)"/>
+    <ellipse cx="1470" cy="470" rx="16" ry="22" transform="rotate(-20 1470 470)"/>
+    <ellipse cx="1516" cy="446" rx="13" ry="18" transform="rotate(10 1516 446)"/>
+    <ellipse cx="330" cy="506" rx="16" ry="22" transform="rotate(10 330 506)"/>
+    <ellipse cx="356" cy="486" rx="13" ry="18" transform="rotate(-14 356 486)"/>
+  </g>
+  <g fill="none" stroke="#59303c" stroke-linecap="round" stroke-width="6">
+    <path d="M470 520 Q460 490 452 476 M470 520 Q470 486 470 468 M470 520 Q480 490 488 476"/>
+    <path d="M980 524 Q972 498 966 486 M980 524 Q980 494 980 480 M980 524 Q988 498 994 486"/>
+    <path d="M1232 520 Q1222 492 1214 478 M1232 520 Q1232 488 1232 470 M1232 520 Q1242 492 1250 478"/>
+    <path d="M610 524 Q604 506 600 498 M610 524 Q610 502 610 494 M610 524 Q616 506 620 498"/>
+  </g>
+</svg>
