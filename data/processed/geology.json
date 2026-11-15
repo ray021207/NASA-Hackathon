@@ -45,6 +45,11 @@
    "label": "Arizona Department of Water Resources. Willcox Active Management Area",
    "url": "https://www.azwater.gov/node/5934",
    "short": "ADWR, Willcox AMA"
+  },
+  "azgs_fissures": {
+   "label": "Arizona Geological Survey. Earth fissure maps, as published with its Earth Fissure Viewer (data last updated February 2016)",
+   "url": "https://github.com/azgs/EarthFissureViewer",
+   "short": "AZGS fissure maps, 2016"
   }
  },
  "areas": {
@@ -105,11 +110,28 @@
     "decline_ft_yr": null
    },
    "sources": [
+    "azgs_fissures",
     "epstein1987",
     "galloway1999",
     "pool2001"
    ],
-   "caveat": "The sources describe the Picacho Basin and the Eloy area; layer depths vary across the basin. The diagram is schematic, not to scale."
+   "caveat": "The sources describe the Picacho Basin and the Eloy area; layer depths vary across the basin. The diagram is schematic, not to scale.",
+   "recovery": {
+    "status": "studied",
+    "text": "Largely no. Water levels rose by up to 150 feet, yet some ground kept sinking as the thick clay kept draining.",
+    "source": "galloway1999"
+   },
+   "fissures": {
+    "km_confirmed": 94.7,
+    "km_reported": 166.0,
+    "azgs_study_areas": [
+     "Picacho Peak and Friendly Corner",
+     "Toltec Buttes",
+     "Tator Hills",
+     "Greene Wash"
+    ],
+    "source": "azgs_fissures"
+   }
   },
   "willcox": {
    "basin": "Willcox basin (Cochise County), including the Kansas Settlement farming area",
@@ -172,11 +194,28 @@
     "decline_ft_yr": 2.31
    },
    "sources": [
+    "azgs_fissures",
     "brown1969",
     "konieczki2006",
     "smilovsky2025"
    ],
-   "caveat": "The playa clay is mapped mainly under and near the playa; its full extent below ground is not known accurately from drillers' logs (Brown and Schumann, 1969). The diagram is schematic, not to scale."
+   "caveat": "The playa clay is mapped mainly under and near the playa; its full extent below ground is not known accurately from drillers' logs (Brown and Schumann, 1969). The diagram is schematic, not to scale.",
+   "recovery": {
+    "status": "studied",
+    "text": "Not so far. Recent wetter years gave only temporary, local recharge, and the sinking continued.",
+    "source": "smilovsky2025"
+   },
+   "fissures": {
+    "km_confirmed": 45.9,
+    "km_reported": 3.5,
+    "azgs_study_areas": [
+     "Three Sisters Buttes",
+     "Dragoon Road",
+     "North Sulphur Springs Valley",
+     "Croton Springs"
+    ],
+    "source": "azgs_fissures"
+   }
   },
   "north_willcox": {
    "basin": "Northern Willcox basin (Graham and Cochise counties), along Fort Grant Road",
@@ -236,10 +275,25 @@
    },
    "sources": [
     "adwr_ama",
+    "azgs_fissures",
     "brown1969",
+    "galloway1999",
     "konieczki2006"
    ],
-   "caveat": "How deep the clay lies at any one point here is not given in the sources. The diagram is schematic, not to scale."
+   "caveat": "How deep the clay lies at any one point here is not given in the sources. The diagram is schematic, not to scale.",
+   "recovery": {
+    "status": "inferred",
+    "text": "Not studied here. The same lake clay lies beneath and the water table is still falling, which the USGS links to permanent compaction.",
+    "source": "galloway1999"
+   },
+   "fissures": {
+    "km_confirmed": 9.6,
+    "km_reported": 0.0,
+    "azgs_study_areas": [
+     "North Sulphur Springs Valley"
+    ],
+    "source": "azgs_fissures"
+   }
   },
   "south": {
    "basin": "Douglas basin (Cochise County), southern Sulphur Springs Valley, around Elfrida",
@@ -288,11 +342,25 @@
     "decline_ft_yr": 2.27
    },
    "sources": [
+    "azgs_fissures",
     "coates1955",
     "galloway1999",
     "konieczki2006"
    ],
-   "caveat": "The Douglas basin sources are older (1955) or general; they do not map clay thickness near Elfrida. The diagram is schematic, not to scale."
+   "caveat": "The Douglas basin sources are older (1955) or general; they do not map clay thickness near Elfrida. The diagram is schematic, not to scale.",
+   "recovery": {
+    "status": "inferred",
+    "text": "Not studied here, and unclear. There are clay lenses but no basin-wide clay layer, so how much would rebound is not known.",
+    "source": "konieczki2006"
+   },
+   "fissures": {
+    "km_confirmed": 2.2,
+    "km_reported": 0.0,
+    "azgs_study_areas": [
+     "Elfrida"
+    ],
+    "source": "azgs_fissures"
+   }
   },
   "east": {
    "basin": "San Simon basin (Cochise County), Bowie and San Simon areas",
@@ -347,9 +415,24 @@
     "decline_ft_yr": 1.34
    },
    "sources": [
+    "azgs_fissures",
+    "galloway1999",
     "white1965"
    ],
-   "caveat": "Our radar sees this area from one direction only, and the San Simon sources are from 1965. The diagram is schematic, not to scale."
+   "caveat": "Our radar sees this area from one direction only, and the San Simon sources are from 1965. The diagram is schematic, not to scale.",
+   "recovery": {
+    "status": "inferred",
+    "text": "Not studied here. A blue clay layer lies beneath and the water table is still falling, which the USGS links to permanent compaction.",
+    "source": "galloway1999"
+   },
+   "fissures": {
+    "km_confirmed": 32.1,
+    "km_reported": 5.8,
+    "azgs_study_areas": [
+     "Bowie San Simon"
+    ],
+    "source": "azgs_fissures"
+   }
   }
  }
 }

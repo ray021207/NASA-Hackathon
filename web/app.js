@@ -998,6 +998,7 @@ async function start() {
     })()
   ];
   await Promise.all(tasks);
+  renderGeoCompare();
   if (state.selected) renderDetails();
   updateRateLayer();
   const hasMeasurements = [...state.series.values()].some(r => r.status === 'ready' && r.value.hasData);
@@ -1335,7 +1336,48 @@ let GEOLOGY = null;
 loadJSON('geology.json', cleanGeology).then(result => {
   GEOLOGY = result.status === 'ready' ? result.value : null;
   if (GEOLOGY && state.selected && !document.querySelector('#detail-content .geology')) renderDetails();
+  renderGeoCompare();
 });
+// Geology tab: the same questions asked of all five study areas, one row each (from geology.json; names from hotspots.geojson).
+function renderGeoCompare() {
+  const box = document.getElementById('geology-compare');
+  if (!box || !GEOLOGY) return;
+  const nameOf = slug => state.hotspots?.features.find(f => f.properties.slug === slug)?.properties.name || null;
+  const rows = Object.entries(GEOLOGY.areas).filter(([, g]) => g.recovery && g.fissures)
+    .sort(([, a], [, b]) => (a.measured.rate ?? 0) - (b.measured.rate ?? 0));
+  if (rows.length < 2) { box.hidden = true; return; }
+  const cite = (g, id) => { const s = g.sources.find(x => x.id === id); if (!s) return null; const link = el('a', 'geo-cite', '(' + s.short + ')'); link.href = s.url; link.target = '_blank'; link.rel = 'noopener noreferrer'; return link; };
+  box.replaceChildren();
+  box.append(el('h3', 'geo-compare-title', 'The five study areas, side by side'));
+  const wrap = el('div', 'geo-compare-wrap');
+  const table = el('table', 'geo-compare-table');
+  const head = el('thead'), hr = el('tr');
+  const COLS = ['Study area', 'Clay that can compact', 'Sinking (cm/yr)', 'Water table', 'Mapped earth fissures', 'Can the ground come back?'];
+  COLS.forEach(c => { const th = el('th', '', c); th.scope = 'col'; hr.append(th); });
+  head.append(hr); table.append(head);
+  const body = el('tbody');
+  rows.forEach(([slug, g]) => {
+    const tr = el('tr');
+    const td = (i, ...kids) => { const c = el(i === 0 ? 'th' : 'td'); if (i === 0) c.scope = 'row'; c.dataset.label = COLS[i]; c.append(...kids.filter(Boolean)); tr.append(c); return c; };
+    const name = nameOf(slug) || g.basin;
+    const open = el('a', 'geo-compare-area', name); open.href = '#atlas';
+    open.addEventListener('click', () => { if (state.slugs?.includes(slug)) setTimeout(() => selectHotspot(slug), 60); });
+    td(0, open, el('small', '', g.basin));
+    const clays = g.layers.filter(l => l.compacts).map(l => l.name);
+    td(1, document.createTextNode(clays.length ? clays.join('; ') : 'None named in the sources'));
+    td(2, el('strong', '', isNumber(g.measured.rate) ? formatNumber(g.measured.rate) : '\u2014'));
+    td(3, document.createTextNode(isNumber(g.measured.decline) ? 'Falling ' + formatNumber(g.measured.decline) + ' ft/yr (' + g.measured.wells + ' wells)' : 'No wells in our data'));
+    const f = g.fissures;
+    const fz = el('span', '', formatNumber(f.confirmed) + ' km confirmed' + (f.reported > 0 ? ' + ' + formatNumber(f.reported) + ' km reported' : ''));
+    td(4, fz, f.areas.length ? el('small', '', f.areas.join(', ')) : null);
+    const r = g.recovery;
+    td(5, el('span', 'recovery-chip ' + r.status, r.status === 'studied' ? 'Studied here' : 'Not studied here'), el('span', 'recovery-text', r.text + ' '), cite(g, r.source));
+    body.append(tr);
+  });
+  table.append(body); wrap.append(table); box.append(wrap);
+  box.append(el('p', 'geo-compare-note', 'Sinking: our Sentinel-1 rates, 2016\u20132026, along the satellite\u2019s slanted view (negative = sinking). Water table: median of the wells inside each area. Earth fissures: kilometres mapped by the Arizona Geological Survey inside each study area, with data as of 2016; "confirmed" combines its continuous and discontinuous classes, and a place with no mapped fissure is not proof that none exist. "Studied here" cites a study of that area; "Not studied here" is our reading of the geology, not a measurement. Select an area name to open it on the map.'));
+  box.hidden = false;
+}
 const GEO_KIND_LABEL = { sand: 'Sand and gravel', clay: 'Clay or silt', mixed: 'Mixed sand, silt and clay', consolidated: 'Older, firmer fill', evaporite: 'Salt and gypsum beds', rock: 'Bedrock' };
 function renderGeology(slug) {
   const g = GEOLOGY?.areas?.[slug];
@@ -1364,6 +1406,8 @@ function renderGeology(slug) {
   const facts = [];
   if (isNumber(m.rate)) facts.push(['Ground motion', formatNumber(m.rate) + ' cm/yr (Sentinel-1, 2016\u20132026, line of sight)']);
   facts.push(['Water table', isNumber(m.decline) ? 'falling about ' + formatNumber(m.decline) + ' ft a year (median of ' + m.wells + ' wells, 1980s\u201390s to 2015\u201325)' : 'no wells in our water-level data for this area']);
+  if (g.fissures) facts.push(['Mapped earth fissures', formatNumber(g.fissures.confirmed) + ' km confirmed' + (g.fissures.reported > 0 ? ' and ' + formatNumber(g.fissures.reported) + ' km reported' : '') + ' inside this study area (Arizona Geological Survey, data as of 2016)']);
+  if (g.recovery) facts.push(['Can it come back?', (g.recovery.status === 'studied' ? 'Studied here: ' : 'Not studied here: ') + g.recovery.text.replace(/^Not studied here(, and unclear)?\. /, m2 => m2.includes('unclear') ? 'unclear. ' : '')]);
   side.append(el('h3', 'geo-subhead', 'What we measured here'), factList(facts));
   side.append(el('h3', 'geo-subhead', 'What the studies say'));
   const list = el('ul', 'geo-facts');

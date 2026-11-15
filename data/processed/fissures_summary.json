@@ -1,0 +1,54 @@
+{
+ "source": "Arizona Geological Survey earth fissure maps, as published with its Earth Fissure Viewer (data last updated 2016-02-04)",
+ "source_url": "https://github.com/azgs/EarthFissureViewer",
+ "current_maps_url": "https://azgs.arizona.edu/earth-fissure-study-areas-arizona",
+ "note": "Kilometres of mapped fissure inside each study box. Confirmed = continuous + discontinuous; reported = reported, unconfirmed. Mapping covers AZGS study areas up to about 2016; a place with no mapped fissure is not proof that none exist.",
+ "areas": {
+  "eloy": {
+   "km_total": 260.7,
+   "km_confirmed": 94.7,
+   "km_reported": 166.0,
+   "azgs_study_areas": [
+    "Picacho Peak and Friendly Corner",
+    "Toltec Buttes",
+    "Tator Hills",
+    "Greene Wash"
+   ]
+  },
+  "willcox": {
+   "km_total": 49.4,
+   "km_confirmed": 45.9,
+   "km_reported": 3.5,
+   "azgs_study_areas": [
+    "Three Sisters Buttes",
+    "Dragoon Road",
+    "North Sulphur Springs Valley",
+    "Croton Springs"
+   ]
+  },
+  "north_willcox": {
+   "km_total": 9.6,
+   "km_confirmed": 9.6,
+   "km_reported": 0.0,
+   "azgs_study_areas": [
+    "North Sulphur Springs Valley"
+   ]
+  },
+  "south": {
+   "km_total": 2.2,
+   "km_confirmed": 2.2,
+   "km_reported": 0.0,
+   "azgs_study_areas": [
+    "Elfrida"
+   ]
+  },
+  "east": {
+   "km_total": 37.9,
+   "km_confirmed": 32.1,
+   "km_reported": 5.8,
+   "azgs_study_areas": [
+    "Bowie San Simon"
+   ]
+  }
+ }
+}

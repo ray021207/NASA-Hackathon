@@ -222,7 +222,15 @@ export function cleanGeology(raw) {
     const m = a?.measured || {};
     const measured = { rate: isNumber(m.rate_cm_yr) ? m.rate_cm_yr : null, wells: isNumber(m.wells) ? m.wells : 0, decline: isNumber(m.decline_ft_yr) ? m.decline_ft_yr : null };
     const basin = geoText(a?.basin, 140), summary = geoText(a?.summary, 420), caveat = geoText(a?.caveat, 320);
-    if (basin && summary && layers.length >= 2 && facts.length >= 2) areas[slug] = { basin, summary, caveat, layers, facts, measured, sources: [...new Set(facts.map(f => f.source))].map(id => ({ id, ...sources[id] })) };
+    const r = a?.recovery, rText = geoText(r?.text, 260);
+    const recovery = rText && (r.status === 'studied' || r.status === 'inferred') && sources[r.source] ? { status: r.status, text: rText, source: r.source } : null;
+    const fz = a?.fissures;
+    const fissures = fz && isNumber(fz.km_confirmed) && fz.km_confirmed >= 0 && isNumber(fz.km_reported) && fz.km_reported >= 0 && sources[fz.source]
+      ? { confirmed: fz.km_confirmed, reported: fz.km_reported, areas: (Array.isArray(fz.azgs_study_areas) ? fz.azgs_study_areas : []).map(t => geoText(t, 60)).filter(Boolean).slice(0, 6), source: fz.source } : null;
+    const used = new Set(facts.map(f => f.source));
+    if (recovery) used.add(recovery.source);
+    if (fissures) used.add(fissures.source);
+    if (basin && summary && layers.length >= 2 && facts.length >= 2) areas[slug] = { basin, summary, caveat, layers, facts, measured, recovery, fissures, sources: [...used].map(id => ({ id, ...sources[id] })) };
   }
   return Object.keys(areas).length ? { areas } : null;
 }

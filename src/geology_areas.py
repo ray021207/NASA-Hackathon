@@ -18,6 +18,16 @@ S = {
     "white1965": ("White, N. D. & Hardt, W. F. (1965). Electrical-Analog Analysis of Hydrologic Data for San Simon Basin, Cochise and Graham Counties, Arizona. USGS Water-Supply Paper 1809-R", "https://pubs.usgs.gov/wsp/1809r/report.pdf"),
     "smilovsky2025": ("Smilovsky, D. (2025). Recharged but Not Recovered: InSAR Observations of Persistent Land Subsidence in Arizona's Willcox Basin. GSA Connects 2025 abstract", "https://gsameetings.secure-platform.com/connects25/solicitations/103002/sessiongallery/schedule/items/95198/application/10103"),
     "adwr_ama": ("Arizona Department of Water Resources. Willcox Active Management Area", "https://www.azwater.gov/node/5934"),
+    "azgs_fissures": ("Arizona Geological Survey. Earth fissure maps, as published with its Earth Fissure Viewer (data last updated February 2016)", "https://github.com/azgs/EarthFissureViewer"),
+}
+# Can the ground come back? 'studied' = a source tested or observed it in this area; 'inferred' = not studied here, our reading of the
+# geology plus the general USGS finding that compaction of clay below its previous lowest water level is largely permanent (Galloway 1999).
+RECOVERY = {
+    "eloy": ("studied", "Largely no. Water levels rose by up to 150 feet, yet some ground kept sinking as the thick clay kept draining.", "galloway1999"),
+    "willcox": ("studied", "Not so far. Recent wetter years gave only temporary, local recharge, and the sinking continued.", "smilovsky2025"),
+    "north_willcox": ("inferred", "Not studied here. The same lake clay lies beneath and the water table is still falling, which the USGS links to permanent compaction.", "galloway1999"),
+    "south": ("inferred", "Not studied here, and unclear. There are clay lenses but no basin-wide clay layer, so how much would rebound is not known.", "konieczki2006"),
+    "east": ("inferred", "Not studied here. A blue clay layer lies beneath and the water table is still falling, which the USGS links to permanent compaction.", "galloway1999"),
 }
 WILLCOX_BASIN = "Willcox basin, northern Sulphur Springs Valley: about 1,500 square miles, of which the valley floor is about 950 (Brown and Schumann, 1969)."
 AREAS = {
@@ -95,17 +105,23 @@ for h in export_web.HOTSPOTS:
     boxes[h["id"]] = h["bbox"]
 gw = json.load(open(f"{P}/groundwater_vs_sinking.json"))["wells"]
 SHORT = {"brown1969": "Brown and Schumann, 1969", "konieczki2006": "Konieczki, 2006", "galloway1999": "Galloway and others, 1999", "pool2001": "Pool and others, 2001",
-         "epstein1987": "Epstein, 1987", "coates1955": "Coates and Cushman, 1955", "white1965": "White and Hardt, 1965", "smilovsky2025": "Smilovsky, 2025", "adwr_ama": "ADWR, Willcox AMA"}
+         "epstein1987": "Epstein, 1987", "coates1955": "Coates and Cushman, 1955", "white1965": "White and Hardt, 1965", "smilovsky2025": "Smilovsky, 2025", "adwr_ama": "ADWR, Willcox AMA",
+         "azgs_fissures": "AZGS fissure maps, 2016"}
+fis = json.load(open(f"{P}/fissures_summary.json"))["areas"]   # from src/fissures_azgs.py
 out = {"note": "Subsurface geology per study area from primary USGS and Arizona sources; layer diagrams are schematic, not to scale.", "sources": {k: dict(label=v[0], url=v[1], short=SHORT[k]) for k, v in S.items()}, "areas": {}}
 for slug, a in AREAS.items():
     w, s, e, n = boxes[slug]
     inside = [x for x in gw if w <= x["lon"] <= e and s <= x["lat"] <= n]
     measured = dict(rate_cm_yr=ts[slug]["rate_cm_yr"], wells=len(inside),
                     decline_ft_yr=round(float(np.median([x["decline_ft_yr"] for x in inside])), 2) if len(inside) >= 5 else None)
-    used = sorted({src for _, src in a["facts"]})
+    status, text, rsrc = RECOVERY[slug]
+    f = fis[slug]
+    used = sorted({src for _, src in a["facts"]} | {rsrc, "azgs_fissures"})
     out["areas"][slug] = dict(basin=a["basin"], summary=a["summary"],
                               layers=[dict(name=l[0], kind=l[1], note=l[2], compacts=l[3]) for l in a["layers"]],
-                              facts=[dict(text=t, source=src) for t, src in a["facts"]], measured=measured, sources=used, caveat=a["caveat"])
+                              facts=[dict(text=t, source=src) for t, src in a["facts"]], measured=measured, sources=used, caveat=a["caveat"],
+                              recovery=dict(status=status, text=text, source=rsrc),
+                              fissures=dict(km_confirmed=f["km_confirmed"], km_reported=f["km_reported"], azgs_study_areas=f["azgs_study_areas"], source="azgs_fissures"))
     print(f"{slug:14s} wells inside: {len(inside):3d} | decline {measured['decline_ft_yr']} ft/yr | rate {measured['rate_cm_yr']} cm/yr | sources {used}")
 json.dump(out, open(f"{P}/geology.json", "w"), indent=1)
 print("saved data/processed/geology.json")

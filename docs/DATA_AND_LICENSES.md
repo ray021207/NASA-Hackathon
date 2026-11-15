@@ -23,3 +23,7 @@ Python dependencies are listed with versions in `requirements.txt`.
 2. Put an Earthdata token in `.env` (never commit it).
 3. Run the `src/` scripts in the order described in `docs/STATUS.md`, then `python src/export_contract.py` to rebuild `data/processed/`.
 4. Serve the repo root (`python -m http.server`) and open `/web/`.
+
+## Arizona Geological Survey earth fissure maps
+
+- Source: GeoJSON in https://github.com/azgs/EarthFissureViewer (gh-pages/data), published by the Arizona Geological Survey with its Earth Fissure Viewer; data last updated 2016-02-04. The repository states no licence. We do not redistribute the raw lines; we publish only per-study-area totals (`data/processed/fissures_summary.json`), credited to the AZGS, with the data date.

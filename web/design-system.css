@@ -886,3 +886,32 @@ details.more>summary:not(#_){min-height:44px;padding:11px 16px}
 /* SI labels, quieter: still visible (Space Apps watermark rule) but blending with the logo instead of popping out. */
 .si-chip:not(#_){right:-2px;bottom:-1px;font:700 7.5px/1 var(--sans);letter-spacing:.06em;color:var(--slate-deep);background:rgba(255,253,248,.92);border:1px solid rgba(45,42,37,.14);border-radius:3px;padding:1px 2px}
 .si-badge:not(#_){bottom:8%;font:600 10.5px/1 var(--sans);letter-spacing:.09em;text-transform:uppercase;color:var(--slate-deep);background:none;border-radius:0;padding:0}
+/* ---- Geology tab: five study areas side by side ---- */
+.geo-compare{margin:26px 0 30px}
+.geo-compare-title,.geo-bg-title{font:700 20px/1.3 var(--sans);letter-spacing:-.02em;color:var(--ink);margin:0 0 12px}
+.geo-bg-title{margin-top:8px}
+.geo-compare-wrap{overflow-x:auto;border:1px solid #e3ddd3;border-radius:16px;background:var(--paper)}
+.geo-compare-table{width:100%;border-collapse:collapse;font:400 14px/1.5 var(--sans);color:var(--ink);min-width:880px}
+.geo-compare-table th,.geo-compare-table td{text-align:left;vertical-align:top;padding:13px 14px;border-bottom:1px solid var(--rule)}
+.geo-compare-table thead th{font:700 12px/1.3 var(--sans);letter-spacing:.05em;text-transform:uppercase;color:var(--slate-deep);background:var(--faint)}
+.geo-compare-table tbody tr:last-child>*{border-bottom:0}
+.geo-compare-table tbody th{font-weight:700;width:17%}
+.geo-compare-table small{display:block;font:400 12.5px/1.45 var(--sans);color:var(--slate-deep);margin-top:3px}
+.geo-compare-area{color:var(--rust);font-weight:700;text-decoration:underline;text-underline-offset:3px}
+.geo-compare-table td:nth-child(3) strong{font:700 17px/1.2 var(--sans);color:var(--rust);font-variant-numeric:tabular-nums}
+.recovery-chip{display:inline-block;font:700 11.5px/1 var(--sans);letter-spacing:.03em;padding:4px 8px;border-radius:999px;margin:0 0 5px}
+.recovery-chip.studied{background:var(--ink);color:#fff}
+.recovery-chip.inferred{background:transparent;color:var(--ink);border:1px dashed var(--slate-deep)}
+.recovery-text{display:block}
+.geo-compare-note{font:400 13px/1.6 var(--sans);color:var(--slate-deep);margin:10px 2px 0;max-width:1000px}
+.scope-tag{display:inline-block;margin:6px 0 0;font:600 12px/1.3 var(--sans);color:var(--slate-deep);border:1px solid var(--rule);border-radius:999px;padding:3px 9px;background:var(--paper)}
+@media(max-width:760px){
+ .geo-compare-wrap{border:0;background:none;overflow:visible}
+ .geo-compare-table{min-width:0}
+ .geo-compare-table thead{display:none}
+ .geo-compare-table,.geo-compare-table tbody,.geo-compare-table tr,.geo-compare-table th,.geo-compare-table td{display:block;width:auto}
+ .geo-compare-table tbody tr{border:1px solid #e3ddd3;border-radius:14px;background:var(--paper);margin:0 0 12px;padding:4px 0}
+ .geo-compare-table tbody th{width:auto;border-bottom:1px solid var(--rule)}
+ .geo-compare-table td{border-bottom:0;padding:8px 14px}
+ .geo-compare-table td::before{content:attr(data-label);display:block;font:700 11px/1.3 var(--sans);letter-spacing:.05em;text-transform:uppercase;color:var(--slate-deep);margin-bottom:3px}
+}
