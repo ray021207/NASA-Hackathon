@@ -185,6 +185,7 @@ function resetTimeView() {
   const t = state.time;
   if (t) { clearInterval(t.timer); [t.image, ...Object.values(t.masks)].forEach(layer => { if (layer && map) map.removeLayer(layer); }); }
   state.time = { meta: null, hover: null, pinned: null, shown: null, timer: null, image: null, masks: {}, chart: null, ui: null };
+  const bar = document.getElementById('map-time-bar'); if (bar) { bar.hidden = true; bar.replaceChildren(); }
 }
 function applyTimeFrame() {
   const t = state.time, meta = t.meta;
@@ -245,25 +246,49 @@ function timeHooks() {
     clear: () => { stop(); t.pinned = null; t.hover = null; applyTimeFrame(); }
   };
 }
+// Compact controls: a round play button and two real checkboxes whose colour squares match the map.
+// On phones they float on the map itself, so the effect is visible where you tap (no scrolling back and forth).
+const PHONE = window.matchMedia ? window.matchMedia('(max-width: 800px)') : { matches: false };
+function placeTimeControls() {
+  const node = state.time?.ui?.node, bar = $('#map-time-bar');
+  if (!node || !bar) return;
+  const home = state.time.ui.home;
+  if (PHONE.matches) { bar.replaceChildren(node); bar.hidden = false; }
+  else { if (home && node.parentNode !== home) home.append(node); bar.hidden = true; bar.replaceChildren(); }
+}
+if (PHONE.addEventListener) PHONE.addEventListener('change', placeTimeControls);
 function makeTimeControls() {
   const t = state.time, node = el('div', 'time-controls'), idle = 'Move along the chart to watch the map change. Click (or tap) to hold a date.';
-  const button = (label, kind) => { const b = el('button', 'time-btn', label); b.type = 'button'; b.setAttribute('aria-pressed', 'false'); if (kind) b.dataset.kind = kind; return b; };
-  const play = button('\u25B6 Play through time'), sink = button('Show the sinking area on the map', 'sinking'), stab = button('Show the stable ground on the map', 'stable');
-  const back = button('Back to the rate map'); back.classList.add('subtle'); back.removeAttribute('aria-pressed');
+  const play = el('button', 'time-play'); play.type = 'button'; play.setAttribute('aria-pressed', 'false');
+  const icon = el('span', 'time-play-icon'); icon.setAttribute('aria-hidden', 'true');
+  const playText = el('span', 'time-play-text', 'Play');
+  play.append(icon, playText);
+  const check = (label, kind) => {
+    const wrap = el('label', 'time-check kind-' + kind), box = el('input');
+    box.type = 'checkbox'; box.dataset.kind = kind;
+    const swatch = el('span', 'time-swatch'); swatch.setAttribute('aria-hidden', 'true');
+    wrap.append(box, swatch, el('span', '', label));
+    return { wrap, box };
+  };
+  const sink = check('Sinking area', 'sinking'), stab = check('Stable ground', 'stable');
+  const back = el('button', 'time-reset', 'Back to the rate map'); back.type = 'button';
   const status = el('p', 'metric-note time-status', idle); status.setAttribute('aria-live', 'polite');
-  const row = el('div', 'time-row'); row.append(play, sink, stab, back); node.append(row, status);
-  if (!t.meta.masks.sinking) sink.hidden = true;
-  if (!t.meta.masks.stable) stab.hidden = true;
-  const ui = { node, sync() {
+  const row = el('div', 'time-row'); row.append(play, sink.wrap, stab.wrap, back); node.append(row, status);
+  if (!t.meta.masks.sinking) sink.wrap.hidden = true;
+  if (!t.meta.masks.stable) stab.wrap.hidden = true;
+  const ui = { node, home: null, sync() {
     const index = t.hover ?? t.pinned, playing = Boolean(t.timer);
-    play.textContent = playing ? '\u275A\u275A Pause' : '\u25B6 Play through time'; play.setAttribute('aria-pressed', String(playing));
-    sink.setAttribute('aria-pressed', String(Boolean(t.masks.sinking))); stab.setAttribute('aria-pressed', String(Boolean(t.masks.stable)));
+    playText.textContent = playing ? 'Pause' : 'Play';
+    play.setAttribute('aria-label', playing ? 'Pause' : 'Play through time');
+    play.setAttribute('aria-pressed', String(playing)); play.classList.toggle('is-playing', playing);
+    sink.box.checked = Boolean(t.masks.sinking); stab.box.checked = Boolean(t.masks.stable);
     back.hidden = t.pinned == null && !playing;
+    node.classList.toggle('has-date', index != null);
     status.textContent = index == null ? idle : 'Map: total change since ' + t.meta.dates[0] + ', as of ' + t.meta.dates[index] + (t.hover == null && t.pinned === index ? ' (held)' : '') + '.';
   } };
   play.addEventListener('click', togglePlay);
-  sink.addEventListener('click', () => toggleMask('sinking'));
-  stab.addEventListener('click', () => toggleMask('stable'));
+  sink.box.addEventListener('change', () => { if (sink.box.checked !== Boolean(t.masks.sinking)) toggleMask('sinking'); });
+  stab.box.addEventListener('change', () => { if (stab.box.checked !== Boolean(t.masks.stable)) toggleMask('stable'); });
   back.addEventListener('click', () => timeHooks().clear());
   ui.sync();
   return ui;
@@ -367,7 +392,7 @@ function renderDetails() {
     const chart = makeChart(series, timeMeta ? timeHooks() : null);
     state.time.chart = chart;
     chartSection.append(chart, note('Relative to: ' + series.reference));
-    if (timeMeta) { const ui = makeTimeControls(); state.time.ui = ui; chartSection.append(ui.node); }
+    if (timeMeta) { const ui = makeTimeControls(); state.time.ui = ui; ui.home = chartSection; chartSection.append(ui.node); }
   } else {
     const wait = el('div', 'chart-wait');
     wait.append(el('span', 'waiting-mark'), el('p', '', 'No observations to plot yet'), el('small', '', dataError(result, 'The chart will use the measured record. Pending does not mean zero movement.')));
@@ -376,6 +401,7 @@ function renderDetails() {
   const chartTarget = $('#study-chart');
   chartTarget.hidden = false;
   chartTarget.replaceChildren(chartSection);
+  placeTimeControls();
   const chartFooter = el('a', 'map-chart-details', 'Read the full ' + p.name + ' study report ↓');
   chartFooter.href = '#details';
   chartTarget.append(chartFooter);
