@@ -602,3 +602,7 @@ details.more-block>p.overview-proof-qualifier{margin-top:12px}
 @media(max-width:900px){.quick-answers ul{grid-template-columns:repeat(2,minmax(0,1fr))}.viz-pair{grid-template-columns:1fr}}
 @media(max-width:560px){.quick-answers ul{grid-template-columns:1fr}.evidence-tabs{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:thin}.evidence-tabs [role=tab]{padding:12px 16px;font-size:13px}.bar-row{grid-template-columns:1fr auto;grid-template-areas:"label value" "track track"}.bar-label{grid-area:label}.bar-value{grid-area:value}.bar-track{grid-area:track}.viz{padding:18px 16px}}
 @media(prefers-reduced-motion:reduce){.bar-fill{transition:none}}
+/* Footer: readable on the light page. It had inherited pale sand text meant for a dark footer (about 1.2:1 on cream); ink on cream is 12.5:1. */
+.page-footer{color:var(--ink);background:var(--canvas);border-top:1px solid var(--rule)}
+.page-footer .footer-separator{color:var(--rust)}
+.page-footer a{color:var(--rust)}

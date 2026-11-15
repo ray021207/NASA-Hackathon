@@ -227,3 +227,11 @@ test('app.js and model.mjs parse as modules (a duplicate declaration or typo wou
     execFileSync(process.execPath, ['--check', file], { stdio: 'pipe' });   // throws with the error text if the syntax is invalid
   }
 });
+
+test('footer text is dark enough for the light footer background (it was pale sand on cream, 1.2:1)', async () => {
+  const css = await readFile(new URL('../design-system.css', import.meta.url), 'utf8');
+  const rules = [...css.matchAll(/\.page-footer\{([^}]*)\}/g)].map(m => m[1]);
+  const last = (prop) => rules.map(r => (r.match(new RegExp('(?:^|;)\s*' + prop + ':\s*([^;]+)')) || [])[1]).filter(Boolean).pop();
+  assert.equal(last('background'), 'var(--canvas)');
+  assert.equal(last('color'), 'var(--ink)', 'the final footer text colour must be the dark ink, not the pale surface colour');
+});
