@@ -1,6 +1,8 @@
 import { cleanGeology, cleanGroundwater, cleanPumping, normalizeSeries, normalizeRate, normalizeHotspots, validateGeoJSON, safeSourceURL, formatNumber, isNumber, cleanInsights, normalizeCumulative, cleanTeam, cleanNisar } from './model.mjs';
 
 const $ = selector => document.querySelector(selector);
+// Reading level: 'plain' (default, for everyone) or 'research' (detail for researchers and water engineers). Set on <html data-audience>.
+const aud = () => document.documentElement.dataset.audience === 'research' ? 'research' : 'plain';
 const DATA = new URL('../data/processed/', import.meta.url);
 const COLORS = { rust: '#A64B2A', ink: '#2D2A25', olive: '#52664B', sand: '#E4D9C9', slate: '#626D76' };
 // Layers in the panel. Each has a group heading and one plain-language line: what it is, and why it is there.
@@ -376,6 +378,25 @@ function makeTimeControls() {
   ui.sync();
   return ui;
 }
+// Research view: the numbers behind the headline rate, straight from the exported record (nothing is recomputed in the browser).
+function renderResearchStats(root, s) {
+  if (!s || !isNumber(s.rate_cm_yr)) return;
+  const box = el('section', 'research-stats detail-section'); box.dataset.aud = 'research';
+  const head = el('div', 'detail-section-heading'); head.append(el('h2', '', 'Key statistics')); box.append(head);
+  const rows = [['Fitted rate', formatNumber(s.rate_cm_yr) + (isNumber(s.rate_sigma) ? ' \u00b1 ' + formatNumber(s.rate_sigma) : '') + ' cm/yr, line of sight']];
+  if (isNumber(s.rate_sigma_fit_only) && isNumber(s.rate_sigma_systematic)) rows.push(['Uncertainty budget', 'Fit error ' + formatNumber(s.rate_sigma_fit_only) + ' and systematic term ' + formatNumber(s.rate_sigma_systematic) + ' cm/yr, combined in quadrature']);
+  if (isNumber(s.area_km2) && isNumber(s.sinking_threshold_cm_yr)) rows.push(['Sinking area', formatNumber(s.area_km2) + ' km\u00b2 of pixels at or below ' + formatNumber(s.sinking_threshold_cm_yr) + ' cm/yr (300 m cells)']);
+  if (isNumber(s.median_rate_cm_yr)) rows.push(['Median of those pixels', formatNumber(s.median_rate_cm_yr) + ' cm/yr']);
+  if (isNumber(s.p5_rate_cm_yr) && isNumber(s.fastest_rate_cm_yr)) rows.push(['Fastest 5% and fastest cell', formatNumber(s.p5_rate_cm_yr) + ' and ' + formatNumber(s.fastest_rate_cm_yr) + ' cm/yr']);
+  const asc = s.ascending_check;
+  rows.push(['Ascending-track check', asc && isNumber(asc.median_rate) ? 'median ' + formatNumber(asc.median_rate) + ' cm/yr over ' + new Intl.NumberFormat('en-US').format(asc.n_px) + ' cells (5th percentile ' + formatNumber(asc.p5_rate) + ')' : 'not available: this area is outside the ascending frame']);
+  const c = s.adwr_comparison;
+  if (c && isNumber(c.corr_s1)) rows.push(['ADWR comparison', 'Sentinel-1 pattern correlation ' + formatNumber(c.corr_s1) + (isNumber(c.corr_rs2) ? '; RADARSAT-2 ' + formatNumber(c.corr_rs2) : '') + (isNumber(c.diff_s1) ? '; our median minus ADWR\u2019s ' + formatNumber(c.diff_s1) + ' cm/yr' : '')]);
+  rows.push(['Record', s.dates.length + ' dates, ' + s.dates[0] + ' to ' + s.dates.at(-1) + (s.track ? ' \u00b7 ' + s.track : '')]);
+  if (s.reference) rows.push(['Reference', s.reference]);
+  box.append(factList(rows));
+  root.append(box);
+}
 function renderInsights(root, series) {
   const ins = cleanInsights(series?.insights);
   if (!ins) return;
@@ -420,6 +441,15 @@ const FIELD_NOTES = {
   study: ['What is a study outline?', 'The boundary represents a project-defined study extent. It is not the observed subsidence footprint.', 'Names and stories are taken from the latest GeoJSON, not a fixed list.'],
   directions: ['Why do two satellite look directions matter?', 'Ascending passes generally move from south toward north, while descending passes move from north toward south. They observe the landscape from different slanted viewing geometries. Comparing both can help distinguish some components of motion and test consistency.', 'One viewing direction alone does not uniquely determine vertical ground movement. Geometry, quality and reference selection matter.']
 };
+const FIELD_NOTES_PLAIN = {
+  confidence: ['How sure are we?', 'Confidence says how strong the evidence is, not how worrying a place is. More observations, a good reference and two viewing directions that agree make us more confident.', 'Confidence labels come from our processed data.'],
+  rate: ['What does the speed mean?', 'It is how fast the ground moved over the period we measured. The radar looks at a slant, so this is not exactly the straight-down sinking rate. A minus sign means sinking.', 'The \u00b1 number is the margin of error. A speed on its own does not tell us the cause.'],
+  chart: ['How do I read the graph?', 'Each dot is a real measurement on a real date. Tap or focus a dot to see its date and value. A gap means no measurement, not zero movement.', 'The dashed line is stable ground. It shows how big the measurement noise is.'],
+  record: ['Why do the details matter?', 'Which satellite, orbit, direction and dates we used decide what can fairly be compared with what.', 'Different viewing angles or time periods cannot simply be mixed.'],
+  validation: ['What does the official comparison show?', 'The state water agency (ADWR) publishes its own radar results. We compare ours with theirs over the same ground to see whether they agree.', 'Agreement is a good sign, but the periods and methods differ, so it is not a full proof.'],
+  study: ['What is a study outline?', 'The box shows the area we chose to study. It is not the exact shape of the sinking ground.', ''],
+  directions: ['Why two viewing directions?', 'On some orbits the satellite sees the ground from one side and on others from the other side. If both show sinking, it is much more likely to be real.', 'One direction alone cannot tell us exactly how much of the movement is straight down.']
+};
 function showFieldNote(title, description, footnote = '') {
   $('#explain-title').textContent = title;
   $('#explain-text').textContent = description;
@@ -429,7 +459,7 @@ function showFieldNote(title, description, footnote = '') {
 function explainButton(key) {
   const button = el('button', 'explain-trigger', 'Explain ↗︎'); button.type = 'button';
   button.setAttribute('aria-label', 'Explain: ' + FIELD_NOTES[key][0]);
-  button.addEventListener('click', () => showFieldNote(...FIELD_NOTES[key]));
+  button.addEventListener('click', () => showFieldNote(...(aud() === 'research' ? FIELD_NOTES : FIELD_NOTES_PLAIN)[key]));
   return button;
 }
 function renderDetails() {
@@ -451,16 +481,21 @@ function renderDetails() {
   if (look) root.append(look);
   const summaryPanel = el('div', 'report-summary');
   renderInsights(summaryPanel, series);
+  renderResearchStats(summaryPanel, series);
   const hasRate = series && isNumber(series.rate_cm_yr);
   const metric = el('section', 'metric' + (hasRate ? '' : ' pending'));
-  metric.append(el('p', 'metric-label', 'Reported displacement rate · line of sight'));
+  const labelPlain = el('p', 'metric-label', 'How fast the ground is sinking'); labelPlain.dataset.aud = 'plain';
+  const labelResearch = el('p', 'metric-label', 'Reported displacement rate · line of sight'); labelResearch.dataset.aud = 'research';
+  metric.append(labelPlain, labelResearch);
   const value = el('div', 'metric-value', hasRate ? formatNumber(series.rate_cm_yr) : 'Measurement pending');
   if (hasRate) value.append(el('small', '', (isNumber(series.rate_sigma) ? '± ' + formatNumber(series.rate_sigma) + ' ' : '') + 'cm/yr'));
   metric.append(value);
-  metric.append(note(hasRate
-    ? (isNumber(series.rate_sigma) ? (series.rate_sigma_note || 'Uncertainty supplied by the processing pipeline.') : 'Uncertainty has not been supplied.')
-    : dataError(result, 'Awaiting a referenced time series and fitted rate.')));
-  if (hasRate) metric.append(note(series.sign_convention || 'Sign convention not supplied. This value is not labelled as vertical sinking.'));
+  if (hasRate) {
+    const plainNote = note('A minus sign means the ground is sinking. The \u00b1 number is the margin of error. Measured along the satellite\u2019s slanted view.'); plainNote.dataset.aud = 'plain';
+    const n1 = note(isNumber(series.rate_sigma) ? (series.rate_sigma_note || 'Uncertainty supplied by the processing pipeline.') : 'Uncertainty has not been supplied.'); n1.dataset.aud = 'research';
+    const n2 = note(series.sign_convention || 'Sign convention not supplied. This value is not labelled as vertical sinking.'); n2.dataset.aud = 'research';
+    metric.append(plainNote, n1, n2);
+  } else metric.append(note(dataError(result, 'Awaiting a referenced time series and fitted rate.')));
   const rateHelp = explainButton('rate'); rateHelp.textContent = 'Explain this rate ↗︎';
   metric.append(rateHelp);
   const topRow = el('div', 'report-top');
@@ -490,7 +525,7 @@ function renderDetails() {
   chartFooter.href = '#details';
   chartTarget.append(chartFooter);
   chartPanelTools(chartTarget);
-  const technical = el('div', 'report-methods');
+  const technical = el('div', 'report-methods'); technical.dataset.aud = 'research';
   technical.append(el('p', 'report-technical-hint', 'Source records, observations, the official comparison and the limits of this measurement.'));
   const technicalGrid = el('div', 'report-technical-grid');
   technical.append(technicalGrid);
@@ -558,7 +593,7 @@ function renderDetails() {
   reportTabs(root, [
     ['summary', 'Summary', summaryPanel, timelapse?.show],
     ['beneath', 'What lies beneath', geology],
-    ['methods', 'Methods & checks', technical]
+    ['methods', 'Methods & checks', methodsPanel(series, technical)]
   ]);
   const bottom = el('div', 'detail-bottom');
   bottom.append(el('div', '', 'Radar measures motion along the satellite’s line of sight. A vertical rate requires a justified conversion.'));
@@ -621,7 +656,9 @@ function renderTimelapse(slug, name) {
   const strip = el('span', 'timelapse-strip'); strip.setAttribute('aria-hidden', 'true');
   const labels = el('span', 'timelapse-labels'); labels.append(el('span', '', formatNumber(meta.vmin) + ' cm'), el('span', '', '0'), el('span', '', '+' + formatNumber(meta.vmax)));
   legend.append(strip, labels);
-  fig.append(box, controls, legend, el('figcaption', '', 'Red: ground lower than in ' + monthYear(meta.dates[0]) + ', measured along the satellite\u2019s slanted view (Sentinel-1). Blank: not measured at every date, not zero. White line: study outline.'));
+  const capPlain = el('figcaption', '', 'Red means the ground is lower than it was in ' + monthYear(meta.dates[0]) + '. Blank means we could not measure it, not that nothing moved. The white line is the study area.'); capPlain.dataset.aud = 'plain';
+  const capResearch = el('figcaption', '', 'Red: ground lower than in ' + monthYear(meta.dates[0]) + ', measured along the satellite\u2019s slanted view (Sentinel-1). Blank: not measured at every date, not zero. White line: study outline.'); capResearch.dataset.aud = 'research';
+  fig.append(box, controls, legend, capPlain, capResearch);
   const view = { map: null, image: null, timer: null, index: last };
   const showFrame = i => {
     view.index = i; range.value = String(i); date.textContent = monthYear(meta.dates[i]);
@@ -673,11 +710,37 @@ function lookCard(status, series) {
   if (both) rec.push('Northbound: Sentinel-1 ascending frame 5125' + (asc && isNumber(asc.median_rate) ? ' (median ' + formatNumber(asc.median_rate) + ' cm/yr over ' + asc.n_px + ' measured cells)' : ''));
   else rec.push('Our northbound (ascending) frame does not reach this area');
   rec.push('2016\u20132026, OPERA DISP-S1');
-  body.append(el('p', 'look-record', 'How it was recorded: ' + rec.join(' \u00b7 ') + '.'));
+  const recorded = el('p', 'look-record', 'How it was recorded: ' + rec.join(' \u00b7 ') + '.'); recorded.dataset.aud = 'research';
+  body.append(recorded);
   card.append(icon, body);
   return card;
 }
 // Study report tabs. The chosen tab is kept when another study area is opened, so areas can be compared section by section.
+// Methods & checks: everyone gets "how sure are we, what could be wrong, does the official record agree"; research also gets the full technical record.
+function methodsPanel(series, technical) {
+  const wrap = el('div', 'report-methods-wrap');
+  const plain = el('div', 'report-methods-plain'); plain.dataset.aud = 'plain';
+  const ins = cleanInsights(series?.insights);
+  const sure = section('How sure are we?');
+  if (ins?.confidence) {
+    sure.append(factList([[ins.confidence.where_label, 'Confidence: ' + ins.confidence.where], [ins.confidence.how_fast_label, 'Confidence: ' + ins.confidence.how_fast]]));
+  } else sure.append(el('p', 'detail-copy', 'We have not rated our confidence for this area yet.'));
+  plain.append(sure);
+  const wrong = section('What could make this wrong?');
+  const list = el('ul', 'plain-bullets');
+  ['The radar looks at a slant, so this is not exactly the straight-down sinking.', 'The ground we compare against is not perfectly still, so a few millimetres a year of error is possible.', 'A match with farming or wells does not prove who or what caused the sinking.'].forEach(t => list.append(el('li', '', t)));
+  wrong.append(list); plain.append(wrong);
+  const agree = section('Does the state\u2019s own radar record agree?', 'validation');
+  const c = series?.adwr_comparison;
+  if (c && isNumber(c.corr_s1)) {
+    agree.append(el('p', 'detail-copy', c.corr_s1 >= 0.9
+      ? 'Yes. Over the same ground, our map and the Arizona Department of Water Resources\u2019 map agree closely (match score ' + formatNumber(c.corr_s1) + ' out of 1).'
+      : 'Only partly. Over the same ground, our map and the Arizona Department of Water Resources\u2019 map agree weakly (match score ' + formatNumber(c.corr_s1) + ' out of 1), so treat this area\u2019s result with more care.'));
+  } else agree.append(el('p', 'detail-copy', 'We have not compared this area with the state\u2019s record yet.'));
+  plain.append(agree);
+  wrap.append(plain, technical);
+  return wrap;
+}
 function reportTabs(root, entries) {
   const list = entries.filter(entry => entry[2]);
   if (!list.some(([id]) => id === state.reportTab)) state.reportTab = list[0][0];
@@ -885,14 +948,18 @@ function makeOverlay(raw, key) {
     }
   });
 }
+const METHOD_PLAIN = `<p>A satellite sends a radar pulse down and times the echo, so it knows how far away the ground is. Each time it passes over the same spot, it can tell whether the ground moved closer or farther by a few millimetres.</p><ol><li><strong>Compare two passes.</strong> If the ground moved between two passes, the radar waves come back slightly out of step. That shift tells us how far it moved.</li><li><strong>Add up many pairs.</strong> One pair is noisy, because moisture in the air also changes the signal. Adding up many pairs over years lets steady sinking build up while random noise cancels out.</li><li><strong>Two satellites.</strong> Sentinel-1 has flown since 2016, so it gives a ten-year trend. NASA-ISRO NISAR started in late 2025, so its record is still short. We show the Sentinel-1 trend and treat NISAR as a preliminary test.</li><li><strong>Two viewing directions.</strong> On some orbits the satellite sees the ground from the east and on others from the west. When both agree, the sinking is much more likely to be real.</li><li><strong>Check against the official record.</strong> We compare our numbers with the radar results the Arizona Department of Water Resources publishes.</li></ol><p>Numbers are measured along the satellite\u2019s slanted view, not straight down.</p>`;
+const METHOD_RESEARCH = `<p>Interferometric SAR (InSAR) measures the change in round-trip phase between two acquisitions. For L-band NISAR (wavelength 24.2 cm) one radian of unwrapped phase is about 19 mm of line-of-sight displacement, d = \u2212(\u03bb / 4\u03c0) \u00b7 \u03c6; the sign convention is read from each product.</p><ol><li><strong>Products.</strong> NISAR L2 GUNW (geocoded unwrapped interferograms) and GCOV (polarimetric covariance) from the ASF archive; OPERA Sentinel-1 DISP-S1 (2016\u20132026) as the long record.</li><li><strong>Valid pixels.</strong> Finite phase, a nonzero connected component, and phase not exactly zero (fill values).</li><li><strong>Corrections.</strong> NISAR: the ionosphere screen is subtracted and the troposphere and solid-earth-tide screens shipped in the product metadata are applied; the troposphere sign was chosen empirically by testing both. Sentinel-1: the solid-earth-tide and ionosphere layers are subtracted; tropospheric delay is not corrected.</li><li><strong>Reference.</strong> Motion is relative to stable ground (the median of the whole frame for Sentinel-1), so a few mm/yr of reference bias is possible.</li><li><strong>Time series.</strong> Connected pairs on one track are chained using their actual dates and a rate is fitted with an uncertainty. Ascending and descending tracks are never combined directly.</li><li><strong>Uncertainty.</strong> The fit error is combined in quadrature with the larger of half the descending-minus-ascending difference or the difference from ADWR\u2019s own Sentinel-1 rate over the same pixels.</li><li><strong>Checks.</strong> Agreement with the opposite look direction and with ADWR\u2019s Sentinel-1 and RADARSAT-2 products; for NISAR, pattern correlation against Sentinel-1 on a 300 m grid.</li></ol><p>All values are line-of-sight. A vertical rate needs the assumption that the motion is mostly vertical, which we state wherever it is used.</p>`;
+const LIMITS_PLAIN = `<ul><li><strong>Empty is not zero.</strong> Where a result is missing or the map is blank, we have no reliable measurement. That does not mean the ground is stable.</li><li><strong>Slanted, not straight down.</strong> Radar measures movement along its slanted line of view. If the ground moves straight down, the true drop is likely somewhat larger.</li><li><strong>Short records need care.</strong> NISAR has about a year of data at Willcox and under four months at Eloy, so we do not publish a NISAR speed.</li><li><strong>Farming and building can hide the signal.</strong> Plowed fields and building sites make it harder for radar to measure.</li><li><strong>Place is not cause.</strong> A nearby farm or city does not prove it caused the sinking.</li><li><strong>Radar does not see wildlife.</strong> Anything about habitat comes from other sources.</li><li><strong>Mines move too.</strong> Open-pit mines shift for reasons unrelated to groundwater. We mark the ones we found.</li><li><strong>Blue patches are probably not real uplift.</strong> Rising values, such as on the Willcox dry lake bed, most likely come from wet or swelling soil. We have not verified this.</li><li><strong>A study box is not a sinking zone.</strong> The outlines show the areas we chose to study.</li></ul>`;
+const LIMITS_RESEARCH = '<ul><li><strong>Pending is not zero.</strong> Empty results mean that a file is missing or has not passed the interface checks.</li><li><strong>Radar measures line-of-sight motion.</strong> A vertical sinking rate needs a justified conversion. A positive or negative value is not interpreted without its sign convention.</li><li><strong>Short records need care.</strong> Seasonal movement, atmospheric errors and the stable reference can influence a fitted rate. NISAR\u2019s record is about a year at Willcox and under four months at Eloy, so we do not publish a NISAR speed; one bad acquisition date can move a one-year fit by a centimetre or more.</li><li><strong>Data quality varies.</strong> Farming and construction can reduce coherence. Product corrections and release status must be checked.</li><li><strong>Location does not establish cause.</strong> A nearby farm or city does not prove responsibility for ground movement.</li><li><strong>Radar does not observe wildlife.</strong> Any mention of habitat comes from outside sources, not from this measurement.</li><li><strong>Mines move too.</strong> Open-pit mines and their waste piles shift for reasons unrelated to groundwater. We mark the ones we found.</li><li><strong>Blue patches are probably not real uplift.</strong> Rising values, such as on the Willcox Playa floor, most likely come from wet or swelling soil changing the radar signal. We have not verified this.</li><li><strong>Gaps are not zeros.</strong> Where the map is empty, the radar could not measure reliably (over plowed fields, for example). That does not mean the ground is stable.</li><li><strong>A study box is not a sinking zone.</strong> Outlines show the areas the team chose to investigate.</li><li><strong>Reference and uncertainty.</strong> Sentinel-1 rates are relative to the frame median; a few mm/yr of reference bias is possible and is not separately included in the uncertainty.</li><li><strong>Troposphere.</strong> Not corrected for Sentinel-1; applied for NISAR with the product\u2019s screens.</li><li><strong>Agreement in sign is not agreement in size.</strong> In three of the four areas with an ascending check, the ascending median is a quarter to a third smaller than the descending one.</li><li><strong>Not fully independent.</strong> Our Sentinel-1 rates and ADWR\u2019s Sentinel-1 product share the satellite, so that comparison is a consistency check; RADARSAT-2 is an independent sensor.</li><li><strong>Data vintage.</strong> NISAR data are Provisional (the first Willcox pair is Beta). Wells span the 1980s to 2025, the pumping estimates are for 2024 and the mapped fissures are as of 2016.</li></ul>';
 const dialogCopy = {
   method: {
     title: 'How we measure ground motion',
-    body: '<p>A satellite sends a radar pulse down and times the echo, so it knows how far away the ground is. Flying over the same spot again and again, it can tell when the ground has moved closer or farther by a few millimetres. Moist air and the ionosphere also delay the signal, so we subtract the corrections NISAR provides for both before measuring any movement.</p><ol><li><strong>Compare two passes.</strong> If the ground moved between two passes, the radar waves return slightly out of step. That shift tells us how far it moved.</li><li><strong>Add up many pairs.</strong> One pair is noisy, because moisture in the air and the upper atmosphere also change the signal. Chaining many pairs over years lets steady sinking add up while random noise does not.</li><li><strong>Two satellites.</strong> Sentinel-1 has flown since 2016, so it gives a ten-year trend. NASA-ISRO NISAR started in late 2025, so its record is still short. We show the Sentinel-1 trend and mark NISAR as preliminary.</li><li><strong>Two viewing directions.</strong> Satellites look at the ground from the east or from the west. When both agree, the sinking is much more likely to be real.</li><li><strong>Check against the official record.</strong> We compare our numbers with the radar results the Arizona Department of Water Resources publishes itself.</li></ol><p>We removed the effects of the Earth\u2019s tides and of the upper atmosphere. We did not remove water vapour in the lower atmosphere, which is a main source of the remaining noise. Numbers are measured along the satellite\u2019s slanted view, not straight down.</p>'
+    body: { plain: METHOD_PLAIN, research: METHOD_RESEARCH }
   },
   limits: {
     title: 'Read the map with its limits',
-    body: '<ul><li><strong>Pending is not zero.</strong> Empty results mean that a file is missing or has not passed the interface checks.</li><li><strong>Radar measures line-of-sight motion.</strong> A vertical sinking rate needs a justified conversion. A positive or negative value is not interpreted without its sign convention.</li><li><strong>Short records need care.</strong> Seasonal movement, atmospheric errors and the stable reference can influence a fitted rate. NISAR\u2019s record is about a year at Willcox and under four months at Eloy, so we do not publish a NISAR speed; one bad acquisition date can move a one-year fit by a centimetre or more.</li><li><strong>Data quality varies.</strong> Farming and construction can reduce coherence. Product corrections and release status must be checked.</li><li><strong>Location does not establish cause.</strong> A nearby farm or city does not prove responsibility for ground movement.</li><li><strong>Radar does not observe wildlife.</strong> Any mention of habitat comes from outside sources, not from this measurement.</li><li><strong>Mines move too.</strong> Open-pit mines and their waste piles shift for reasons unrelated to groundwater. We mark the ones we found.</li><li><strong>Blue patches are probably not real uplift.</strong> Rising values, such as on the Willcox Playa floor, most likely come from wet or swelling soil changing the radar signal. We have not verified this.</li><li><strong>Gaps are not zeros.</strong> Where the map is empty, the radar could not measure reliably (over plowed fields, for example). That does not mean the ground is stable.</li><li><strong>A study box is not a sinking zone.</strong> Outlines show the areas the team chose to investigate.</li></ul>'
+    body: { plain: LIMITS_PLAIN, research: LIMITS_RESEARCH }
   },
   sources: {
     title: 'Resources · research, data and code',
@@ -931,7 +998,7 @@ const dialogCopy = {
 function openDialog(key) {
   const copy = dialogCopy[key]; if (!copy) return;
   $('#dialog-title').textContent = copy.title;
-  $('#dialog-body').innerHTML = copy.body; // Static, locally authored content only.
+  $('#dialog-body').innerHTML = typeof copy.body === 'string' ? copy.body : (copy.body[aud()] || copy.body.plain); // Static, locally authored content only.
   $('#about-dialog').showModal();
 }
 document.querySelectorAll('[data-dialog]').forEach(b => b.addEventListener('click', () => openDialog(b.dataset.dialog)));
@@ -1147,7 +1214,7 @@ function renderNisar(n) {
   const fl = n.farmland, mm = x => (x < 0 ? '\u2212' : x > 0 ? '+' : '') + one(Math.abs(x)) + ' mm';
   const away = x => Math.max(0, -x);
   barChart($('#viz-directions'), {
-    title: 'Is the sinking visible from both sides?', sub: 'How far the sinking areas moved away from the satellite over ' + dr.span + ' days, relative to the rest (mm). Whiskers: 95% range.',
+    title: 'Is the sinking visible from both sides?', subPlain: 'How far the sinking areas moved away from the satellite over ' + dr.span + ' days, in millimetres. A longer bar means more movement.', notePlain: 'Both views move the same way as the ten-year trend predicts.', sub: 'How far the sinking areas moved away from the satellite over ' + dr.span + ' days, relative to the rest (mm). Whiskers: 95% range.',
     max: 14, rows: [
       { label: 'NISAR, ascending track', value: away(dr.asc), lo: away(dr.ascHi), hi: away(dr.ascLo), text: mm(dr.asc), color: '#a64b2a' },
       { label: 'NISAR, descending track', value: away(dr.desc), lo: away(dr.descHi), hi: away(dr.descLo), text: mm(dr.desc), color: '#c77d5e' },
@@ -1205,11 +1272,13 @@ function renderPumping(p) {
 loadPumping().then(renderPumping);
 
 // Bar chart built from plain HTML (wraps on phones, readable by screen readers). Rows are keyboard-focusable and announce their value.
-function barChart(host, { title, sub, rows, note, min = 0, max }) {
+function barChart(host, { title, sub, subPlain, rows, note, notePlain, min = 0, max }) {
   if (!host || !rows?.length) return;
   const pct = v => Math.max(0, Math.min(100, (v - min) / (max - min) * 100));
   const wrap = el('div', 'viz-card');
-  wrap.append(el('h4', '', title), el('p', 'viz-sub', sub));
+  wrap.append(el('h4', '', title));
+  if (subPlain) { const p1 = el('p', 'viz-sub', subPlain), p2 = el('p', 'viz-sub', sub); p1.dataset.aud = 'plain'; p2.dataset.aud = 'research'; wrap.append(p1, p2); }
+  else wrap.append(el('p', 'viz-sub', sub));
   const list = el('ul', 'bars');
   rows.forEach(r => {
     const li = el('li', 'bar-row');
@@ -1231,7 +1300,8 @@ function barChart(host, { title, sub, rows, note, min = 0, max }) {
     requestAnimationFrame(() => requestAnimationFrame(() => { fill.style.width = pct(r.value) + '%'; }));
   });
   wrap.append(list);
-  if (note) wrap.append(el('p', 'viz-note', note));
+  if (note && notePlain) { const n1 = el('p', 'viz-note', notePlain), n2 = el('p', 'viz-note', note); n1.dataset.aud = 'plain'; n2.dataset.aud = 'research'; wrap.append(n1, n2); }
+  else if (note) wrap.append(el('p', 'viz-note', note));
   host.replaceChildren(wrap);
   host.hidden = false;
 }
@@ -1381,7 +1451,7 @@ function renderGeoCompare() {
   const table = el('table', 'geo-compare-table');
   const head = el('thead'), hr = el('tr');
   const COLS = ['Study area', 'Clay that can compact', 'Sinking (cm/yr)', 'Water table', 'Mapped earth fissures', 'Can the ground come back?'];
-  COLS.forEach(c => { const th = el('th', '', c); th.scope = 'col'; hr.append(th); });
+  COLS.forEach((c, i) => { const th = el('th', '', c); th.scope = 'col'; if (i === 1 || i === 4) th.dataset.aud = 'research'; hr.append(th); });
   head.append(hr); table.append(head);
   const body = el('tbody');
   rows.forEach(([slug, g]) => {
@@ -1390,17 +1460,20 @@ function renderGeoCompare() {
     const name = nameOf(slug) || g.basin;
     const open = el('a', 'geo-compare-area', name); open.href = '#atlas';
     open.addEventListener('click', () => { if (state.slugs?.includes(slug)) setTimeout(() => selectHotspot(slug), 60); });
-    td(0, open, el('small', '', g.basin));
+    const basinNote = el('small', '', g.basin); basinNote.dataset.aud = 'research';
+    td(0, open, basinNote);
     const clays = g.layers.filter(l => l.compacts).map(l => l.name);
-    td(1, document.createTextNode(clays.length ? clays.join('; ') : 'None named in the sources'));
+    td(1, document.createTextNode(clays.length ? clays.join('; ') : 'None named in the sources')).dataset.aud = 'research';
     td(2, el('strong', '', isNumber(g.measured.rate) ? formatNumber(g.measured.rate) : '\u2014'));
     td(3, document.createTextNode(isNumber(g.measured.decline) ? 'Falling ' + formatNumber(g.measured.decline) + ' ft/yr (' + g.measured.wells + ' wells)' : 'No wells in our data'));
     const f = g.fissures;
     const fz = el('span', '', formatNumber(f.confirmed) + ' km confirmed' + (f.reported > 0 ? ' + ' + formatNumber(f.reported) + ' km reported' : ''));
-    td(4, fz, f.areas.length ? el('small', '', f.areas.join(', ')) : null);
+    td(4, fz, f.areas.length ? el('small', '', f.areas.join(', ')) : null).dataset.aud = 'research';
     const r = g.recovery;
+    const plainAnswer = x => { const e = el('span', 'recovery-text', x.plain + ' '); e.dataset.aud = 'plain'; return e; };
+    const researchAnswer = t => { const e = el('span', 'recovery-text', t + ' '); e.dataset.aud = 'research'; return e; };
     const answer = r.status === 'inferred' ? r.text.replace(/^Not studied here(, and unclear)?\. /, (m, u) => u ? 'Unclear. ' : '') : r.text;   // the chip already says "Not studied here"
-    td(5, el('span', 'recovery-chip ' + r.status, r.status === 'studied' ? 'Studied here' : 'Not studied here'), el('span', 'recovery-text', answer + ' '), cite(g, r.source));
+    td(5, el('span', 'recovery-chip ' + r.status, r.status === 'studied' ? 'Studied here' : 'Not studied here'), plainAnswer(r), researchAnswer(answer), cite(g, r.source));
     body.append(tr);
   });
   table.append(body); wrap.append(table); box.append(wrap);
@@ -1413,47 +1486,70 @@ function renderGeology(slug) {
   if (!g) return null;
   const box = section('What lies beneath');
   box.classList.add('geology');
-  box.append(el('p', 'geology-basin', g.basin), el('p', 'detail-copy', g.summary));
-  const figure = el('figure', 'geo-figure');
-  const column = el('ol', 'geo-column');
-  column.setAttribute('aria-label', 'Layers from the surface down (schematic, not to scale)');
-  const top = el('li', 'geo-surface'); top.append(el('span', '', 'Ground surface')); column.append(top);
-  g.layers.forEach(layer => {
-    const li = el('li', 'geo-layer kind-' + layer.kind);
-    const swatch = el('span', 'geo-swatch'); swatch.setAttribute('aria-hidden', 'true');
-    const text = el('div', 'geo-text');
-    const name = el('strong', '', layer.name);
-    text.append(name, el('span', 'geo-kind', GEO_KIND_LABEL[layer.kind]), el('p', '', layer.note));
-    if (layer.compacts) text.append(el('span', 'geo-compacts', 'Compacts when the water level falls'));
-    li.append(swatch, text);
-    column.append(li);
-  });
-  figure.append(column, el('figcaption', '', 'Schematic order of layers from the sources below, not to scale.'));
-  const grid = el('div', 'geo-grid'), side = el('div', 'geo-side');
-  grid.append(figure, side); box.append(grid);
+  box.append(el('p', 'geology-basin', g.basin));
+  const cite = id => { const src = g.sources.find(x => x.id === id); if (!src) return null; const link = el('a', 'geo-cite', '(' + src.short + ')'); link.href = src.url; link.target = '_blank'; link.rel = 'noopener noreferrer'; return link; };
+  const layerColumn = notes => {
+    const column = el('ol', 'geo-column');
+    column.setAttribute('aria-label', 'Layers from the surface down (schematic, not to scale)');
+    const top = el('li', 'geo-surface'); top.append(el('span', '', 'Ground surface')); column.append(top);
+    g.layers.forEach((layer, i) => {
+      const li = el('li', 'geo-layer kind-' + layer.kind);
+      const swatch = el('span', 'geo-swatch'); swatch.setAttribute('aria-hidden', 'true');
+      const text = el('div', 'geo-text');
+      text.append(el('strong', '', layer.name), el('span', 'geo-kind', GEO_KIND_LABEL[layer.kind]), el('p', '', notes?.[i] || layer.note));
+      if (layer.compacts) text.append(el('span', 'geo-compacts', 'Compacts when the water level falls'));
+      li.append(swatch, text); column.append(li);
+    });
+    return column;
+  };
+  const figureFor = notes => { const f = el('figure', 'geo-figure'); f.append(layerColumn(notes), el('figcaption', '', 'Schematic order of layers from the sources below, not to scale.')); return f; };
   const m = g.measured;
-  const facts = [];
-  if (isNumber(m.rate)) facts.push(['Ground motion', formatNumber(m.rate) + ' cm/yr (Sentinel-1, 2016\u20132026, line of sight)']);
-  facts.push(['Water table', isNumber(m.decline) ? 'falling about ' + formatNumber(m.decline) + ' ft a year (median of ' + m.wells + ' wells, 1980s\u201390s to 2015\u201325)' : 'no wells in our water-level data for this area']);
-  if (g.fissures) facts.push(['Mapped earth fissures', formatNumber(g.fissures.confirmed) + ' km confirmed' + (g.fissures.reported > 0 ? ' and ' + formatNumber(g.fissures.reported) + ' km reported' : '') + ' inside this study area (Arizona Geological Survey, data as of 2016)']);
-  if (g.recovery) facts.push(['Can it come back?', (g.recovery.status === 'studied' ? 'Studied here: ' : 'Not studied here: ') + g.recovery.text.replace(/^Not studied here(, and unclear)?\. /, m2 => m2.includes('unclear') ? 'unclear. ' : '')]);
-  side.append(el('h3', 'geo-subhead', 'What we measured here'), factList(facts));
-  side.append(el('h3', 'geo-subhead', 'What the studies say'));
-  const list = el('ul', 'geo-facts');
-  g.facts.forEach(f => {
-    const li = el('li', '', f.text + ' ');
-    const src = g.sources.find(s => s.id === f.source);
-    if (src) { const link = el('a', 'geo-cite', '(' + src.short + ')'); link.href = src.url; link.target = '_blank'; link.rel = 'noopener noreferrer'; li.append(link); }
-    list.append(li);
-  });
-  side.append(list);
-  if (g.caveat) side.append(note(g.caveat));
+  const measured = plain => {
+    const facts = [];
+    if (isNumber(m.rate)) facts.push(['Ground motion', plain ? formatNumber(m.rate) + ' cm a year (negative means sinking)' : formatNumber(m.rate) + ' cm/yr (Sentinel-1, 2016\u20132026, line of sight)']);
+    facts.push(['Water table', isNumber(m.decline)
+      ? (plain ? 'Falling about ' + formatNumber(m.decline) + ' feet a year (' + m.wells + ' wells)' : 'falling about ' + formatNumber(m.decline) + ' ft a year (median of ' + m.wells + ' wells, 1980s\u201390s to 2015\u201325)')
+      : 'no wells in our water-level data for this area']);
+    if (g.fissures) facts.push(['Mapped earth fissures', formatNumber(g.fissures.confirmed) + ' km confirmed' + (g.fissures.reported > 0 ? ' and ' + formatNumber(g.fissures.reported) + ' km reported' : '') + (plain ? ' in this area' : ' inside this study area (Arizona Geological Survey, data as of 2016)')]);
+    if (g.recovery) facts.push(['Can it come back?', plain ? g.recovery.plain : (g.recovery.status === 'studied' ? 'Studied here: ' : 'Not studied here: ') + g.recovery.text.replace(/^Not studied here(, and unclear)?\. /, m2 => m2.includes('unclear') ? 'unclear. ' : '')]);
+    return factList(facts);
+  };
+  const factsList = facts => {
+    const list = el('ul', 'geo-facts');
+    facts.forEach(f => { const li = el('li', '', f.text + ' '); const link = cite(f.source); if (link) li.append(link); list.append(li); });
+    return list;
+  };
+  // Everyone: a short summary, the layers in plain words, what we measured, three sourced facts.
+  let plainDiv = null;
+  if (g.plain) {
+    plainDiv = el('div', 'geo-plain'); plainDiv.dataset.aud = 'plain';
+    plainDiv.append(el('p', 'detail-copy', g.plain.summary));
+    const grid = el('div', 'geo-grid'), side = el('div', 'geo-side');
+    side.append(el('h3', 'geo-subhead', 'What we measured here'), measured(true), el('h3', 'geo-subhead', 'What the studies say'), factsList(g.plain.facts));
+    grid.append(figureFor(g.plain.layerNotes), side); plainDiv.append(grid);
+  }
+  // Research: the full text, the sourced hydrogeology detail, and the caveat.
+  const researchDiv = el('div', 'geo-research');
+  if (plainDiv) researchDiv.dataset.aud = 'research';
+  researchDiv.append(el('p', 'detail-copy', g.summary));
+  const grid = el('div', 'geo-grid'), side = el('div', 'geo-side');
+  side.append(el('h3', 'geo-subhead', 'What we measured here'), measured(false), el('h3', 'geo-subhead', 'What the studies say'), factsList(g.facts));
+  grid.append(figureFor(null), side); researchDiv.append(grid);
+  if (g.detail?.length) {
+    researchDiv.append(el('h3', 'geo-subhead geo-detail-head', 'Hydrogeology for researchers and water engineers'));
+    const dl = el('dl', 'geo-detail');
+    g.detail.forEach(d => { const row = el('div'); const dd = el('dd', '', d.text + ' '); const link = cite(d.source); if (link) dd.append(link); row.append(el('dt', '', d.label), dd); dl.append(row); });
+    researchDiv.append(dl);
+  }
+  if (g.caveat) researchDiv.append(note(g.caveat));
+  if (plainDiv) box.append(plainDiv);
+  box.append(researchDiv);
   const more = el('details', 'more');
   more.append(el('summary', '', 'Sources for this area'));
   const srcList = el('ul', 'geo-sources');
-  g.sources.forEach(s => { const li = el('li'); const link = el('a', '', s.label); link.href = s.url; link.target = '_blank'; link.rel = 'noopener noreferrer'; li.append(link); srcList.append(li); });
+  g.sources.forEach(src => { const li = el('li'); const link = el('a', '', src.label); link.href = src.url; link.target = '_blank'; link.rel = 'noopener noreferrer'; li.append(link); srcList.append(li); });
   more.append(srcList);
-  side.append(more);
+  box.append(more);
   return box;
 }
 
@@ -1499,4 +1595,30 @@ function renderGeology(slug) {
   window.addEventListener('pointermove', e => { if (!drag) return; stage.scrollLeft = drag.l - (e.clientX - drag.x); stage.scrollTop = drag.t - (e.clientY - drag.y); });
   window.addEventListener('pointerup', () => { drag = null; stage.classList.remove('dragging'); });
   window.addEventListener('resize', () => { if (dlg.open) apply(); });
+})();
+
+// Reading-level switch. Most variants are both present in the page and shown or hidden by CSS ([data-aud]), so switching is instant.
+(function initAudience() {
+  const sw = document.getElementById('audience-switch'), hint = document.getElementById('audience-hint'), announce = document.getElementById('audience-announce');
+  if (!sw) return;
+  const HINT = {
+    plain: 'The findings, explained simply.',
+    research: 'Methods, statistics, uncertainties and hydrogeology detail, with sources, for researchers and water engineers.'
+  };
+  function set(mode, user) {
+    const m = mode === 'research' ? 'research' : 'plain';
+    const root = document.documentElement;
+    if (m === 'research') root.setAttribute('data-audience', 'research'); else root.removeAttribute('data-audience');
+    sw.setAttribute('aria-checked', String(m === 'research'));
+    if (hint) hint.textContent = HINT[m];
+    try { localStorage.setItem('sinkronized-audience', m); } catch (error) { /* storage unavailable: the choice lasts for this visit */ }
+    if (user && announce) announce.textContent = m === 'research' ? 'Research detail is on.' : 'Plain language is on.';
+    document.querySelectorAll('#evidence details.more').forEach(d => { d.open = m === 'research'; });   // researchers get the detail unfolded; everyone else gets it one click away
+    document.dispatchEvent(new CustomEvent('audiencechange', { detail: m }));
+  }
+  sw.addEventListener('click', () => set(aud() === 'research' ? 'plain' : 'research', true));
+  document.querySelectorAll('.audience-side').forEach(b => b.addEventListener('click', () => set(b.dataset.set, true)));
+  sw.setAttribute('aria-checked', String(aud() === 'research'));
+  if (hint) hint.textContent = HINT[aud()];
+  if (aud() === 'research') document.querySelectorAll('#evidence details.more').forEach(d => { d.open = true; });
 })();

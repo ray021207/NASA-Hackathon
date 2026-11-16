@@ -223,14 +223,22 @@ export function cleanGeology(raw) {
     const measured = { rate: isNumber(m.rate_cm_yr) ? m.rate_cm_yr : null, wells: isNumber(m.wells) ? m.wells : 0, decline: isNumber(m.decline_ft_yr) ? m.decline_ft_yr : null };
     const basin = geoText(a?.basin, 140), summary = geoText(a?.summary, 420), caveat = geoText(a?.caveat, 320);
     const r = a?.recovery, rText = geoText(r?.text, 260);
-    const recovery = rText && (r.status === 'studied' || r.status === 'inferred') && sources[r.source] ? { status: r.status, text: rText, source: r.source } : null;
+    const recovery = rText && (r.status === 'studied' || r.status === 'inferred') && sources[r.source] ? { status: r.status, text: rText, plain: geoText(r?.plain, 200) || rText, source: r.source } : null;
+    // Plain-language version (optional): a short summary, one short note per layer, and three sourced facts.
+    const pl = a?.plain;
+    const plain = pl && geoText(pl.summary, 320) && Array.isArray(pl.layer_notes) && Array.isArray(pl.facts)
+      ? { summary: geoText(pl.summary, 320), layerNotes: pl.layer_notes.map(t => geoText(t, 160)), facts: pl.facts.slice(0, 5).map(f => ({ text: geoText(f?.text, 240), source: sources[f?.source] ? f.source : null })).filter(f => f.text && f.source) } : null;
+    // Research detail (optional): labelled, sourced paragraphs for researchers and water engineers.
+    const detail = (Array.isArray(a?.detail) ? a.detail : []).slice(0, 12).map(d => ({ label: geoText(d?.label, 60), text: geoText(d?.text, 700), source: sources[d?.source] ? d.source : null })).filter(d => d.label && d.text && d.source);
     const fz = a?.fissures;
     const fissures = fz && isNumber(fz.km_confirmed) && fz.km_confirmed >= 0 && isNumber(fz.km_reported) && fz.km_reported >= 0 && sources[fz.source]
       ? { confirmed: fz.km_confirmed, reported: fz.km_reported, areas: (Array.isArray(fz.azgs_study_areas) ? fz.azgs_study_areas : []).map(t => geoText(t, 60)).filter(Boolean).slice(0, 6), source: fz.source } : null;
     const used = new Set(facts.map(f => f.source));
+    (plain?.facts || []).forEach(f => used.add(f.source));
+    detail.forEach(d => used.add(d.source));
     if (recovery) used.add(recovery.source);
     if (fissures) used.add(fissures.source);
-    if (basin && summary && layers.length >= 2 && facts.length >= 2) areas[slug] = { basin, summary, caveat, layers, facts, measured, recovery, fissures, sources: [...used].map(id => ({ id, ...sources[id] })) };
+    if (basin && summary && layers.length >= 2 && facts.length >= 2) areas[slug] = { basin, summary, caveat, layers, facts, measured, recovery, fissures, plain: plain && plain.layerNotes.length === layers.length && plain.layerNotes.every(Boolean) ? plain : null, detail, sources: [...used].map(id => ({ id, ...sources[id] })) };
   }
   return Object.keys(areas).length ? { areas } : null;
 }

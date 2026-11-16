@@ -108,6 +108,7 @@ All of this lives in one free, static website that works without a backend, by k
 - **Each study area has a report.** It opens with the headline rate beside a ranking against the other four, then has three tabs: **Summary** (the story of the place and a ten-year time-lapse on satellite imagery you can play), **What lies beneath** (layers, measured values, sources), and **Methods & checks** (records, the comparison with ADWR, the limits). A card says whether the two satellite directions agree and how that was recorded.
 - **The graph** beside the map can be scrubbed through time, minimized, expanded or resized, and highlights the sinking and stable pixels on the map as you go.
 - **"How we measured" and "Limits"** explain the method in plain language and list what we do not claim. **"Resources"** gives every source.
+- **Two reading levels.** A switch under the header changes the whole site between plain language for everyone and a research view for scientists and water engineers: the same design and numbers, with methods, statistics, uncertainty budgets and cited hydrogeology added.
 - **Every value is loaded through strict checks.** If a number is missing or malformed, its section hides itself instead of showing something wrong.
 
 ## 12. Mistakes we caught, and what we changed

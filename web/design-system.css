@@ -1007,3 +1007,39 @@ body{overflow-x:hidden}
 /* Finding cards: the 'How we know' button sits at the bottom of every card, so a row of cards lines up. */
 .overview-proof-card>details.more:not(#_){margin-top:auto;padding-top:14px}
 .overview-proof-card>details.more>summary{margin-top:0}
+
+/* ---- Reading level: Plain language (default) or Research detail. The template and palette stay the same; only the wording and the depth change. ---- */
+html:not([data-audience="research"]) [data-aud="research"]{display:none!important}
+html[data-audience="research"] [data-aud="plain"]{display:none!important}
+details.more>div>p,details.more>div>ul{margin-top:12px}
+details.more-block>div>p.overview-proof-qualifier{margin-top:12px}
+.audience-bar{background:var(--paper);border-bottom:1px solid var(--rule)}
+.audience-inner{max-width:var(--layout-width);margin:0 auto;padding:8px var(--page-gutter);display:flex;align-items:center;gap:8px 16px;flex-wrap:wrap}
+.audience-label{font:700 11px/1.2 var(--sans);letter-spacing:.09em;text-transform:uppercase;color:var(--slate-deep)}
+.audience-control{display:inline-flex;align-items:center;gap:10px}
+.audience-side{border:0;background:none;padding:6px 2px;min-height:34px;font:650 14px/1.2 var(--sans);color:var(--slate-deep);cursor:pointer;border-bottom:2px solid transparent}
+.audience-side:hover{color:var(--ink)}
+html:not([data-audience="research"]) .audience-side[data-set="plain"],html[data-audience="research"] .audience-side[data-set="research"]{color:var(--ink);border-bottom-color:var(--rust)}
+.audience-switch{position:relative;flex:none;width:46px;height:26px;border:1.5px solid var(--ink);border-radius:999px;background:var(--faint);cursor:pointer;padding:0;transition:background .2s ease}
+.audience-knob{position:absolute;top:2px;left:2px;width:19px;height:19px;border-radius:50%;background:var(--ink);transition:transform .22s cubic-bezier(.2,.8,.2,1),background .2s ease}
+.audience-switch[aria-checked=true]{background:var(--rust);border-color:var(--rust)}
+.audience-switch[aria-checked=true] .audience-knob{transform:translateX(20px);background:#fff}
+.audience-switch:focus-visible,.audience-side:focus-visible{outline:2px solid var(--rust);outline-offset:3px}
+.audience-hint{font:400 13.5px/1.4 var(--sans);color:var(--slate-deep)}
+@media(max-width:700px){.audience-label{display:none}.audience-inner{padding:6px 20px;gap:4px 12px}.audience-hint{font-size:12.5px;flex-basis:100%}}
+@media(prefers-reduced-motion:reduce){.audience-switch,.audience-knob{transition:none}}
+/* Research view extras */
+.tech-note{font:400 14px/1.65 var(--sans);color:var(--ink);margin:12px 0 0;padding:10px 14px;border-left:3px solid var(--olive);background:var(--faint);border-radius:0 8px 8px 0}
+.research-stats.detail-section{background:var(--paper);border:1px solid #e3ddd3;border-radius:15px;padding:20px 22px;margin:0}
+.research-stats .detail-section-heading{padding:0 0 10px}
+.geo-detail{display:grid;margin:0}
+.geo-detail>div{display:grid;grid-template-columns:minmax(120px,.26fr) minmax(0,1fr);gap:4px 22px;padding:12px 0;border-top:1px solid var(--rule)}
+.geo-detail dt{font:700 13.5px/1.45 var(--sans);color:var(--ink)}
+.geo-detail dd{margin:0;font:400 14.5px/1.65 var(--sans);color:var(--ink)}
+.geo-detail-head{margin-top:26px}
+.plain-bullets{margin:0;padding-left:20px;display:grid;gap:8px;font:400 15.5px/1.6 var(--sans);color:var(--ink)}
+.report-methods-plain{display:grid;gap:6px}
+.report-methods-plain .detail-section{margin:0;padding:19px 0;border-top:1px solid var(--rule)}
+@media(max-width:700px){.geo-detail>div{grid-template-columns:1fr}}
+html:not([data-audience="research"]) .bar-ci{display:none}
+.report-methods-plain>.detail-section:first-child:not(#_){border-top:0;padding-top:14px}

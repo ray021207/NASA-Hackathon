@@ -31,6 +31,7 @@ Rates are along the satellite's line of sight; negative means sinking. Every num
 - A map of the five study areas with ten years of ground motion, NISAR's first year, ADWR's official sinking zones, probable mines and places we checked and found steady.
 - A report for each study area: headline rate and ranking, a 2016-2026 time-lapse, whether both satellite look directions agree, what lies beneath (basin, clay layers, falling water table, mapped earth fissures, whether the ground can come back), and the methods and checks.
 - A side-by-side geology comparison of all five areas, "How we measured", "Limits", and every source.
+- Two reading levels, chosen with a switch under the header: **Plain language** for everyone, and **Research detail** with methods, statistics, uncertainty budgets and cited hydrogeology for researchers and water engineers (the same design and data; only the wording and depth change).
 - It works by keyboard and screen reader, and on phones.
 
 ## Method

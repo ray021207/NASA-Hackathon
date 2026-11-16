@@ -362,3 +362,28 @@ test('one typeface: DM Sans only (Space Grotesk is gone)', async () => {
   assert.ok(!/Space[ +]Grotesk/.test(html) && !/Space Grotesk/.test(css.replace(/\/\*[\s\S]*?\*\//g, '')), 'no second typeface');
   assert.match(css, /--display:\s*var\(--sans\)/);
 });
+
+test('reading level switch: a labelled switch, an early no-flash script, and paired plain/research blocks', async () => {
+  const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
+  assert.match(html, /<button type="button" id="audience-switch" class="audience-switch" role="switch" aria-checked="false"/);
+  assert.match(html, /<script>\(function\(\)\{try\{var q=new URLSearchParams\(location\.search\)\.get\("audience"\)/, 'reading level is set before first paint');
+  assert.ok((html.match(/data-aud="plain"/g) || []).length >= 40, 'many plain-language blocks');
+  assert.ok((html.match(/data-aud="research"/g) || []).length >= 40, 'many research blocks');
+  const css = await readFile(new URL('../design-system.css', import.meta.url), 'utf8');
+  assert.match(css, /html:not\(\[data-audience="research"\]\) \[data-aud="research"\]\{display:none!important\}/);
+  assert.match(css, /html\[data-audience="research"\] \[data-aud="plain"\]\{display:none!important\}/);
+});
+
+test('geology.json: every area has a plain version and sourced research detail that the strict checker keeps', async () => {
+  const raw = JSON.parse(await readFile(new URL('../../data/processed/geology.json', import.meta.url), 'utf8'));
+  const clean = cleanGeology(raw);
+  for (const slug of ['eloy', 'willcox', 'north_willcox', 'south', 'east']) {
+    const a = clean.areas[slug];
+    assert.ok(a.plain && a.plain.facts.length === 3 && a.plain.layerNotes.length === a.layers.length, slug + ' plain version');
+    assert.ok(a.detail.length >= 4 && a.detail.every(d => d.source), slug + ' sourced research detail');
+    assert.ok(a.recovery.plain && a.recovery.plain.length < 140, slug + ' plain recovery answer');
+  }
+  const bad = JSON.parse(JSON.stringify(raw));
+  bad.areas.eloy.detail[0].source = 'not-a-source';
+  assert.ok(cleanGeology(bad).areas.eloy.detail.every(d => d.source !== 'not-a-source'), 'unsourced detail is dropped');
+});
