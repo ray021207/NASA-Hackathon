@@ -1743,3 +1743,19 @@ function renderGeology(slug) {
   if (hint) hint.textContent = HINT[aud()];
   if (aud() === 'research') document.querySelectorAll('#evidence details.more').forEach(d => { d.open = true; });
 })();
+
+// Keep the switch bar (and the sticky Evidence tabs) clear of the pinned header: measure the header and publish the heights as CSS variables.
+(function pinBars() {
+  const root = document.documentElement, mast = document.querySelector('.masthead'), bar = document.getElementById('audience-bar');
+  if (!mast || !bar) return;
+  const measure = () => {
+    const pinned = getComputedStyle(mast).position === 'sticky';   // on phones the header scrolls away, only the switch stays
+    const m = pinned ? mast.offsetHeight : 0;
+    root.style.setProperty('--mast-top', m + 'px');
+    root.style.setProperty('--top-h', (m + bar.offsetHeight) + 'px');
+  };
+  measure();
+  window.addEventListener('resize', measure);
+  window.addEventListener('load', measure);
+  if ('ResizeObserver' in window) { const ro = new ResizeObserver(measure); ro.observe(mast); ro.observe(bar); }
+})();

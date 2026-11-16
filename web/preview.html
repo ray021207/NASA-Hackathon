@@ -2294,6 +2294,34 @@ html:not([data-audience="research"]) .insight-grid:not(#_){grid-template-columns
 #nisar-record .geo-compare-table tbody th{width:30%}
 .overview-proof-card>details.more[open]:not(#_){margin-top:14px;padding-top:0}
 #area-stats thead th,#soils-compare thead th,#gw-detail thead th,#nisar-record thead th{text-transform:none;letter-spacing:0;font-size:12.5px}
+
+/* ---- The reading-level switch stays pinned under the header while scrolling ---- */
+.audience-bar:not(#_){position:sticky;top:var(--mast-top,0px);z-index:2100;box-shadow:0 1px 0 var(--rule),0 4px 12px rgba(31,30,24,.05)}
+.evidence-tabs:not(#_){top:var(--top-h,0px)}
+html:not(#_){scroll-padding-top:calc(var(--top-h,100px) + 14px)}
+@media(max-width:700px){.audience-hint:not(#_){display:none}.audience-inner:not(#_){padding:4px 20px}.audience-side{min-height:40px}}
+
+/* ---- Comparison tables: tighter, fixed columns, calmer rows ---- */
+.geo-compare-table:not(#_){table-layout:fixed;min-width:0;font-size:13.5px;line-height:1.45}
+.geo-compare-table th:not(#_),.geo-compare-table td:not(#_){padding:9px 12px}
+.geo-compare-table thead th:not(#_){padding:8px 12px;font-size:11.5px;letter-spacing:.04em;line-height:1.25;vertical-align:bottom}
+.geo-compare-table small:not(#_){font-size:12px;line-height:1.4;margin-top:2px}
+.geo-compare-table tbody tr:nth-child(even){background:var(--faint)}
+.geo-compare-table tbody tr:hover{background:#f3eee4}
+.geo-compare-table tbody th:not(#_){width:auto}
+#geology-compare .geo-compare-table th:nth-child(1){width:22%}
+#geology-compare .geo-compare-table th:nth-child(2){width:13%}
+#geology-compare .geo-compare-table th:nth-child(3){width:9%;text-align:center}
+#geology-compare .geo-compare-table td:nth-child(3){text-align:center}
+#geology-compare .geo-compare-table th:nth-child(4){width:13%}
+#geology-compare .geo-compare-table th:nth-child(5){width:17%}
+#geology-compare .geo-compare-table th:nth-child(6){width:26%}
+#geology-compare .recovery-chip{margin:0 0 4px}
+#geology-compare .recovery-text{display:block}
+#geology-compare .recovery-chip{display:block;width:max-content;max-width:100%}
+#area-stats .geo-compare-table:not(#_),#soils-compare .geo-compare-table:not(#_){table-layout:auto;min-width:940px}
+#area-stats .geo-compare-table td,#soils-compare .geo-compare-table td{font-variant-numeric:tabular-nums}
+@media(max-width:760px){.geo-compare-table:not(#_){table-layout:auto}.geo-compare-table tbody tr:nth-child(even){background:var(--paper)}}
 </style>
   <script>/* @preserve
  * Leaflet 1.9.4, a JS library for interactive maps. https://leafletjs.com
@@ -4730,6 +4758,22 @@ function renderGeology(slug) {
   sw.setAttribute('aria-checked', String(aud() === 'research'));
   if (hint) hint.textContent = HINT[aud()];
   if (aud() === 'research') document.querySelectorAll('#evidence details.more').forEach(d => { d.open = true; });
+})();
+
+// Keep the switch bar (and the sticky Evidence tabs) clear of the pinned header: measure the header and publish the heights as CSS variables.
+(function pinBars() {
+  const root = document.documentElement, mast = document.querySelector('.masthead'), bar = document.getElementById('audience-bar');
+  if (!mast || !bar) return;
+  const measure = () => {
+    const pinned = getComputedStyle(mast).position === 'sticky';   // on phones the header scrolls away, only the switch stays
+    const m = pinned ? mast.offsetHeight : 0;
+    root.style.setProperty('--mast-top', m + 'px');
+    root.style.setProperty('--top-h', (m + bar.offsetHeight) + 'px');
+  };
+  measure();
+  window.addEventListener('resize', measure);
+  window.addEventListener('load', measure);
+  if ('ResizeObserver' in window) { const ro = new ResizeObserver(measure); ro.observe(mast); ro.observe(bar); }
 })();
 </script>
 </head>
