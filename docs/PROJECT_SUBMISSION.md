@@ -39,7 +39,7 @@ The map covers five study areas around Willcox and Eloy. Click one and its repor
 - **what lies beneath**: the basin, a layer diagram, the clay that compacts, the falling water table, mapped earth fissures, and whether the ground can come back;
 - the methods and checks, including the comparison with Arizona's official radar results.
 
-**Two reading levels.** A switch under the header changes the whole site between *Plain language* (short, everyday wording, for anyone) and *Research detail* (methods, statistics, uncertainty budgets and sourced hydrogeology for researchers and water engineers). The design, data and conclusions are identical; only the wording and the depth change, and the choice is remembered.
+**Two reading levels.** A switch under the header changes the whole site between *Plain language* (short, everyday wording, for anyone) and *Research detail* (methods, statistics, uncertainty budgets, cited hydrogeology and USDA soil-survey detail for researchers, water engineers and soil ecologists). Plain language keeps only the trends: where it is sinking, how fast, why it is likely happening and how sure we are. The design, data and conclusions are identical; only the wording and the depth change, and the choice is remembered.
 
 Other layers show NASA NISAR's first year, Arizona's official sinking zones, probable mines (which move for other reasons), and places we checked and found steady, such as Phoenix and the West Valley. Code and data are at https://github.com/mansi200304/NASA-Hackathon.
 
@@ -144,6 +144,7 @@ Select every option that applies. This answer is not shown to judges.
 | Smilovsky (2025), persistent subsidence in the Willcox Basin, GSA Connects abstract | https://gsameetings.secure-platform.com/connects25/solicitations/103002/sessiongallery/schedule/items/95198/application/10103 |
 | Arizona Revised Statutes § 32-2117 (earth fissure maps) | https://www.azleg.gov/ars/32/02117.htm |
 | ADWR Willcox Active Management Area | https://www.azwater.gov/node/5934 |
+| USDA NRCS Soil Survey (SSURGO) via Soil Data Access | https://sdmdataaccess.sc.egov.usda.gov/ |
 | Arizona Geological Survey, earth fissure maps (data last updated 2016) | https://github.com/azgs/EarthFissureViewer |
 | Arizona Geological Survey, earth fissure study areas | https://azgs.arizona.edu/earth-fissure-study-areas-arizona |
 | Site logo, generated with ChatGPT (OpenAI) from the team's brief | https://chatgpt.com/ |

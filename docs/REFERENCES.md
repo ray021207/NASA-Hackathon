@@ -45,6 +45,8 @@ Sections 1-5 are the paste block. Section 6 lists what the team made itself.
 19h. White, N. D., & Hardt, W. F. (1965). *Electrical-Analog Analysis of Hydrologic Data for San Simon Basin, Cochise and Graham Counties, Arizona.* U.S. Geological Survey Water-Supply Paper 1809-R. https://pubs.usgs.gov/wsp/1809r/report.pdf
 19i. Konieczki, A. D. (2006). *Investigation of the Hydrologic Monitoring Network of the Willcox and Douglas Basins of Southeastern Arizona.* U.S. Geological Survey Fact Sheet 2006-3055. https://pubs.usgs.gov/fs/2006/3055/
 19j. Arizona Geological Survey. *Earth fissure maps* (GeoJSON published with the AZGS Earth Fissure Viewer, data last updated February 2016). https://github.com/azgs/EarthFissureViewer ; study areas: https://azgs.arizona.edu/earth-fissure-study-areas-arizona
+19k. USDA Natural Resources Conservation Service. *Soil Survey Geographic Database (SSURGO)*, via Soil Data Access. https://sdmdataaccess.sc.egov.usda.gov/ (public domain).
+19l. Richards, L. A. (Ed.) (1954). *Diagnosis and Improvement of Saline and Alkali Soils.* USDA Agriculture Handbook 60 (thresholds EC 4 dS/m and SAR 13 for saline and sodic soils).
 19. U.S. Geological Survey. *Land Subsidence* (USGS Water Science School). https://www.usgs.gov/water-science-school/science/land-subsidence
 
 ## 5. Software, services and design

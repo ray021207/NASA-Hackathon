@@ -1,0 +1,3100 @@
+{
+ "source": "USDA NRCS Soil Survey (SSURGO) via Soil Data Access (sdmdataaccess.sc.egov.usda.gov), point sampling; queried 2026-11-15",
+ "source_url": "https://sdmdataaccess.sc.egov.usda.gov/",
+ "note": "Surface soils (top about 2 m) as mapped by the soil survey; not the aquifer layers. Each study area was sampled with random points (120 in the whole box, 120 in the sinking zone). SSURGO has no microbial or biological-crust data.",
+ "areas": {
+  "eloy": {
+   "box": {
+    "points": 120,
+    "points_with_soil_data": 120,
+    "orders": [
+     {
+      "name": "Aridisols",
+      "pct": 63.0
+     },
+     {
+      "name": "Entisols",
+      "pct": 22.7
+     },
+     {
+      "name": "unclassified / miscellaneous area",
+      "pct": 14.4
+     }
+    ],
+    "suborders": [
+     {
+      "name": "Cambids",
+      "pct": 40.6
+     },
+     {
+      "name": "Argids",
+      "pct": 27.8
+     },
+     {
+      "name": "Fluvents",
+      "pct": 25.3
+     },
+     {
+      "name": "Calcids",
+      "pct": 4.8
+     },
+     {
+      "name": "Orthents",
+      "pct": 1.2
+     },
+     {
+      "name": "Durids",
+      "pct": 0.4
+     }
+    ],
+    "great_groups": [
+     {
+      "name": "Haplocambids",
+      "pct": 40.6
+     },
+     {
+      "name": "Torrifluvents",
+      "pct": 25.3
+     },
+     {
+      "name": "Calciargids",
+      "pct": 20.3
+     },
+     {
+      "name": "Natrargids",
+      "pct": 7.4
+     },
+     {
+      "name": "Haplocalcids",
+      "pct": 4.8
+     },
+     {
+      "name": "Torriorthents",
+      "pct": 1.2
+     },
+     {
+      "name": "Haplodurids",
+      "pct": 0.4
+     }
+    ],
+    "map_units": [
+     {
+      "name": "Glenbar clay loam, 0 to 2 percent slopes",
+      "pct": 15.8
+     },
+     {
+      "name": "Marana silty clay loam",
+      "pct": 11.7
+     },
+     {
+      "name": "Denure sandy loam, 1 to 3 percent slopes",
+      "pct": 10.0
+     },
+     {
+      "name": "Mohall loam MLRA 40",
+      "pct": 7.5
+     },
+     {
+      "name": "Mohall sandy loam, 0 to 1 percent slopes",
+      "pct": 5.8
+     },
+     {
+      "name": "Casa Grande fine sandy loam, 0 to 3 percent slopes",
+      "pct": 5.0
+     },
+     {
+      "name": "Pinamt-Momoli complex, 1 to 8 percent slopes",
+      "pct": 4.2
+     },
+     {
+      "name": "Dateland fine sandy loam",
+      "pct": 4.2
+     }
+    ],
+    "landforms": [
+     {
+      "name": "stream terraces",
+      "pct": 28.5
+     },
+     {
+      "name": "fan terraces",
+      "pct": 25.6
+     },
+     {
+      "name": "basin floors",
+      "pct": 19.5
+     },
+     {
+      "name": "intermontane basins",
+      "pct": 15.7
+     },
+     {
+      "name": "flood plains",
+      "pct": 9.6
+     },
+     {
+      "name": "mountains",
+      "pct": 1.2
+     }
+    ],
+    "ecological_sites": [
+     {
+      "name": "Loamy Upland 7\"-10\" p.z.",
+      "pct": 23.4
+     },
+     {
+      "name": "Loamy Swale 7\"-10\" p.z.",
+      "pct": 19.0
+     },
+     {
+      "name": "Limy Fan 7\"-10\" p.z.",
+      "pct": 15.1
+     },
+     {
+      "name": "Loamy Upland, Saline 7\"-10\" p.z.",
+      "pct": 13.7
+     },
+     {
+      "name": "Sandy Loam Upland 7\"-10\" p.z.",
+      "pct": 11.0
+     },
+     {
+      "name": "Clayey Swale 7\"-10\" p.z.",
+      "pct": 6.3
+     }
+    ],
+    "drainage": [
+     {
+      "name": "Well drained",
+      "pct": 86.1
+     },
+     {
+      "name": "Somewhat excessively drained",
+      "pct": 13.9
+     }
+    ],
+    "hydrologic_group": [
+     {
+      "name": "C",
+      "pct": 66.8
+     },
+     {
+      "name": "A",
+      "pct": 20.2
+     },
+     {
+      "name": "B",
+      "pct": 11.1
+     },
+     {
+      "name": "D",
+      "pct": 1.9
+     }
+    ],
+    "temperature_regime": [
+     {
+      "name": "hyperthermic",
+      "pct": 98.4
+     },
+     {
+      "name": "thermic",
+      "pct": 1.6
+     }
+    ],
+    "moisture_regime": [
+     {
+      "name": "Typic",
+      "pct": 100.0
+     }
+    ],
+    "restrictive_layers": [
+     {
+      "name": "none recorded",
+      "pct": 94.4
+     },
+     {
+      "name": "Natric",
+      "pct": 4.2
+     },
+     {
+      "name": "Lithic bedrock",
+      "pct": 1.0
+     },
+     {
+      "name": "Duripan",
+      "pct": 0.3
+     }
+    ],
+    "surface_texture": [
+     {
+      "name": "Fine sandy loam",
+      "pct": 22.2
+     },
+     {
+      "name": "Clay loam",
+      "pct": 21.5
+     },
+     {
+      "name": "Sandy loam",
+      "pct": 19.3
+     },
+     {
+      "name": "Silty clay loam",
+      "pct": 13.2
+     },
+     {
+      "name": "Loam",
+      "pct": 7.0
+     },
+     {
+      "name": "Clay",
+      "pct": 6.3
+     }
+    ],
+    "properties_weighted_mean": {
+     "clay_pct": {
+      "0-30": 23.5,
+      "30-100": 24.66
+     },
+     "silt_pct": {
+      "0-30": 33.61,
+      "30-100": 36.08
+     },
+     "sand_pct": {
+      "0-30": 42.9,
+      "30-100": 38.09
+     },
+     "organic_matter_pct": {
+      "0-30": 0.54,
+      "30-100": 0.3
+     },
+     "ph": {
+      "0-30": 8.13,
+      "30-100": 8.19
+     },
+     "ec_dS_m": {
+      "0-30": 2.34,
+      "30-100": 2.46
+     },
+     "sar": {
+      "0-30": 1.65,
+      "30-100": 8.68
+     },
+     "caco3_pct": {
+      "0-30": 9.46,
+      "30-100": 11.92
+     },
+     "gypsum_pct": {
+      "0-30": 0.16,
+      "30-100": 0.5
+     },
+     "cec_meq_100g": {
+      "0-30": 15.76,
+      "30-100": 16.33
+     },
+     "awc_cm_cm": {
+      "0-30": 0.15,
+      "30-100": 0.15
+     },
+     "ksat_um_s": {
+      "0-30": 12.08,
+      "30-100": 9.43
+     }
+    },
+    "slope_pct_mean": 1.8,
+    "restriction_depth_cm_mean": 33.4
+   },
+   "sinking_zone": {
+    "points": 120,
+    "points_with_soil_data": 120,
+    "orders": [
+     {
+      "name": "Aridisols",
+      "pct": 63.9
+     },
+     {
+      "name": "Entisols",
+      "pct": 21.8
+     },
+     {
+      "name": "unclassified / miscellaneous area",
+      "pct": 14.3
+     }
+    ],
+    "suborders": [
+     {
+      "name": "Cambids",
+      "pct": 37.8
+     },
+     {
+      "name": "Argids",
+      "pct": 28.0
+     },
+     {
+      "name": "Fluvents",
+      "pct": 22.7
+     },
+     {
+      "name": "Calcids",
+      "pct": 8.8
+     },
+     {
+      "name": "Psamments",
+      "pct": 2.8
+     }
+    ],
+    "great_groups": [
+     {
+      "name": "Haplocambids",
+      "pct": 37.8
+     },
+     {
+      "name": "Calciargids",
+      "pct": 23.0
+     },
+     {
+      "name": "Torrifluvents",
+      "pct": 22.7
+     },
+     {
+      "name": "Haplocalcids",
+      "pct": 7.8
+     },
+     {
+      "name": "Natrargids",
+      "pct": 5.0
+     },
+     {
+      "name": "Torripsamments",
+      "pct": 2.8
+     },
+     {
+      "name": "Petrocalcids",
+      "pct": 0.9
+     }
+    ],
+    "map_units": [
+     {
+      "name": "Denure sandy loam, 1 to 3 percent slopes",
+      "pct": 15.8
+     },
+     {
+      "name": "Glenbar clay loam, 0 to 2 percent slopes",
+      "pct": 12.5
+     },
+     {
+      "name": "Contine clay loam",
+      "pct": 11.7
+     },
+     {
+      "name": "Toltec fine sandy loam",
+      "pct": 6.7
+     },
+     {
+      "name": "Mohall loam MLRA 40",
+      "pct": 6.7
+     },
+     {
+      "name": "Sasco silt loam",
+      "pct": 5.8
+     },
+     {
+      "name": "Marana silty clay loam",
+      "pct": 5.0
+     },
+     {
+      "name": "Cashion clay",
+      "pct": 4.2
+     }
+    ],
+    "landforms": [
+     {
+      "name": "fan terraces",
+      "pct": 35.7
+     },
+     {
+      "name": "stream terraces",
+      "pct": 21.5
+     },
+     {
+      "name": "basin floors",
+      "pct": 17.3
+     },
+     {
+      "name": "intermontane basins",
+      "pct": 12.4
+     },
+     {
+      "name": "flood plains",
+      "pct": 10.3
+     },
+     {
+      "name": "dunes",
+      "pct": 2.8
+     }
+    ],
+    "ecological_sites": [
+     {
+      "name": "Loamy Upland 7\"-10\" p.z.",
+      "pct": 19.0
+     },
+     {
+      "name": "Limy Fan 7\"-10\" p.z.",
+      "pct": 17.7
+     },
+     {
+      "name": "Loamy Swale 7\"-10\" p.z.",
+      "pct": 16.5
+     },
+     {
+      "name": "Loamy Upland, Saline 7\"-10\" p.z.",
+      "pct": 15.7
+     },
+     {
+      "name": "Clay Loam Upland 7\"-10\" p.z.",
+      "pct": 11.6
+     },
+     {
+      "name": "Sandy Loam Upland 7\"-10\" p.z.",
+      "pct": 8.9
+     }
+    ],
+    "drainage": [
+     {
+      "name": "Well drained",
+      "pct": 83.1
+     },
+     {
+      "name": "Somewhat excessively drained",
+      "pct": 16.9
+     }
+    ],
+    "hydrologic_group": [
+     {
+      "name": "C",
+      "pct": 58.5
+     },
+     {
+      "name": "A",
+      "pct": 26.5
+     },
+     {
+      "name": "B",
+      "pct": 14.1
+     },
+     {
+      "name": "D",
+      "pct": 0.9
+     }
+    ],
+    "temperature_regime": [
+     {
+      "name": "hyperthermic",
+      "pct": 100.0
+     }
+    ],
+    "moisture_regime": [
+     {
+      "name": "Typic",
+      "pct": 100.0
+     }
+    ],
+    "restrictive_layers": [
+     {
+      "name": "none recorded",
+      "pct": 96.4
+     },
+     {
+      "name": "Natric",
+      "pct": 2.8
+     },
+     {
+      "name": "Petrocalcic",
+      "pct": 0.8
+     }
+    ],
+    "surface_texture": [
+     {
+      "name": "Clay loam",
+      "pct": 26.6
+     },
+     {
+      "name": "Fine sandy loam",
+      "pct": 24.1
+     },
+     {
+      "name": "Sandy loam",
+      "pct": 22.3
+     },
+     {
+      "name": "Loam",
+      "pct": 7.1
+     },
+     {
+      "name": "Clay",
+      "pct": 6.1
+     },
+     {
+      "name": "Silt loam",
+      "pct": 5.8
+     }
+    ],
+    "properties_weighted_mean": {
+     "clay_pct": {
+      "0-30": 22.65,
+      "30-100": 24.16
+     },
+     "silt_pct": {
+      "0-30": 31.11,
+      "30-100": 33.57
+     },
+     "sand_pct": {
+      "0-30": 46.24,
+      "30-100": 42.27
+     },
+     "organic_matter_pct": {
+      "0-30": 0.56,
+      "30-100": 0.29
+     },
+     "ph": {
+      "0-30": 8.13,
+      "30-100": 8.17
+     },
+     "ec_dS_m": {
+      "0-30": 2.26,
+      "30-100": 2.44
+     },
+     "sar": {
+      "0-30": 1.93,
+      "30-100": 6.65
+     },
+     "caco3_pct": {
+      "0-30": 7.98,
+      "30-100": 11.73
+     },
+     "gypsum_pct": {
+      "0-30": 0.12,
+      "30-100": 0.26
+     },
+     "cec_meq_100g": {
+      "0-30": 14.87,
+      "30-100": 15.28
+     },
+     "awc_cm_cm": {
+      "0-30": 0.15,
+      "30-100": 0.15
+     },
+     "ksat_um_s": {
+      "0-30": 13.92,
+      "30-100": 12.26
+     }
+    },
+    "slope_pct_mean": 1.1,
+    "restriction_depth_cm_mean": 41.3
+   },
+   "sinking_zone_pixels": 6435
+  },
+  "willcox": {
+   "box": {
+    "points": 120,
+    "points_with_soil_data": 120,
+    "orders": [
+     {
+      "name": "Aridisols",
+      "pct": 39.7
+     },
+     {
+      "name": "Mollisols",
+      "pct": 38.1
+     },
+     {
+      "name": "unclassified / miscellaneous area",
+      "pct": 13.7
+     },
+     {
+      "name": "Entisols",
+      "pct": 6.0
+     },
+     {
+      "name": "Alfisols",
+      "pct": 2.5
+     }
+    ],
+    "suborders": [
+     {
+      "name": "Ustolls",
+      "pct": 43.2
+     },
+     {
+      "name": "Argids",
+      "pct": 32.5
+     },
+     {
+      "name": "Orthids",
+      "pct": 8.7
+     },
+     {
+      "name": "Calcids",
+      "pct": 4.5
+     },
+     {
+      "name": "Fluvents",
+      "pct": 4.3
+     },
+     {
+      "name": "Ustalfs",
+      "pct": 2.9
+     }
+    ],
+    "great_groups": [
+     {
+      "name": "Haplustolls",
+      "pct": 22.3
+     },
+     {
+      "name": "Paleargids",
+      "pct": 14.1
+     },
+     {
+      "name": "Calciustolls",
+      "pct": 12.5
+     },
+     {
+      "name": "Haplargids",
+      "pct": 10.1
+     },
+     {
+      "name": "Calciorthids",
+      "pct": 6.8
+     },
+     {
+      "name": "Natrargids",
+      "pct": 5.8
+     },
+     {
+      "name": "Argiustolls",
+      "pct": 5.1
+     },
+     {
+      "name": "Torrifluvents",
+      "pct": 4.3
+     }
+    ],
+    "map_units": [
+     {
+      "name": "Tubac sandy clay loam, 0 to 2 percent slopes",
+      "pct": 6.7
+     },
+     {
+      "name": "Faraway-Rock outcrop complex",
+      "pct": 5.8
+     },
+     {
+      "name": "Gothard fine sandy loam",
+      "pct": 5.0
+     },
+     {
+      "name": "Water",
+      "pct": 5.0
+     },
+     {
+      "name": "Karro loam",
+      "pct": 5.0
+     },
+     {
+      "name": "Grabe loam",
+      "pct": 5.0
+     },
+     {
+      "name": "Atascosa-Chiricahua-Rock outcrop complex",
+      "pct": 4.2
+     },
+     {
+      "name": "Carbine-Hathaway complex, 3 to 15 percent slopes",
+      "pct": 4.2
+     }
+    ],
+    "landforms": [
+     {
+      "name": "alluvial fans",
+      "pct": 23.5
+     },
+     {
+      "name": "flood plains",
+      "pct": 14.5
+     },
+     {
+      "name": "terraces",
+      "pct": 13.3
+     },
+     {
+      "name": "fan terraces",
+      "pct": 10.1
+     },
+     {
+      "name": "flats",
+      "pct": 8.7
+     },
+     {
+      "name": "plains",
+      "pct": 8.7
+     }
+    ],
+    "ecological_sites": [
+     {
+      "name": "Saline Bottom 12-16\" p.z.",
+      "pct": 15.2
+     },
+     {
+      "name": "Loamy Swale 12-16\" p.z.",
+      "pct": 13.2
+     },
+     {
+      "name": "Clay Loam Upland 12-16\" p.z.",
+      "pct": 12.2
+     },
+     {
+      "name": "Limy Upland 12-16\" p.z.",
+      "pct": 9.9
+     },
+     {
+      "name": "Limy Fan 12-16\" p.z.",
+      "pct": 6.1
+     },
+     {
+      "name": "Sandy Loam Upland 12-16\" p.z.",
+      "pct": 4.7
+     }
+    ],
+    "drainage": [
+     {
+      "name": "Well drained",
+      "pct": 85.4
+     },
+     {
+      "name": "Moderately well drained",
+      "pct": 7.2
+     },
+     {
+      "name": "Somewhat poorly drained",
+      "pct": 5.8
+     },
+     {
+      "name": "Excessively drained",
+      "pct": 1.5
+     }
+    ],
+    "hydrologic_group": [
+     {
+      "name": "C",
+      "pct": 55.7
+     },
+     {
+      "name": "D",
+      "pct": 31.4
+     },
+     {
+      "name": "A",
+      "pct": 10.3
+     },
+     {
+      "name": "B",
+      "pct": 2.6
+     }
+    ],
+    "temperature_regime": [
+     {
+      "name": "thermic",
+      "pct": 93.4
+     },
+     {
+      "name": "mesic",
+      "pct": 5.7
+     },
+     {
+      "name": "frigid",
+      "pct": 0.9
+     }
+    ],
+    "moisture_regime": [
+     {
+      "name": "Ustic",
+      "pct": 48.3
+     },
+     {
+      "name": "Aridic (torric)",
+      "pct": 36.8
+     },
+     {
+      "name": "Typic",
+      "pct": 14.9
+     }
+    ],
+    "restrictive_layers": [
+     {
+      "name": "none recorded",
+      "pct": 81.0
+     },
+     {
+      "name": "Lithic bedrock",
+      "pct": 10.6
+     },
+     {
+      "name": "Petrocalcic",
+      "pct": 5.2
+     },
+     {
+      "name": "Duripan",
+      "pct": 1.7
+     },
+     {
+      "name": "Paralithic bedrock",
+      "pct": 0.9
+     }
+    ],
+    "surface_texture": [
+     {
+      "name": "Loam",
+      "pct": 24.8
+     },
+     {
+      "name": "Sandy loam",
+      "pct": 17.1
+     },
+     {
+      "name": "Sandy clay loam",
+      "pct": 8.3
+     },
+     {
+      "name": "Gravelly sandy loam",
+      "pct": 7.9
+     },
+     {
+      "name": "Fine sandy loam",
+      "pct": 6.5
+     },
+     {
+      "name": "Gravelly loam",
+      "pct": 5.7
+     }
+    ],
+    "properties_weighted_mean": {
+     "clay_pct": {
+      "0-30": 22.78,
+      "30-100": 28.64
+     },
+     "silt_pct": {
+      "0-30": 31.08,
+      "30-100": 32.0
+     },
+     "sand_pct": {
+      "0-30": 46.13,
+      "30-100": 39.36
+     },
+     "organic_matter_pct": {
+      "0-30": 1.29,
+      "30-100": 0.9
+     },
+     "ph": {
+      "0-30": 7.71,
+      "30-100": 8.07
+     },
+     "ec_dS_m": {
+      "0-30": 3.26,
+      "30-100": 5.14
+     },
+     "sar": {
+      "0-30": 8.03,
+      "30-100": 16.67
+     },
+     "caco3_pct": {
+      "0-30": 6.84,
+      "30-100": 11.86
+     },
+     "gypsum_pct": {
+      "0-30": 0.26,
+      "30-100": 0.62
+     },
+     "cec_meq_100g": {
+      "0-30": 14.34,
+      "30-100": 17.98
+     },
+     "awc_cm_cm": {
+      "0-30": 0.13,
+      "30-100": 0.12
+     },
+     "ksat_um_s": {
+      "0-30": 13.52,
+      "30-100": 7.83
+     }
+    },
+    "slope_pct_mean": 7.4,
+    "restriction_depth_cm_mean": 34.1
+   },
+   "sinking_zone": {
+    "points": 120,
+    "points_with_soil_data": 120,
+    "orders": [
+     {
+      "name": "Aridisols",
+      "pct": 57.5
+     },
+     {
+      "name": "Mollisols",
+      "pct": 25.8
+     },
+     {
+      "name": "Entisols",
+      "pct": 10.3
+     },
+     {
+      "name": "Alfisols",
+      "pct": 4.2
+     },
+     {
+      "name": "unclassified / miscellaneous area",
+      "pct": 2.2
+     }
+    ],
+    "suborders": [
+     {
+      "name": "Argids",
+      "pct": 44.3
+     },
+     {
+      "name": "Ustolls",
+      "pct": 26.4
+     },
+     {
+      "name": "Orthids",
+      "pct": 14.5
+     },
+     {
+      "name": "Fluvents",
+      "pct": 6.7
+     },
+     {
+      "name": "Ustalfs",
+      "pct": 4.3
+     },
+     {
+      "name": "Orthents",
+      "pct": 3.8
+     }
+    ],
+    "great_groups": [
+     {
+      "name": "Natrargids",
+      "pct": 23.0
+     },
+     {
+      "name": "Haplustolls",
+      "pct": 18.7
+     },
+     {
+      "name": "Haplargids",
+      "pct": 14.5
+     },
+     {
+      "name": "Calciorthids",
+      "pct": 10.2
+     },
+     {
+      "name": "Calciustolls",
+      "pct": 7.7
+     },
+     {
+      "name": "Paleargids",
+      "pct": 6.8
+     },
+     {
+      "name": "Torrifluvents",
+      "pct": 6.7
+     },
+     {
+      "name": "Durorthids",
+      "pct": 4.3
+     }
+    ],
+    "map_units": [
+     {
+      "name": "Gothard fine sandy loam",
+      "pct": 22.5
+     },
+     {
+      "name": "Karro loam",
+      "pct": 8.3
+     },
+     {
+      "name": "Pima loam",
+      "pct": 5.8
+     },
+     {
+      "name": "Grabe loam",
+      "pct": 5.8
+     },
+     {
+      "name": "McAllister loam",
+      "pct": 5.0
+     },
+     {
+      "name": "Stewart loam",
+      "pct": 4.2
+     },
+     {
+      "name": "Tubac sandy clay loam, 0 to 2 percent slopes",
+      "pct": 4.2
+     },
+     {
+      "name": "Sonoita sandy loam, 0 to 2 percent slopes",
+      "pct": 4.2
+     }
+    ],
+    "landforms": [
+     {
+      "name": "flats",
+      "pct": 27.3
+     },
+     {
+      "name": "terraces",
+      "pct": 20.4
+     },
+     {
+      "name": "alluvial fans",
+      "pct": 16.6
+     },
+     {
+      "name": "flood plains",
+      "pct": 16.5
+     },
+     {
+      "name": "plains",
+      "pct": 10.2
+     },
+     {
+      "name": "valleys",
+      "pct": 5.1
+     }
+    ],
+    "ecological_sites": [
+     {
+      "name": "Saline Bottom 12-16\" p.z.",
+      "pct": 35.8
+     },
+     {
+      "name": "Loamy Swale 12-16\" p.z.",
+      "pct": 14.5
+     },
+     {
+      "name": "Limy Fan 12-16\" p.z.",
+      "pct": 10.2
+     },
+     {
+      "name": "Limy Upland 12-16\" p.z.",
+      "pct": 8.5
+     },
+     {
+      "name": "Sandy Loam 12-16\" p.z. Deep",
+      "pct": 7.7
+     },
+     {
+      "name": "Sandy Upland 12-16\" p.z. Saline",
+      "pct": 5.5
+     }
+    ],
+    "drainage": [
+     {
+      "name": "Well drained",
+      "pct": 62.3
+     },
+     {
+      "name": "Moderately well drained",
+      "pct": 23.0
+     },
+     {
+      "name": "Somewhat poorly drained",
+      "pct": 8.5
+     },
+     {
+      "name": "Somewhat excessively drained",
+      "pct": 3.4
+     },
+     {
+      "name": "Excessively drained",
+      "pct": 2.8
+     }
+    ],
+    "hydrologic_group": [
+     {
+      "name": "C",
+      "pct": 77.7
+     },
+     {
+      "name": "A",
+      "pct": 12.2
+     },
+     {
+      "name": "D",
+      "pct": 9.7
+     },
+     {
+      "name": "B",
+      "pct": 0.4
+     }
+    ],
+    "temperature_regime": [
+     {
+      "name": "thermic",
+      "pct": 100.0
+     }
+    ],
+    "moisture_regime": [
+     {
+      "name": "Ustic",
+      "pct": 60.9
+     },
+     {
+      "name": "Aridic (torric)",
+      "pct": 39.1
+     }
+    ],
+    "restrictive_layers": [
+     {
+      "name": "none recorded",
+      "pct": 95.8
+     },
+     {
+      "name": "Duripan",
+      "pct": 4.2
+     }
+    ],
+    "surface_texture": [
+     {
+      "name": "Loam",
+      "pct": 36.2
+     },
+     {
+      "name": "Fine sandy loam",
+      "pct": 23.9
+     },
+     {
+      "name": "Sandy loam",
+      "pct": 15.9
+     },
+     {
+      "name": "Clay loam",
+      "pct": 6.2
+     },
+     {
+      "name": "Loamy sand",
+      "pct": 5.3
+     },
+     {
+      "name": "Sandy clay loam",
+      "pct": 4.4
+     }
+    ],
+    "properties_weighted_mean": {
+     "clay_pct": {
+      "0-30": 21.62,
+      "30-100": 26.84
+     },
+     "silt_pct": {
+      "0-30": 32.06,
+      "30-100": 33.37
+     },
+     "sand_pct": {
+      "0-30": 46.32,
+      "30-100": 39.79
+     },
+     "organic_matter_pct": {
+      "0-30": 1.07,
+      "30-100": 0.78
+     },
+     "ph": {
+      "0-30": 8.26,
+      "30-100": 8.54
+     },
+     "ec_dS_m": {
+      "0-30": 7.09,
+      "30-100": 8.29
+     },
+     "sar": {
+      "0-30": 23.07,
+      "30-100": 39.43
+     },
+     "caco3_pct": {
+      "0-30": 9.56,
+      "30-100": 15.81
+     },
+     "gypsum_pct": {
+      "0-30": 0.53,
+      "30-100": 0.84
+     },
+     "cec_meq_100g": {
+      "0-30": 12.7,
+      "30-100": 15.84
+     },
+     "awc_cm_cm": {
+      "0-30": 0.14,
+      "30-100": 0.13
+     },
+     "ksat_um_s": {
+      "0-30": 12.45,
+      "30-100": 7.19
+     }
+    },
+    "slope_pct_mean": 1.3,
+    "restriction_depth_cm_mean": 23.0
+   },
+   "sinking_zone_pixels": 8839
+  },
+  "north_willcox": {
+   "box": {
+    "points": 120,
+    "points_with_soil_data": 120,
+    "orders": [
+     {
+      "name": "Aridisols",
+      "pct": 41.7
+     },
+     {
+      "name": "Mollisols",
+      "pct": 32.0
+     },
+     {
+      "name": "unclassified / miscellaneous area",
+      "pct": 17.0
+     },
+     {
+      "name": "Entisols",
+      "pct": 6.8
+     },
+     {
+      "name": "Vertisols",
+      "pct": 2.5
+     }
+    ],
+    "suborders": [
+     {
+      "name": "Argids",
+      "pct": 40.0
+     },
+     {
+      "name": "Ustolls",
+      "pct": 38.5
+     },
+     {
+      "name": "Cambids",
+      "pct": 9.5
+     },
+     {
+      "name": "Fluvents",
+      "pct": 7.4
+     },
+     {
+      "name": "Torrerts",
+      "pct": 3.0
+     },
+     {
+      "name": "Calcids",
+      "pct": 0.8
+     }
+    ],
+    "great_groups": [
+     {
+      "name": "Paleargids",
+      "pct": 26.0
+     },
+     {
+      "name": "Argiustolls",
+      "pct": 18.6
+     },
+     {
+      "name": "Haplustolls",
+      "pct": 16.4
+     },
+     {
+      "name": "Haplocambids",
+      "pct": 9.5
+     },
+     {
+      "name": "Haplargids",
+      "pct": 7.6
+     },
+     {
+      "name": "Torrifluvents",
+      "pct": 7.4
+     },
+     {
+      "name": "Durargids",
+      "pct": 4.0
+     },
+     {
+      "name": "Calciustolls",
+      "pct": 3.5
+     }
+    ],
+    "map_units": [
+     {
+      "name": "Sasabe sandy loam, 1 to 8 percent slopes",
+      "pct": 17.5
+     },
+     {
+      "name": "Beaumain-Cherrycow-Rock outcrop complex, 5 to 60 percent slopes",
+      "pct": 10.8
+     },
+     {
+      "name": "Sasabe-Bonita-Forrest complex, 0 to 3 percent slopes",
+      "pct": 10.0
+     },
+     {
+      "name": "Lithic Argiustolls, Typic Haplustolls, and Aridic Calciustolls; warm mesic ustic mountains",
+      "pct": 8.3
+     },
+     {
+      "name": "Sonoita sandy loam, 0 to 2 percent slopes",
+      "pct": 5.0
+     },
+     {
+      "name": "Cloverdale cobbly clay loam, 1 to 5 percent slopes",
+      "pct": 4.2
+     },
+     {
+      "name": "Ustifluventic Haplocambids, 0 to 3 percent slopes",
+      "pct": 4.2
+     },
+     {
+      "name": "Frye sandy loam",
+      "pct": 3.3
+     }
+    ],
+    "landforms": [
+     {
+      "name": "alluvial fans",
+      "pct": 24.1
+     },
+     {
+      "name": "flood plains",
+      "pct": 22.9
+     },
+     {
+      "name": "fan terraces",
+      "pct": 14.6
+     },
+     {
+      "name": "basin floors",
+      "pct": 9.5
+     },
+     {
+      "name": "mountains",
+      "pct": 7.7
+     },
+     {
+      "name": "escarpments",
+      "pct": 5.5
+     }
+    ],
+    "ecological_sites": [
+     {
+      "name": "Sandy Loam Upland 12-16\" p.z.",
+      "pct": 24.1
+     },
+     {
+      "name": "Sandy Loam 12-16\" p.z. Deep",
+      "pct": 18.0
+     },
+     {
+      "name": "Volcanic Hills 16-20\" p.z.",
+      "pct": 10.6
+     },
+     {
+      "name": "Loamy Swale 12-16\" p.z.",
+      "pct": 6.8
+     },
+     {
+      "name": "Loamy Bottom 12-16\" p.z.",
+      "pct": 6.6
+     },
+     {
+      "name": "Clayey Upland 16-20\" p.z.",
+      "pct": 5.1
+     }
+    ],
+    "drainage": [
+     {
+      "name": "Well drained",
+      "pct": 94.6
+     },
+     {
+      "name": "Somewhat excessively drained",
+      "pct": 3.4
+     },
+     {
+      "name": "Moderately well drained",
+      "pct": 1.4
+     },
+     {
+      "name": "Excessively drained",
+      "pct": 0.6
+     }
+    ],
+    "hydrologic_group": [
+     {
+      "name": "C",
+      "pct": 47.8
+     },
+     {
+      "name": "D",
+      "pct": 30.3
+     },
+     {
+      "name": "A",
+      "pct": 16.7
+     },
+     {
+      "name": "B",
+      "pct": 5.2
+     }
+    ],
+    "temperature_regime": [
+     {
+      "name": "thermic",
+      "pct": 89.5
+     },
+     {
+      "name": "mesic",
+      "pct": 7.3
+     },
+     {
+      "name": "frigid",
+      "pct": 3.1
+     }
+    ],
+    "moisture_regime": [
+     {
+      "name": "Ustic",
+      "pct": 55.1
+     },
+     {
+      "name": "Aridic (torric)",
+      "pct": 29.8
+     },
+     {
+      "name": "Typic",
+      "pct": 15.1
+     }
+    ],
+    "restrictive_layers": [
+     {
+      "name": "none recorded",
+      "pct": 71.0
+     },
+     {
+      "name": "Lithic bedrock",
+      "pct": 12.8
+     },
+     {
+      "name": "Abrupt textural change",
+      "pct": 12.2
+     },
+     {
+      "name": "Duripan",
+      "pct": 3.3
+     },
+     {
+      "name": "Paralithic bedrock",
+      "pct": 0.6
+     }
+    ],
+    "surface_texture": [
+     {
+      "name": "Sandy loam",
+      "pct": 39.2
+     },
+     {
+      "name": "Loam",
+      "pct": 20.3
+     },
+     {
+      "name": "Extremely cobbly loam",
+      "pct": 8.5
+     },
+     {
+      "name": "Clay loam",
+      "pct": 7.3
+     },
+     {
+      "name": "Cobbly clay loam",
+      "pct": 4.5
+     },
+     {
+      "name": "Sandy clay loam",
+      "pct": 4.5
+     }
+    ],
+    "properties_weighted_mean": {
+     "clay_pct": {
+      "0-30": 26.42,
+      "30-100": 34.96
+     },
+     "silt_pct": {
+      "0-30": 29.8,
+      "30-100": 29.25
+     },
+     "sand_pct": {
+      "0-30": 43.73,
+      "30-100": 35.67
+     },
+     "organic_matter_pct": {
+      "0-30": 1.28,
+      "30-100": 0.99
+     },
+     "ph": {
+      "0-30": 7.16,
+      "30-100": 7.57
+     },
+     "ec_dS_m": {
+      "0-30": 0.66,
+      "30-100": 1.07
+     },
+     "sar": {
+      "0-30": 0.67,
+      "30-100": 1.18
+     },
+     "caco3_pct": {
+      "0-30": 1.69,
+      "30-100": 3.84
+     },
+     "gypsum_pct": {
+      "0-30": 0.04,
+      "30-100": 0.13
+     },
+     "cec_meq_100g": {
+      "0-30": 19.43,
+      "30-100": 24.59
+     },
+     "awc_cm_cm": {
+      "0-30": 0.13,
+      "30-100": 0.13
+     },
+     "ksat_um_s": {
+      "0-30": 13.03,
+      "30-100": 8.86
+     }
+    },
+    "slope_pct_mean": 8.8,
+    "restriction_depth_cm_mean": 35.4
+   },
+   "sinking_zone": {
+    "points": 120,
+    "points_with_soil_data": 120,
+    "orders": [
+     {
+      "name": "Aridisols",
+      "pct": 52.2
+     },
+     {
+      "name": "Mollisols",
+      "pct": 32.5
+     },
+     {
+      "name": "Entisols",
+      "pct": 10.0
+     },
+     {
+      "name": "unclassified / miscellaneous area",
+      "pct": 5.2
+     }
+    ],
+    "suborders": [
+     {
+      "name": "Argids",
+      "pct": 50.9
+     },
+     {
+      "name": "Ustolls",
+      "pct": 34.3
+     },
+     {
+      "name": "Fluvents",
+      "pct": 10.6
+     },
+     {
+      "name": "Cambids",
+      "pct": 4.2
+     }
+    ],
+    "great_groups": [
+     {
+      "name": "Haplustolls",
+      "pct": 30.8
+     },
+     {
+      "name": "Paleargids",
+      "pct": 27.3
+     },
+     {
+      "name": "Haplargids",
+      "pct": 17.5
+     },
+     {
+      "name": "Torrifluvents",
+      "pct": 10.6
+     },
+     {
+      "name": "Durargids",
+      "pct": 6.2
+     },
+     {
+      "name": "Haplocambids",
+      "pct": 4.2
+     },
+     {
+      "name": "Calciustolls",
+      "pct": 3.5
+     }
+    ],
+    "map_units": [
+     {
+      "name": "Pima loam",
+      "pct": 17.5
+     },
+     {
+      "name": "Sasabe sandy loam, 1 to 8 percent slopes",
+      "pct": 10.8
+     },
+     {
+      "name": "Sonoita sandy loam, 0 to 2 percent slopes",
+      "pct": 10.8
+     },
+     {
+      "name": "Tubac sandy loam, 0 to 2 percent slopes",
+      "pct": 10.8
+     },
+     {
+      "name": "Cowan sandy loam",
+      "pct": 7.5
+     },
+     {
+      "name": "Tubac sandy clay loam, 0 to 2 percent slopes",
+      "pct": 6.7
+     },
+     {
+      "name": "Frye sandy loam",
+      "pct": 5.8
+     },
+     {
+      "name": "Guest clay loam",
+      "pct": 5.0
+     }
+    ],
+    "landforms": [
+     {
+      "name": "flood plains",
+      "pct": 39.4
+     },
+     {
+      "name": "alluvial fans",
+      "pct": 35.2
+     },
+     {
+      "name": "fan terraces",
+      "pct": 8.8
+     },
+     {
+      "name": "terraces",
+      "pct": 6.2
+     },
+     {
+      "name": "plains",
+      "pct": 6.2
+     },
+     {
+      "name": "valleys",
+      "pct": 3.5
+     }
+    ],
+    "ecological_sites": [
+     {
+      "name": "Sandy Loam 12-16\" p.z. Deep",
+      "pct": 26.4
+     },
+     {
+      "name": "Loamy Swale 12-16\" p.z.",
+      "pct": 23.7
+     },
+     {
+      "name": "Sandy Loam Upland 12-16\" p.z.",
+      "pct": 19.4
+     },
+     {
+      "name": "Clay Loam Upland 12-16\" p.z.",
+      "pct": 7.8
+     },
+     {
+      "name": "Loamy Upland 12-16\" p.z. Limy",
+      "pct": 6.2
+     },
+     {
+      "name": "Clayey Swale 12-16\" p.z.",
+      "pct": 5.3
+     }
+    ],
+    "drainage": [
+     {
+      "name": "Well drained",
+      "pct": 99.2
+     },
+     {
+      "name": "Somewhat excessively drained",
+      "pct": 0.8
+     }
+    ],
+    "hydrologic_group": [
+     {
+      "name": "C",
+      "pct": 66.7
+     },
+     {
+      "name": "A",
+      "pct": 25.8
+     },
+     {
+      "name": "D",
+      "pct": 6.2
+     },
+     {
+      "name": "B",
+      "pct": 1.3
+     }
+    ],
+    "temperature_regime": [
+     {
+      "name": "thermic",
+      "pct": 100.0
+     }
+    ],
+    "moisture_regime": [
+     {
+      "name": "Ustic",
+      "pct": 100.0
+     }
+    ],
+    "restrictive_layers": [
+     {
+      "name": "none recorded",
+      "pct": 85.8
+     },
+     {
+      "name": "Abrupt textural change",
+      "pct": 8.3
+     },
+     {
+      "name": "Duripan",
+      "pct": 5.8
+     }
+    ],
+    "surface_texture": [
+     {
+      "name": "Sandy loam",
+      "pct": 54.5
+     },
+     {
+      "name": "Loam",
+      "pct": 25.3
+     },
+     {
+      "name": "Clay loam",
+      "pct": 9.5
+     },
+     {
+      "name": "Sandy clay loam",
+      "pct": 7.8
+     },
+     {
+      "name": "Gravelly sandy loam",
+      "pct": 1.4
+     },
+     {
+      "name": "Silty clay",
+      "pct": 1.2
+     }
+    ],
+    "properties_weighted_mean": {
+     "clay_pct": {
+      "0-30": 21.55,
+      "30-100": 31.01
+     },
+     "silt_pct": {
+      "0-30": 29.25,
+      "30-100": 30.34
+     },
+     "sand_pct": {
+      "0-30": 49.2,
+      "30-100": 38.66
+     },
+     "organic_matter_pct": {
+      "0-30": 1.12,
+      "30-100": 0.87
+     },
+     "ph": {
+      "0-30": 7.39,
+      "30-100": 7.62
+     },
+     "ec_dS_m": {
+      "0-30": 1.4,
+      "30-100": 2.2
+     },
+     "sar": {
+      "0-30": 1.54,
+      "30-100": 2.55
+     },
+     "caco3_pct": {
+      "0-30": 3.23,
+      "30-100": 4.91
+     },
+     "gypsum_pct": {
+      "0-30": 0.13,
+      "30-100": 0.32
+     },
+     "cec_meq_100g": {
+      "0-30": 13.46,
+      "30-100": 19.11
+     },
+     "awc_cm_cm": {
+      "0-30": 0.14,
+      "30-100": 0.14
+     },
+     "ksat_um_s": {
+      "0-30": 16.5,
+      "30-100": 12.73
+     }
+    },
+    "slope_pct_mean": 1.5,
+    "restriction_depth_cm_mean": 40.3
+   },
+   "sinking_zone_pixels": 2425
+  },
+  "south": {
+   "box": {
+    "points": 120,
+    "points_with_soil_data": 120,
+    "orders": [
+     {
+      "name": "Aridisols",
+      "pct": 68.1
+     },
+     {
+      "name": "Entisols",
+      "pct": 14.7
+     },
+     {
+      "name": "unclassified / miscellaneous area",
+      "pct": 13.1
+     },
+     {
+      "name": "Vertisols",
+      "pct": 2.8
+     },
+     {
+      "name": "Mollisols",
+      "pct": 1.2
+     }
+    ],
+    "suborders": [
+     {
+      "name": "Argids",
+      "pct": 64.8
+     },
+     {
+      "name": "Fluvents",
+      "pct": 13.9
+     },
+     {
+      "name": "Calcids",
+      "pct": 7.3
+     },
+     {
+      "name": "Cambids",
+      "pct": 6.3
+     },
+     {
+      "name": "Torrerts",
+      "pct": 3.2
+     },
+     {
+      "name": "Orthents",
+      "pct": 2.6
+     }
+    ],
+    "great_groups": [
+     {
+      "name": "Haplargids",
+      "pct": 29.5
+     },
+     {
+      "name": "Paleargids",
+      "pct": 18.0
+     },
+     {
+      "name": "Torrifluvents",
+      "pct": 13.9
+     },
+     {
+      "name": "Calciargids",
+      "pct": 13.2
+     },
+     {
+      "name": "Haplocambids",
+      "pct": 6.3
+     },
+     {
+      "name": "Haplocalcids",
+      "pct": 5.8
+     },
+     {
+      "name": "Natrargids",
+      "pct": 4.1
+     },
+     {
+      "name": "Haplotorrerts",
+      "pct": 3.2
+     }
+    ],
+    "map_units": [
+     {
+      "name": "Courtland-Sasabe-Diaspar complex, 1 to 8 percent slopes",
+      "pct": 25.8
+     },
+     {
+      "name": "Forrest clay loam, 1 to 3 percent slopes",
+      "pct": 6.7
+     },
+     {
+      "name": "Kahn-Zapolote complex, 1 to 15 percent slopes",
+      "pct": 4.2
+     },
+     {
+      "name": "Eloma-Caralampi-White House complex, 1 to 15 percent slopes",
+      "pct": 4.2
+     },
+     {
+      "name": "Bonita-Forrest complex, 1 to 8 percent slopes",
+      "pct": 4.2
+     },
+     {
+      "name": "Gothard sandy loam, 0 to 2 percent slopes",
+      "pct": 4.2
+     },
+     {
+      "name": "Mallet-Hooks complex, 0 to 5 percent slopes",
+      "pct": 3.3
+     },
+     {
+      "name": "Sasabe gravelly sandy loam, 0 to 2 percent slopes",
+      "pct": 3.3
+     }
+    ],
+    "landforms": [
+     {
+      "name": "fan terraces",
+      "pct": 30.6
+     },
+     {
+      "name": "fan piedmonts",
+      "pct": 27.1
+     },
+     {
+      "name": "alluvial fans",
+      "pct": 16.6
+     },
+     {
+      "name": "flood plains",
+      "pct": 6.9
+     },
+     {
+      "name": "fan remnants",
+      "pct": 4.3
+     },
+     {
+      "name": "mountains",
+      "pct": 4.2
+     }
+    ],
+    "ecological_sites": [
+     {
+      "name": "Sandy Loam Upland 12-16\" p.z.",
+      "pct": 24.9
+     },
+     {
+      "name": "Loamy Upland 12\"-16\" p.z.",
+      "pct": 17.4
+     },
+     {
+      "name": "Loamy Swale 12-16\" p.z.",
+      "pct": 10.9
+     },
+     {
+      "name": "Saline Bottom 12-16\" p.z.",
+      "pct": 7.9
+     },
+     {
+      "name": "Sandy Loam 12-16\" p.z. Deep",
+      "pct": 6.5
+     },
+     {
+      "name": "Loamy Bottom 12-16\" p.z.",
+      "pct": 5.2
+     }
+    ],
+    "drainage": [
+     {
+      "name": "Well drained",
+      "pct": 98.5
+     },
+     {
+      "name": "Somewhat excessively drained",
+      "pct": 1.5
+     }
+    ],
+    "hydrologic_group": [
+     {
+      "name": "C",
+      "pct": 70.1
+     },
+     {
+      "name": "D",
+      "pct": 14.7
+     },
+     {
+      "name": "A",
+      "pct": 13.1
+     },
+     {
+      "name": "B",
+      "pct": 2.1
+     }
+    ],
+    "temperature_regime": [
+     {
+      "name": "thermic",
+      "pct": 100.0
+     }
+    ],
+    "moisture_regime": [
+     {
+      "name": "Aridic (torric)",
+      "pct": 59.7
+     },
+     {
+      "name": "Ustic",
+      "pct": 40.3
+     }
+    ],
+    "restrictive_layers": [
+     {
+      "name": "none recorded",
+      "pct": 79.1
+     },
+     {
+      "name": "Abrupt textural change",
+      "pct": 10.2
+     },
+     {
+      "name": "Lithic bedrock",
+      "pct": 7.1
+     },
+     {
+      "name": "Strongly contrasting textural stratification",
+      "pct": 2.1
+     },
+     {
+      "name": "Petrocalcic",
+      "pct": 1.3
+     }
+    ],
+    "surface_texture": [
+     {
+      "name": "Sandy loam",
+      "pct": 46.4
+     },
+     {
+      "name": "Clay loam",
+      "pct": 11.7
+     },
+     {
+      "name": "Loam",
+      "pct": 11.1
+     },
+     {
+      "name": "Very gravelly sandy loam",
+      "pct": 5.9
+     },
+     {
+      "name": "Gravelly sandy loam",
+      "pct": 4.5
+     },
+     {
+      "name": "Silt loam",
+      "pct": 4.0
+     }
+    ],
+    "properties_weighted_mean": {
+     "clay_pct": {
+      "0-30": 26.96,
+      "30-100": 33.7
+     },
+     "silt_pct": {
+      "0-30": 27.95,
+      "30-100": 26.57
+     },
+     "sand_pct": {
+      "0-30": 45.0,
+      "30-100": 38.99
+     },
+     "organic_matter_pct": {
+      "0-30": 0.85,
+      "30-100": 0.5
+     },
+     "ph": {
+      "0-30": 7.49,
+      "30-100": 7.75
+     },
+     "ec_dS_m": {
+      "0-30": 0.86,
+      "30-100": 2.05
+     },
+     "sar": {
+      "0-30": 1.31,
+      "30-100": 2.71
+     },
+     "caco3_pct": {
+      "0-30": 4.28,
+      "30-100": 5.89
+     },
+     "gypsum_pct": {
+      "0-30": 0.38,
+      "30-100": 0.71
+     },
+     "cec_meq_100g": {
+      "0-30": 17.71,
+      "30-100": 21.17
+     },
+     "awc_cm_cm": {
+      "0-30": 0.14,
+      "30-100": 0.14
+     },
+     "ksat_um_s": {
+      "0-30": 13.26,
+      "30-100": 7.43
+     }
+    },
+    "slope_pct_mean": 4.9,
+    "restriction_depth_cm_mean": 34.5
+   },
+   "sinking_zone": {
+    "points": 120,
+    "points_with_soil_data": 120,
+    "orders": [
+     {
+      "name": "Aridisols",
+      "pct": 64.0
+     },
+     {
+      "name": "Entisols",
+      "pct": 21.2
+     },
+     {
+      "name": "unclassified / miscellaneous area",
+      "pct": 13.1
+     },
+     {
+      "name": "Vertisols",
+      "pct": 1.8
+     }
+    ],
+    "suborders": [
+     {
+      "name": "Argids",
+      "pct": 54.3
+     },
+     {
+      "name": "Fluvents",
+      "pct": 23.9
+     },
+     {
+      "name": "Calcids",
+      "pct": 11.5
+     },
+     {
+      "name": "Cambids",
+      "pct": 7.7
+     },
+     {
+      "name": "Torrerts",
+      "pct": 2.1
+     },
+     {
+      "name": "Psamments",
+      "pct": 0.4
+     }
+    ],
+    "great_groups": [
+     {
+      "name": "Torrifluvents",
+      "pct": 23.9
+     },
+     {
+      "name": "Haplargids",
+      "pct": 20.0
+     },
+     {
+      "name": "Calciargids",
+      "pct": 15.4
+     },
+     {
+      "name": "Haplocalcids",
+      "pct": 11.5
+     },
+     {
+      "name": "Paleargids",
+      "pct": 9.9
+     },
+     {
+      "name": "Natrargids",
+      "pct": 9.0
+     },
+     {
+      "name": "Haplocambids",
+      "pct": 7.7
+     },
+     {
+      "name": "Haplotorrerts",
+      "pct": 2.1
+     }
+    ],
+    "map_units": [
+     {
+      "name": "Elfrida clay loam, saline-sodic, 0 to 2 percent slopes",
+      "pct": 8.3
+     },
+     {
+      "name": "Gothard sandy loam, 0 to 2 percent slopes",
+      "pct": 8.3
+     },
+     {
+      "name": "Forrest clay loam, 1 to 3 percent slopes",
+      "pct": 8.3
+     },
+     {
+      "name": "Courtland-Sasabe-Diaspar complex, 1 to 8 percent slopes",
+      "pct": 8.3
+     },
+     {
+      "name": "Courtland sandy loam, 0 to 2 percent slopes",
+      "pct": 7.5
+     },
+     {
+      "name": "Ubik loam, 1 to 3 percent slopes",
+      "pct": 5.8
+     },
+     {
+      "name": "McAllister loam, 1 to 3 percent slopes",
+      "pct": 5.8
+     },
+     {
+      "name": "Sasabe gravelly sandy loam, 0 to 2 percent slopes",
+      "pct": 5.0
+     }
+    ],
+    "landforms": [
+     {
+      "name": "fan terraces",
+      "pct": 39.6
+     },
+     {
+      "name": "alluvial fans",
+      "pct": 32.8
+     },
+     {
+      "name": "basin floors",
+      "pct": 9.0
+     },
+     {
+      "name": "fan piedmonts",
+      "pct": 8.7
+     },
+     {
+      "name": "flood plains",
+      "pct": 7.4
+     },
+     {
+      "name": "stream terraces",
+      "pct": 2.4
+     }
+    ],
+    "ecological_sites": [
+     {
+      "name": "Sandy Loam Upland 12-16\" p.z.",
+      "pct": 26.3
+     },
+     {
+      "name": "Saline Bottom 12-16\" p.z.",
+      "pct": 21.1
+     },
+     {
+      "name": "Loamy Swale 12-16\" p.z.",
+      "pct": 11.9
+     },
+     {
+      "name": "Clayey Swale 12-16\" p.z.",
+      "pct": 10.6
+     },
+     {
+      "name": "Loamy Upland 12\"-16\" p.z.",
+      "pct": 10.1
+     },
+     {
+      "name": "Sandy Loam 12-16\" p.z. Deep",
+      "pct": 8.4
+     }
+    ],
+    "drainage": [
+     {
+      "name": "Well drained",
+      "pct": 99.1
+     },
+     {
+      "name": "Somewhat excessively drained",
+      "pct": 0.9
+     }
+    ],
+    "hydrologic_group": [
+     {
+      "name": "C",
+      "pct": 72.3
+     },
+     {
+      "name": "A",
+      "pct": 25.6
+     },
+     {
+      "name": "D",
+      "pct": 2.1
+     }
+    ],
+    "temperature_regime": [
+     {
+      "name": "thermic",
+      "pct": 100.0
+     }
+    ],
+    "moisture_regime": [
+     {
+      "name": "Aridic (torric)",
+      "pct": 78.8
+     },
+     {
+      "name": "Ustic",
+      "pct": 21.2
+     }
+    ],
+    "restrictive_layers": [
+     {
+      "name": "none recorded",
+      "pct": 91.3
+     },
+     {
+      "name": "Strongly contrasting textural stratification",
+      "pct": 5.5
+     },
+     {
+      "name": "Abrupt textural change",
+      "pct": 3.2
+     }
+    ],
+    "surface_texture": [
+     {
+      "name": "Sandy loam",
+      "pct": 42.6
+     },
+     {
+      "name": "Clay loam",
+      "pct": 19.7
+     },
+     {
+      "name": "Loam",
+      "pct": 14.7
+     },
+     {
+      "name": "Silty clay loam",
+      "pct": 6.3
+     },
+     {
+      "name": "Gravelly sandy loam",
+      "pct": 5.7
+     },
+     {
+      "name": "Clay",
+      "pct": 3.9
+     }
+    ],
+    "properties_weighted_mean": {
+     "clay_pct": {
+      "0-30": 23.38,
+      "30-100": 29.77
+     },
+     "silt_pct": {
+      "0-30": 28.5,
+      "30-100": 27.49
+     },
+     "sand_pct": {
+      "0-30": 48.12,
+      "30-100": 42.74
+     },
+     "organic_matter_pct": {
+      "0-30": 1.02,
+      "30-100": 0.57
+     },
+     "ph": {
+      "0-30": 7.84,
+      "30-100": 8.24
+     },
+     "ec_dS_m": {
+      "0-30": 1.51,
+      "30-100": 4.57
+     },
+     "sar": {
+      "0-30": 3.89,
+      "30-100": 8.01
+     },
+     "caco3_pct": {
+      "0-30": 3.3,
+      "30-100": 7.54
+     },
+     "gypsum_pct": {
+      "0-30": 0.55,
+      "30-100": 1.06
+     },
+     "cec_meq_100g": {
+      "0-30": 15.0,
+      "30-100": 17.35
+     },
+     "awc_cm_cm": {
+      "0-30": 0.14,
+      "30-100": 0.14
+     },
+     "ksat_um_s": {
+      "0-30": 16.46,
+      "30-100": 9.94
+     }
+    },
+    "slope_pct_mean": 1.6,
+    "restriction_depth_cm_mean": 72.0
+   },
+   "sinking_zone_pixels": 3612
+  },
+  "east": {
+   "box": {
+    "points": 120,
+    "points_with_soil_data": 120,
+    "orders": [
+     {
+      "name": "Aridisols",
+      "pct": 54.1
+     },
+     {
+      "name": "Entisols",
+      "pct": 18.8
+     },
+     {
+      "name": "unclassified / miscellaneous area",
+      "pct": 14.5
+     },
+     {
+      "name": "Mollisols",
+      "pct": 12.5
+     }
+    ],
+    "suborders": [
+     {
+      "name": "Argids",
+      "pct": 60.8
+     },
+     {
+      "name": "Fluvents",
+      "pct": 20.3
+     },
+     {
+      "name": "Ustolls",
+      "pct": 14.7
+     },
+     {
+      "name": "Calcids",
+      "pct": 2.0
+     },
+     {
+      "name": "Orthents",
+      "pct": 1.3
+     },
+     {
+      "name": "Orthids",
+      "pct": 0.6
+     }
+    ],
+    "great_groups": [
+     {
+      "name": "Torrifluvents",
+      "pct": 20.3
+     },
+     {
+      "name": "Haplargids",
+      "pct": 19.3
+     },
+     {
+      "name": "Calciargids",
+      "pct": 18.4
+     },
+     {
+      "name": "Natrargids",
+      "pct": 16.7
+     },
+     {
+      "name": "Argiustolls",
+      "pct": 11.4
+     },
+     {
+      "name": "Paleargids",
+      "pct": 6.4
+     },
+     {
+      "name": "Haplustolls",
+      "pct": 3.3
+     },
+     {
+      "name": "Petrocalcids",
+      "pct": 2.0
+     }
+    ],
+    "map_units": [
+     {
+      "name": "Hondale complex",
+      "pct": 12.5
+     },
+     {
+      "name": "Eba gravelly sandy loam",
+      "pct": 8.3
+     },
+     {
+      "name": "Atascosa-Chiricahua-Rock outcrop complex",
+      "pct": 6.7
+     },
+     {
+      "name": "Atascosa-Graham-Rock outcrop complex",
+      "pct": 5.8
+     },
+     {
+      "name": "Mokiak-Faraway-Rock outcrop complex",
+      "pct": 5.8
+     },
+     {
+      "name": "Bucklebar fine sandy loam",
+      "pct": 4.2
+     },
+     {
+      "name": "Hondale silty clay loam",
+      "pct": 4.2
+     },
+     {
+      "name": "Tubac-Sonoita complex",
+      "pct": 3.3
+     }
+    ],
+    "landforms": [
+     {
+      "name": "terraces",
+      "pct": 52.7
+     },
+     {
+      "name": "alluvial fans",
+      "pct": 17.3
+     },
+     {
+      "name": "mountains",
+      "pct": 11.8
+     },
+     {
+      "name": "flood plains",
+      "pct": 11.1
+     },
+     {
+      "name": "hills",
+      "pct": 5.2
+     },
+     {
+      "name": "fans",
+      "pct": 1.6
+     }
+    ],
+    "ecological_sites": [
+     {
+      "name": "Saline Upland 8-12\" p.z.",
+      "pct": 16.7
+     },
+     {
+      "name": "Clay Loam Upland 8-12\" p.z.",
+      "pct": 16.6
+     },
+     {
+      "name": "Sandy Loam Upland 8-12\" p.z.",
+      "pct": 9.8
+     },
+     {
+      "name": "Limy Fan 8-12\" p.z.",
+      "pct": 7.8
+     },
+     {
+      "name": "Loamy Swale 8-12\" p.z.",
+      "pct": 5.8
+     },
+     {
+      "name": "Shallow Hills 12-16\" p.z.",
+      "pct": 5.5
+     }
+    ],
+    "drainage": [
+     {
+      "name": "Well drained",
+      "pct": 99.2
+     },
+     {
+      "name": "Somewhat excessively drained",
+      "pct": 0.4
+     },
+     {
+      "name": "Moderately well drained",
+      "pct": 0.4
+     }
+    ],
+    "hydrologic_group": [
+     {
+      "name": "C",
+      "pct": 36.7
+     },
+     {
+      "name": "D",
+      "pct": 34.8
+     },
+     {
+      "name": "B",
+      "pct": 16.4
+     },
+     {
+      "name": "A",
+      "pct": 12.1
+     }
+    ],
+    "temperature_regime": [
+     {
+      "name": "thermic",
+      "pct": 95.2
+     },
+     {
+      "name": "mesic",
+      "pct": 4.8
+     }
+    ],
+    "moisture_regime": [],
+    "restrictive_layers": [
+     {
+      "name": "none recorded",
+      "pct": 83.4
+     },
+     {
+      "name": "Lithic bedrock",
+      "pct": 14.5
+     },
+     {
+      "name": "Petrocalcic",
+      "pct": 1.7
+     },
+     {
+      "name": "Duripan",
+      "pct": 0.5
+     }
+    ],
+    "surface_texture": [
+     {
+      "name": "Gravelly sandy loam",
+      "pct": 17.6
+     },
+     {
+      "name": "Fine sandy loam",
+      "pct": 17.5
+     },
+     {
+      "name": "Silty clay loam",
+      "pct": 11.4
+     },
+     {
+      "name": "Loam",
+      "pct": 9.4
+     },
+     {
+      "name": "Silt loam",
+      "pct": 8.2
+     },
+     {
+      "name": "Gravelly loam",
+      "pct": 7.7
+     }
+    ],
+    "properties_weighted_mean": {
+     "clay_pct": {
+      "0-30": 22.61,
+      "30-100": 28.48
+     },
+     "silt_pct": {
+      "0-30": 32.81,
+      "30-100": 35.92
+     },
+     "sand_pct": {
+      "0-30": 44.58,
+      "30-100": 35.6
+     },
+     "organic_matter_pct": {
+      "0-30": 0.9,
+      "30-100": 0.64
+     },
+     "ph": {
+      "0-30": 8.05,
+      "30-100": 8.34
+     },
+     "ec_dS_m": {
+      "0-30": 2.51,
+      "30-100": 3.75
+     },
+     "sar": {
+      "0-30": 6.2,
+      "30-100": 7.52
+     },
+     "caco3_pct": {
+      "0-30": 4.53,
+      "30-100": 9.08
+     },
+     "gypsum_pct": {
+      "0-30": 0.14,
+      "30-100": 0.63
+     },
+     "cec_meq_100g": {
+      "0-30": 14.63,
+      "30-100": 19.41
+     },
+     "awc_cm_cm": {
+      "0-30": 0.11,
+      "30-100": 0.11
+     },
+     "ksat_um_s": {
+      "0-30": 9.07,
+      "30-100": 7.6
+     }
+    },
+    "slope_pct_mean": 7.4,
+    "restriction_depth_cm_mean": 43.5
+   },
+   "sinking_zone": {
+    "points": 120,
+    "points_with_soil_data": 120,
+    "orders": [
+     {
+      "name": "Aridisols",
+      "pct": 68.3
+     },
+     {
+      "name": "Entisols",
+      "pct": 24.0
+     },
+     {
+      "name": "unclassified / miscellaneous area",
+      "pct": 7.7
+     }
+    ],
+    "suborders": [
+     {
+      "name": "Argids",
+      "pct": 70.4
+     },
+     {
+      "name": "Fluvents",
+      "pct": 23.4
+     },
+     {
+      "name": "Durids",
+      "pct": 3.6
+     },
+     {
+      "name": "Psamments",
+      "pct": 1.6
+     },
+     {
+      "name": "Orthents",
+      "pct": 0.9
+     }
+    ],
+    "great_groups": [
+     {
+      "name": "Calciargids",
+      "pct": 27.1
+     },
+     {
+      "name": "Torrifluvents",
+      "pct": 23.4
+     },
+     {
+      "name": "Haplargids",
+      "pct": 17.0
+     },
+     {
+      "name": "Natrargids",
+      "pct": 14.2
+     },
+     {
+      "name": "Paleargids",
+      "pct": 12.1
+     },
+     {
+      "name": "Argidurids",
+      "pct": 3.6
+     },
+     {
+      "name": "Torripsamments",
+      "pct": 1.6
+     },
+     {
+      "name": "Torriorthents",
+      "pct": 0.9
+     }
+    ],
+    "map_units": [
+     {
+      "name": "Tres Hermanos gravelly loam",
+      "pct": 10.8
+     },
+     {
+      "name": "Tubac-Sonoita complex",
+      "pct": 9.2
+     },
+     {
+      "name": "Hondale silty clay loam",
+      "pct": 9.2
+     },
+     {
+      "name": "Pima-Grabe silt loams",
+      "pct": 8.3
+     },
+     {
+      "name": "Bucklebar fine sandy loam",
+      "pct": 6.7
+     },
+     {
+      "name": "Glendale-Gila complex, eroded",
+      "pct": 5.8
+     },
+     {
+      "name": "Tubac sandy clay loam",
+      "pct": 5.8
+     },
+     {
+      "name": "Dona Ana fine sandy loam, 0 to 5 percent slopes",
+      "pct": 5.8
+     }
+    ],
+    "landforms": [
+     {
+      "name": "terraces",
+      "pct": 67.4
+     },
+     {
+      "name": "flood plains",
+      "pct": 18.5
+     },
+     {
+      "name": "alluvial fans",
+      "pct": 8.1
+     },
+     {
+      "name": "fans",
+      "pct": 4.0
+     },
+     {
+      "name": "dunes",
+      "pct": 1.6
+     },
+     {
+      "name": "swales",
+      "pct": 0.5
+     }
+    ],
+    "ecological_sites": [
+     {
+      "name": "Limy Fan 8-12\" p.z.",
+      "pct": 23.5
+     },
+     {
+      "name": "Clay Loam Upland 8-12\" p.z.",
+      "pct": 17.7
+     },
+     {
+      "name": "Saline Upland 8-12\" p.z.",
+      "pct": 14.2
+     },
+     {
+      "name": "Sandy Loam Upland 8-12\" p.z.",
+      "pct": 10.2
+     },
+     {
+      "name": "Loamy Swale 8-12\" p.z.",
+      "pct": 7.5
+     },
+     {
+      "name": "Loamy Upland 12\"-16\" p.z.",
+      "pct": 7.2
+     }
+    ],
+    "drainage": [
+     {
+      "name": "Well drained",
+      "pct": 96.0
+     },
+     {
+      "name": "Somewhat excessively drained",
+      "pct": 1.6
+     },
+     {
+      "name": "Moderately well drained",
+      "pct": 1.4
+     },
+     {
+      "name": "Excessively drained",
+      "pct": 0.9
+     }
+    ],
+    "hydrologic_group": [
+     {
+      "name": "C",
+      "pct": 48.0
+     },
+     {
+      "name": "B",
+      "pct": 27.0
+     },
+     {
+      "name": "D",
+      "pct": 12.8
+     },
+     {
+      "name": "A",
+      "pct": 12.3
+     }
+    ],
+    "temperature_regime": [
+     {
+      "name": "thermic",
+      "pct": 100.0
+     }
+    ],
+    "moisture_regime": [],
+    "restrictive_layers": [
+     {
+      "name": "none recorded",
+      "pct": 96.7
+     },
+     {
+      "name": "Duripan",
+      "pct": 3.3
+     }
+    ],
+    "surface_texture": [
+     {
+      "name": "Fine sandy loam",
+      "pct": 25.3
+     },
+     {
+      "name": "Silty clay loam",
+      "pct": 15.0
+     },
+     {
+      "name": "Gravelly loam",
+      "pct": 12.7
+     },
+     {
+      "name": "Sandy loam",
+      "pct": 10.8
+     },
+     {
+      "name": "Loam",
+      "pct": 9.2
+     },
+     {
+      "name": "Silt loam",
+      "pct": 9.1
+     }
+    ],
+    "properties_weighted_mean": {
+     "clay_pct": {
+      "0-30": 22.8,
+      "30-100": 26.07
+     },
+     "silt_pct": {
+      "0-30": 34.66,
+      "30-100": 35.29
+     },
+     "sand_pct": {
+      "0-30": 42.53,
+      "30-100": 38.63
+     },
+     "organic_matter_pct": {
+      "0-30": 0.61,
+      "30-100": 0.48
+     },
+     "ph": {
+      "0-30": 8.21,
+      "30-100": 8.38
+     },
+     "ec_dS_m": {
+      "0-30": 2.78,
+      "30-100": 3.67
+     },
+     "sar": {
+      "0-30": 8.1,
+      "30-100": 8.35
+     },
+     "caco3_pct": {
+      "0-30": 6.17,
+      "30-100": 10.94
+     },
+     "gypsum_pct": {
+      "0-30": 0.23,
+      "30-100": 0.66
+     },
+     "cec_meq_100g": {
+      "0-30": 14.17,
+      "30-100": 18.01
+     },
+     "awc_cm_cm": {
+      "0-30": 0.13,
+      "30-100": 0.13
+     },
+     "ksat_um_s": {
+      "0-30": 11.53,
+      "30-100": 11.36
+     }
+    },
+    "slope_pct_mean": 1.8,
+    "restriction_depth_cm_mean": 64.0
+   },
+   "sinking_zone_pixels": 9292
+  }
+ }
+}

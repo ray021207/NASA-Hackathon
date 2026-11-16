@@ -1,4 +1,4 @@
-import { cleanGeology, cleanGroundwater, cleanPumping, normalizeSeries, normalizeRate, normalizeHotspots, validateGeoJSON, safeSourceURL, formatNumber, isNumber, cleanInsights, normalizeCumulative, cleanTeam, cleanNisar } from './model.mjs';
+import { cleanSoils, cleanGeology, cleanGroundwater, cleanPumping, normalizeSeries, normalizeRate, normalizeHotspots, validateGeoJSON, safeSourceURL, formatNumber, isNumber, cleanInsights, normalizeCumulative, cleanTeam, cleanNisar } from './model.mjs';
 
 const $ = selector => document.querySelector(selector);
 // Reading level: 'plain' (default, for everyone) or 'research' (detail for researchers and water engineers). Set on <html data-audience>.
@@ -428,6 +428,7 @@ function renderInsights(root, series) {
       more.append(el('summary', '', 'Read full explanation'), el('p', '', point.text));
       item.append(more);
     }
+    if (![0, 2, 3].includes(index)) item.dataset.aud = 'research';   // everyone: what we found, why it sinks, why it matters
     grid.append(item);
   });
   box.append(grid); root.append(box);
@@ -948,9 +949,9 @@ function makeOverlay(raw, key) {
     }
   });
 }
-const METHOD_PLAIN = `<p>A satellite sends a radar pulse down and times the echo, so it knows how far away the ground is. Each time it passes over the same spot, it can tell whether the ground moved closer or farther by a few millimetres.</p><ol><li><strong>Compare two passes.</strong> If the ground moved between two passes, the radar waves come back slightly out of step. That shift tells us how far it moved.</li><li><strong>Add up many pairs.</strong> One pair is noisy, because moisture in the air also changes the signal. Adding up many pairs over years lets steady sinking build up while random noise cancels out.</li><li><strong>Two satellites.</strong> Sentinel-1 has flown since 2016, so it gives a ten-year trend. NASA-ISRO NISAR started in late 2025, so its record is still short. We show the Sentinel-1 trend and treat NISAR as a preliminary test.</li><li><strong>Two viewing directions.</strong> On some orbits the satellite sees the ground from the east and on others from the west. When both agree, the sinking is much more likely to be real.</li><li><strong>Check against the official record.</strong> We compare our numbers with the radar results the Arizona Department of Water Resources publishes.</li></ol><p>Numbers are measured along the satellite\u2019s slanted view, not straight down.</p>`;
+const METHOD_PLAIN = `<p>A satellite sends a radar pulse down and times the echo, so it knows how far away the ground is. Each time it passes over the same spot, it can tell whether the ground moved closer or farther by a few millimetres.</p><ol><li><strong>Compare two passes.</strong> If the ground moved between two passes, the radar waves come back slightly out of step. That shift tells us how far it moved.</li><li><strong>Add up many passes.</strong> One pair is noisy, so we add up many over years. Steady sinking builds up; random noise cancels out.</li><li><strong>Check it twice.</strong> We compare two satellites (Sentinel-1 for ten years, NASA\u2019s new NISAR for its first year), two viewing directions, and the state\u2019s own radar results.</li></ol><p>Numbers are measured along the satellite\u2019s slanted view, not straight down.</p>`;
 const METHOD_RESEARCH = `<p>Interferometric SAR (InSAR) measures the change in round-trip phase between two acquisitions. For L-band NISAR (wavelength 24.2 cm) one radian of unwrapped phase is about 19 mm of line-of-sight displacement, d = \u2212(\u03bb / 4\u03c0) \u00b7 \u03c6; the sign convention is read from each product.</p><ol><li><strong>Products.</strong> NISAR L2 GUNW (geocoded unwrapped interferograms) and GCOV (polarimetric covariance) from the ASF archive; OPERA Sentinel-1 DISP-S1 (2016\u20132026) as the long record.</li><li><strong>Valid pixels.</strong> Finite phase, a nonzero connected component, and phase not exactly zero (fill values).</li><li><strong>Corrections.</strong> NISAR: the ionosphere screen is subtracted and the troposphere and solid-earth-tide screens shipped in the product metadata are applied; the troposphere sign was chosen empirically by testing both. Sentinel-1: the solid-earth-tide and ionosphere layers are subtracted; tropospheric delay is not corrected.</li><li><strong>Reference.</strong> Motion is relative to stable ground (the median of the whole frame for Sentinel-1), so a few mm/yr of reference bias is possible.</li><li><strong>Time series.</strong> Connected pairs on one track are chained using their actual dates and a rate is fitted with an uncertainty. Ascending and descending tracks are never combined directly.</li><li><strong>Uncertainty.</strong> The fit error is combined in quadrature with the larger of half the descending-minus-ascending difference or the difference from ADWR\u2019s own Sentinel-1 rate over the same pixels.</li><li><strong>Checks.</strong> Agreement with the opposite look direction and with ADWR\u2019s Sentinel-1 and RADARSAT-2 products; for NISAR, pattern correlation against Sentinel-1 on a 300 m grid.</li></ol><p>All values are line-of-sight. A vertical rate needs the assumption that the motion is mostly vertical, which we state wherever it is used.</p>`;
-const LIMITS_PLAIN = `<ul><li><strong>Empty is not zero.</strong> Where a result is missing or the map is blank, we have no reliable measurement. That does not mean the ground is stable.</li><li><strong>Slanted, not straight down.</strong> Radar measures movement along its slanted line of view. If the ground moves straight down, the true drop is likely somewhat larger.</li><li><strong>Short records need care.</strong> NISAR has about a year of data at Willcox and under four months at Eloy, so we do not publish a NISAR speed.</li><li><strong>Farming and building can hide the signal.</strong> Plowed fields and building sites make it harder for radar to measure.</li><li><strong>Place is not cause.</strong> A nearby farm or city does not prove it caused the sinking.</li><li><strong>Radar does not see wildlife.</strong> Anything about habitat comes from other sources.</li><li><strong>Mines move too.</strong> Open-pit mines shift for reasons unrelated to groundwater. We mark the ones we found.</li><li><strong>Blue patches are probably not real uplift.</strong> Rising values, such as on the Willcox dry lake bed, most likely come from wet or swelling soil. We have not verified this.</li><li><strong>A study box is not a sinking zone.</strong> The outlines show the areas we chose to study.</li></ul>`;
+const LIMITS_PLAIN = `<ul><li><strong>Empty is not zero.</strong> Where a result is missing or the map is blank, we have no reliable measurement. That does not mean the ground is stable.</li><li><strong>Slanted, not straight down.</strong> Radar measures along its slanted line of view. If the ground moves straight down, the true drop is likely somewhat larger.</li><li><strong>Short records need care.</strong> NISAR has about a year of data at Willcox and under four months at Eloy, so we do not publish a NISAR speed.</li><li><strong>Place is not cause.</strong> A nearby farm or city does not prove it caused the sinking.</li><li><strong>Mines move too.</strong> Open-pit mines shift for reasons unrelated to groundwater. We mark the ones we found.</li></ul>`;
 const LIMITS_RESEARCH = '<ul><li><strong>Pending is not zero.</strong> Empty results mean that a file is missing or has not passed the interface checks.</li><li><strong>Radar measures line-of-sight motion.</strong> A vertical sinking rate needs a justified conversion. A positive or negative value is not interpreted without its sign convention.</li><li><strong>Short records need care.</strong> Seasonal movement, atmospheric errors and the stable reference can influence a fitted rate. NISAR\u2019s record is about a year at Willcox and under four months at Eloy, so we do not publish a NISAR speed; one bad acquisition date can move a one-year fit by a centimetre or more.</li><li><strong>Data quality varies.</strong> Farming and construction can reduce coherence. Product corrections and release status must be checked.</li><li><strong>Location does not establish cause.</strong> A nearby farm or city does not prove responsibility for ground movement.</li><li><strong>Radar does not observe wildlife.</strong> Any mention of habitat comes from outside sources, not from this measurement.</li><li><strong>Mines move too.</strong> Open-pit mines and their waste piles shift for reasons unrelated to groundwater. We mark the ones we found.</li><li><strong>Blue patches are probably not real uplift.</strong> Rising values, such as on the Willcox Playa floor, most likely come from wet or swelling soil changing the radar signal. We have not verified this.</li><li><strong>Gaps are not zeros.</strong> Where the map is empty, the radar could not measure reliably (over plowed fields, for example). That does not mean the ground is stable.</li><li><strong>A study box is not a sinking zone.</strong> Outlines show the areas the team chose to investigate.</li><li><strong>Reference and uncertainty.</strong> Sentinel-1 rates are relative to the frame median; a few mm/yr of reference bias is possible and is not separately included in the uncertainty.</li><li><strong>Troposphere.</strong> Not corrected for Sentinel-1; applied for NISAR with the product\u2019s screens.</li><li><strong>Agreement in sign is not agreement in size.</strong> In three of the four areas with an ascending check, the ascending median is a quarter to a third smaller than the descending one.</li><li><strong>Not fully independent.</strong> Our Sentinel-1 rates and ADWR\u2019s Sentinel-1 product share the satellite, so that comparison is a consistency check; RADARSAT-2 is an independent sensor.</li><li><strong>Data vintage.</strong> NISAR data are Provisional (the first Willcox pair is Beta). Wells span the 1980s to 2025, the pumping estimates are for 2024 and the mapped fissures are as of 2016.</li></ul>';
 const dialogCopy = {
   method: {
@@ -989,6 +990,8 @@ const dialogCopy = {
       <li><a href="https://search.asf.alaska.edu/" target="_blank" rel="noopener noreferrer">Alaska Satellite Facility · SAR data discovery</a></li>
       <li><a href="https://www.azwater.gov/hydrology/field-services/land-subsidence-arizona" target="_blank" rel="noopener noreferrer">ADWR · Arizona land-subsidence monitoring</a></li>
       <li><a href="https://www.azwater.gov/gis" target="_blank" rel="noopener noreferrer">ADWR GIS · official subsidence areas and radar products</a></li>
+      <li><a href="https://sdmdataaccess.sc.egov.usda.gov/" target="_blank" rel="noopener noreferrer">USDA NRCS Soil Survey (SSURGO) · Soil Data Access</a> — surface soils, ecological sites and soil properties for each study area (research view).</li>
+      <li><a href="https://azgs.arizona.edu/earth-fissure-study-areas-arizona" target="_blank" rel="noopener noreferrer">Arizona Geological Survey · earth fissure study areas</a> — mapped earth fissures (data as of 2016).</li>
       <li><a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap · land-use reference notes</a></li>
     </ul>
     <p><strong>Interpretation:</strong> Groundwater pumping is a documented regional mechanism, and agriculture is a major groundwater-use sector in Willcox. Neither a correlation nor the Sinkronized maps alone can assign an observed pixel to a specific farm, well or other water user.</p>
@@ -1091,6 +1094,8 @@ async function start() {
   ];
   await Promise.all(tasks);
   renderGeoCompare();
+  renderAreaStats();
+  renderSoilCompare();
   if (state.selected) renderDetails();
   updateRateLayer();
   const hasMeasurements = [...state.series.values()].some(r => r.status === 'ready' && r.value.hasData);
@@ -1209,6 +1214,7 @@ function renderNisar(n) {
     .forEach(([key, text]) => document.querySelectorAll('[data-nisar="' + key + '"]').forEach(node => { node.textContent = text; }));
   const img3 = $('#nisar-portrait-img');
   if (img3) img3.src = window.ATLAS_PREVIEW_IMAGES?.[pr.file] || new URL(pr.file, DATA).href;
+  renderNisarRecord(n);
   section.hidden = false;
   if (farm) farm.hidden = false;
   const fl = n.farmland, mm = x => (x < 0 ? '\u2212' : x > 0 ? '+' : '') + one(Math.abs(x)) + ' mm';
@@ -1316,7 +1322,8 @@ function barChart(host, { title, sub, subPlain, rows, note, notePlain, min = 0, 
     if (views.length < 4 || !tabs.length || panels.some(p => !p)) return;
     const navFor = { overview: '#overview', evidence: '#evidence', map: '#atlas', about: '#about' };   // the Evidence view now has four tabs
     const rootEl = document.documentElement;
-    const available = () => tabs.filter((t, i) => !panels[i].hidden);
+    const audienceOk = node => !(node.dataset.aud === 'research' && aud() === 'plain') && !(node.dataset.aud === 'plain' && aud() === 'research');
+    const available = () => tabs.filter((t, i) => !panels[i].hidden && audienceOk(panels[i]));
     let pending = null;   // a deep link to a tab whose data has not arrived yet (its panel starts hidden)
     function syncTabs() {
       tabs.forEach((t, i) => { t.hidden = panels[i].hidden; });
@@ -1340,7 +1347,8 @@ function barChart(host, { title, sub, subPlain, rows, note, notePlain, min = 0, 
       views.forEach(v => v.classList.toggle('is-active', v === viewEl));
       if (name === 'evidence') {
         const hit = target && panels.find(p => p === target || p.contains(target));
-        const pick = hit && !hit.hidden ? hit : panels.find(p => !p.hidden) || panels[0];
+        if (hit && hit.dataset.aud === 'research' && aud() === 'plain') document.dispatchEvent(new CustomEvent('audience-request', { detail: 'research' }));   // this part is in the research view
+        const pick = hit && !hit.hidden ? hit : panels.find(p => !p.hidden && audienceOk(p)) || panels[0];
         pending = hit && hit.hidden ? hit : null;
         selectPanel(pick);
       }
@@ -1368,6 +1376,10 @@ function barChart(host, { title, sub, subPlain, rows, note, notePlain, min = 0, 
         else if (ev.key === 'End') next = list[list.length - 1];
         if (next) { ev.preventDefault(); next.focus(); location.hash = '#' + panels[tabs.indexOf(next)].id; }
       });
+    });
+    document.addEventListener('audiencechange', () => {   // leaving research while on a research-only tab: move to the first tab everyone sees
+      const active = panels.find(p => p.classList.contains('is-active'));
+      if (active && !audienceOk(active)) { const first = available()[0]; if (first) selectPanel(panels[tabs.indexOf(first)]); }
     });
     window.addEventListener('hashchange', () => route(location.hash, true));
     if ('MutationObserver' in window) panels.forEach(p => new MutationObserver(syncTabs).observe(p, { attributes: true, attributeFilter: ['hidden'] }));
@@ -1403,6 +1415,9 @@ function renderGroundwater(g) {
     title: 'The faster the water table falls, the faster the ground sinks', sub: 'Wells in four equal groups by how fast their water fell (feet per year). Bar: typical sinking rate around those wells (cm/yr).', max: 2.5,
     rows: g.q.map((x, i) => ({ label: one(x.lo) + ' to ' + one(x.hi) + ' ft/yr (' + x.n + ' wells)', value: Math.max(0, -x.rate), text: s1(x.rate) + ' cm/yr', color: colors[i] })),
     note: 'Water levels: USGS and ADWR well measurements. Sinking: ten-year Sentinel-1 rate. Association, not cause.' });
+  statTable($('#gw-detail'), { title: 'Water-level decline groups', cols: ['Decline (ft/yr)', 'Wells', 'Median sinking rate (cm/yr)', 'Wells on sinking ground'],
+    rows: g.q.map(x => [one(x.lo) + ' to ' + one(x.hi), String(x.n), s1(x.rate), String(Math.round(x.sinking)) + '%']),
+    note: g.wells + ' wells; first readings ' + g.from + '\u2013' + g.to + ' against the latest ' + g.recentFrom + '\u2013' + g.recentTo + '. Rank correlation ' + s2(g.rho) + ' (95% range ' + s2(g.rhoLo) + ' to ' + s2(g.rhoHi) + ', block bootstrap over ' + g.tiles + ' areas of 5 km). Where the ground sinks, it sinks by about ' + one(g.ratio) + '% of the rate at which the water table falls. Sinking is the ten-year Sentinel-1 rate around each well.' });
   section.hidden = false;
 }
 loadGroundwater().then(renderGroundwater);
@@ -1437,6 +1452,109 @@ loadJSON('geology.json', cleanGeology).then(result => {
   renderGeoCompare();
 });
 // Geology tab: the same questions asked of all five study areas, one row each (from geology.json; names from hotspots.geojson).
+// ---- Research tables (shown only in the research view): one helper draws them all, in the same style as the geology comparison.
+function statTable(host, { title, cols, rows, note: noteText }) {
+  if (!host || !rows.length) return;
+  host.replaceChildren();
+  host.append(el('h3', 'geo-compare-title', title));
+  const wrap = el('div', 'geo-compare-wrap'), table = el('table', 'geo-compare-table');
+  const hr = el('tr'); cols.forEach(c => { const th = el('th', '', c); th.scope = 'col'; hr.append(th); });
+  const head = el('thead'); head.append(hr); table.append(head);
+  const body = el('tbody');
+  rows.forEach(r => {
+    const tr = el('tr');
+    r.forEach((v, i) => { const c = el(i === 0 ? 'th' : 'td'); if (i === 0) c.scope = 'row'; c.dataset.label = cols[i]; if (v instanceof Node) c.append(v); else c.textContent = v; tr.append(c); });
+    body.append(tr);
+  });
+  table.append(body); wrap.append(table); host.append(wrap);
+  if (noteText) host.append(el('p', 'geo-compare-note', noteText));
+  host.hidden = false;
+}
+const nfmt = v => isNumber(v) ? formatNumber(v) : '\u2014';
+function areaName(slug) { return state.hotspots?.features.find(f => f.properties.slug === slug)?.properties.name || slug; }
+function renderAreaStats() {
+  const host = document.getElementById('area-stats');
+  if (!host || !state.hotspots) return;
+  const rows = [];
+  state.slugs.forEach(slug => {
+    const r = state.series.get(slug), s = r?.status === 'ready' ? r.value : null;
+    if (!s || !isNumber(s.rate_cm_yr)) return;
+    const c = s.adwr_comparison, asc = s.ascending_check;
+    rows.push([areaName(slug), nfmt(s.rate_cm_yr) + (isNumber(s.rate_sigma) ? ' \u00b1 ' + nfmt(s.rate_sigma) : ''), nfmt(s.median_rate_cm_yr), nfmt(s.area_km2), nfmt(s.p5_rate_cm_yr) + ' / ' + nfmt(s.fastest_rate_cm_yr),
+      asc && isNumber(asc.median_rate) ? nfmt(asc.median_rate) + ' (' + new Intl.NumberFormat('en-US').format(asc.n_px) + ' cells)' : 'none',
+      c ? nfmt(c.adwr_s1_median) + ' / ' + nfmt(c.adwr_rs2_median) : '\u2014', c ? nfmt(c.corr_s1) + ' / ' + nfmt(c.corr_rs2) : '\u2014', String(s.dates.length)]);
+  });
+  statTable(host, { title: 'Sentinel-1 statistics for every study area',
+    cols: ['Study area', 'Rate \u00b1 uncertainty (cm/yr)', 'Median of sinking pixels', 'Sinking area (km\u00b2)', '5th percentile / fastest cell', 'Ascending-track median', 'ADWR median: Sentinel-1 / RADARSAT-2', 'Pattern correlation with ADWR: Sentinel-1 / RADARSAT-2', 'Dates'],
+    rows, note: 'Line-of-sight rates in cm/yr (negative = sinking), Sentinel-1 2016\u20132026. Sinking pixels are 300 m cells at or below \u22121 cm/yr. The uncertainty combines the fit error with a systematic term (half the descending\u2013ascending difference, or the difference from ADWR\u2019s own Sentinel-1 rate). ADWR medians are over the same pixels (units inferred as metres).' });
+}
+function renderNisarRecord(n) {
+  const host = document.getElementById('nisar-record'), r = n?.research;
+  if (!host || !r) return;
+  const rows = [];
+  [['Willcox record', r.willcoxRecord], ['Eloy record', r.eloyRecord]].forEach(([label, x]) => { if (x) rows.push([label, 'Track ' + x.track + ' \u00b7 ' + x.dates + ' dates \u00b7 ' + x.start + ' to ' + x.end]); });
+  rows.push(['Pattern correlation with Sentinel-1', nfmt(n.pattern.r) + ' across ' + new Intl.NumberFormat('en-US').format(n.pattern.blocks) + ' blocks' + (r.rClean !== null ? ' (' + nfmt(r.rClean) + ' without the one bad September 2026 date)' : '')]);
+  rows.push(['Troposphere correction', 'Residual scatter ' + nfmt(n.weather.before) + ' to ' + nfmt(n.weather.after) + ' mm' + (r.jumpBefore !== null && r.jumpAfter !== null ? '; pair-to-pair jump scatter ' + nfmt(r.jumpBefore) + ' to ' + nfmt(r.jumpAfter) + ' mm' : '')]);
+  rows.push(['Sinking-area rate, NISAR vs Sentinel-1', nfmt(n.sinking.nisar) + ' vs ' + nfmt(n.sinking.s1) + ' cm/yr over ' + new Intl.NumberFormat('en-US').format(n.sinking.blocks) + ' blocks, relative to the surroundings']);
+  rows.push(['Correlation over the six months both watched', nfmt(n.overlap.r)]);
+  rows.push(['Dry-lake-bed change', 'NISAR net ' + nfmt(n.playa.net) + ' cm in ' + nfmt(n.playa.years) + ' yr; Sentinel-1 ten-year trend ' + nfmt(n.playa.trend) + ' and last three years ' + nfmt(n.playa.last3) + ' cm/yr']);
+  rows.push(['Time to a confirmed rate (3 sigma, 90% power)', 'Willcox ' + nfmt(n.willcox.years) + ' yr (' + n.willcox.date + '); Eloy ' + nfmt(n.eloy.years) + ' yr (' + n.eloy.date + ')']);
+  if (r.release) rows.push(['Release status', r.release]);
+  statTable(host, { title: 'NISAR data record and statistics', cols: ['Item', 'Value'], rows });
+}
+// ---- Soils (USDA soil survey): in each area's research report, and compared across areas
+let SOILS = null;
+loadJSON('soils.json', cleanSoils).then(result => {
+  SOILS = result.status === 'ready' ? result.value : null;
+  renderSoilCompare();
+  if (SOILS && state.selected && !document.querySelector('#detail-content .soil-block')) renderDetails();
+});
+const SOIL_ROWS = [['Sand (%)', 'sand_pct', 0], ['Silt (%)', 'silt_pct', 0], ['Clay (%)', 'clay_pct', 0], ['Organic matter (%)', 'organic_matter_pct', 2], ['pH (1:1 in water)', 'ph', 1], ['Salinity, EC (dS/m)', 'ec_dS_m', 1],
+  ['Sodium adsorption ratio (SAR)', 'sar', 1], ['Calcium carbonate (%)', 'caco3_pct', 1], ['Gypsum (%)', 'gypsum_pct', 2], ['Cation exchange capacity (meq/100 g)', 'cec_meq_100g', 1],
+  ['Available water capacity (cm/cm)', 'awc_cm_cm', 2], ['Saturated hydraulic conductivity (\u00b5m/s)', 'ksat_um_s', 1]];
+const soilPct = (arr, k = 4) => arr.slice(0, k).map(x => x.name + ' ' + (x.pct >= 1 ? Math.round(x.pct) : '<1') + '%').join('; ');
+function soilBlock(slug) {
+  const a = SOILS?.areas?.[slug], set = a?.zone || a?.box;
+  if (!set) return null;
+  const box = el('section', 'soil-block');
+  box.append(el('h3', 'geo-subhead geo-detail-head', 'Surface soils and ecology (USDA soil survey)'));
+  box.append(note('Map units of the USDA NRCS soil survey, sampled with ' + set.points + ' random points across ' + (a.zone ? 'the sinking zone' : 'the study box') + ' (' + set.covered + ' had soil data). Each point shares its weight across its map unit\u2019s components by their percentages. These are the soils of the top 2 m, not the aquifer layers described above, and the survey holds no microbial or biological-crust data.'));
+  const rows = [['Soil orders', soilPct(set.orders)], ['Suborders', soilPct(set.suborders)], ['Great groups', soilPct(set.greatGroups, 5)], ['Map units', soilPct(set.mapUnits, 4)], ['Landforms', soilPct(set.landforms)],
+    ['NRCS ecological sites', soilPct(set.ecoSites, 4)], ['Surface texture', soilPct(set.texture)], ['Drainage class', soilPct(set.drainage, 3)], ['Hydrologic soil group', soilPct(set.hydgrp, 3)],
+    ['Soil temperature regime', soilPct(set.temp, 2)], ['Restrictive layers', soilPct(set.restrictions, 4)]];
+  if (isNumber(set.slope)) rows.push(['Mean slope', formatNumber(set.slope) + '%']);
+  box.append(factList(rows.filter(r => r[1])));
+  const wrap = el('div', 'geo-compare-wrap'), table = el('table', 'geo-compare-table soil-table');
+  const hr = el('tr'); ['Property (weighted mean)', 'Top 0\u201330 cm', 'Below 30\u2013100 cm'].forEach(c => { const th = el('th', '', c); th.scope = 'col'; hr.append(th); });
+  const head = el('thead'); head.append(hr); table.append(head);
+  const body = el('tbody');
+  SOIL_ROWS.forEach(([label, key, d]) => {
+    const p = set.props[key]; if (!p || (p.top === null && p.deep === null)) return;
+    const tr = el('tr'), th = el('th', '', label); th.scope = 'row'; tr.append(th);
+    [p.top, p.deep].forEach((v, i) => { const td = el('td', '', v === null ? '\u2014' : v.toFixed(d)); td.dataset.label = i ? 'Below 30\u2013100 cm' : 'Top 0\u201330 cm'; tr.append(td); });
+    body.append(tr);
+  });
+  table.append(body); wrap.append(table); box.append(wrap);
+  const ec = set.props.ec_dS_m.top, sar = set.props.sar.top, flags = [];
+  if (ec !== null) flags.push(ec >= 4 ? 'saline on average in the top 30 cm (EC ' + ec.toFixed(1) + ' dS/m, at or above the standard USDA threshold of 4)' : 'below the USDA saline threshold of 4 dS/m on average in the top 30 cm (EC ' + ec.toFixed(1) + ')');
+  if (sar !== null) flags.push(sar >= 13 ? 'sodic on average (SAR ' + sar.toFixed(1) + ', at or above the standard threshold of 13)' : 'below the sodic threshold of SAR 13 on average in the top 30 cm (' + sar.toFixed(1) + ')');
+  if (flags.length) box.append(note('Reading the numbers: ' + flags.join('; ') + '. Weighted means can hide patches, so check the map units above. Thresholds are those of the USDA Salinity Laboratory (Handbook 60).'));
+  return box;
+}
+function renderSoilCompare() {
+  const host = document.getElementById('soils-compare');
+  if (!host || !SOILS || !state.hotspots) return;
+  const rows = [];
+  state.slugs.forEach(slug => {
+    const a = SOILS.areas[slug], s = a?.zone || a?.box;
+    if (!s) return;
+    const p = k => (s.props[k].top === null ? '\u2014' : s.props[k].top.toFixed(k === 'organic_matter_pct' ? 2 : 1));
+    rows.push([areaName(slug), soilPct(s.orders, 3), soilPct(s.greatGroups, 2), soilPct(s.texture, 2), p('organic_matter_pct'), p('ph'), p('ec_dS_m'), p('sar'), p('caco3_pct'), soilPct(s.landforms, 2), soilPct(s.ecoSites, 2)]);
+  });
+  statTable(host, { title: 'Surface soils compared (USDA soil survey)',
+    cols: ['Study area', 'Soil orders', 'Great groups', 'Surface texture', 'Organic matter % (0\u201330 cm)', 'pH', 'Salinity EC (dS/m)', 'SAR', 'CaCO\u2083 %', 'Landforms', 'NRCS ecological sites'],
+    rows, note: 'Source: USDA NRCS Soil Survey (SSURGO) via Soil Data Access, sampled with random points across each area\u2019s sinking zone; shares are percentages of sample points. Values are weighted means for the top 30 cm. These are surface soils (top 2 m), not aquifer layers; the survey has no microbial or biological-crust data.' });
+}
 function renderGeoCompare() {
   const box = document.getElementById('geology-compare');
   if (!box || !GEOLOGY) return;
@@ -1541,6 +1659,8 @@ function renderGeology(slug) {
     g.detail.forEach(d => { const row = el('div'); const dd = el('dd', '', d.text + ' '); const link = cite(d.source); if (link) dd.append(link); row.append(el('dt', '', d.label), dd); dl.append(row); });
     researchDiv.append(dl);
   }
+  const soil = soilBlock(slug);
+  if (soil) researchDiv.append(soil);
   if (g.caveat) researchDiv.append(note(g.caveat));
   if (plainDiv) box.append(plainDiv);
   box.append(researchDiv);
@@ -1617,6 +1737,7 @@ function renderGeology(slug) {
     document.dispatchEvent(new CustomEvent('audiencechange', { detail: m }));
   }
   sw.addEventListener('click', () => set(aud() === 'research' ? 'plain' : 'research', true));
+  document.addEventListener('audience-request', e => { if (aud() !== e.detail) set(e.detail, true); });
   document.querySelectorAll('.audience-side').forEach(b => b.addEventListener('click', () => set(b.dataset.set, true)));
   sw.setAttribute('aria-checked', String(aud() === 'research'));
   if (hint) hint.textContent = HINT[aud()];

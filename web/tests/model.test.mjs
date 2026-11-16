@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { normalizeSeries, normalizeRate, normalizeHotspots, validateGeoJSON, safeSourceURL, formatNumber, cleanInsights, normalizeCumulative, cleanTeam, cleanNisar, cleanPumping, cleanGroundwater, cleanGeology } from '../model.mjs';
+import { cleanSoils, normalizeSeries, normalizeRate, normalizeHotspots, validateGeoJSON, safeSourceURL, formatNumber, cleanInsights, normalizeCumulative, cleanTeam, cleanNisar, cleanPumping, cleanGroundwater, cleanGeology } from '../model.mjs';
 import { readFile } from 'node:fs/promises';
 
 const series = extra => ({ hotspot: 'eloy', units: 'cm', reference: 'Synthetic test reference', dates: ['2026-01-01', '2026-01-13'], displacement: [0, -1], rate_cm_yr: -2, rate_sigma: 0.2, ...extra });
@@ -386,4 +386,29 @@ test('geology.json: every area has a plain version and sourced research detail t
   const bad = JSON.parse(JSON.stringify(raw));
   bad.areas.eloy.detail[0].source = 'not-a-source';
   assert.ok(cleanGeology(bad).areas.eloy.detail.every(d => d.source !== 'not-a-source'), 'unsourced detail is dropped');
+});
+
+test('soils.json: real USDA survey summaries validate for every area, bad entries are dropped', async () => {
+  const raw = JSON.parse(await readFile(new URL('../../data/processed/soils.json', import.meta.url), 'utf8'));
+  const clean = cleanSoils(raw);
+  for (const slug of ['eloy', 'willcox', 'north_willcox', 'south', 'east']) {
+    const s = clean.areas[slug].zone;
+    assert.ok(s && s.covered >= 100 && s.orders.length >= 2 && s.ecoSites.length >= 2 && s.props.ec_dS_m.top !== null && s.props.organic_matter_pct.top !== null, slug);
+    assert.ok(s.orders.every(o => o.pct >= 0 && o.pct <= 100), slug + ' shares are percentages');
+  }
+  assert.match(raw.note, /not the aquifer layers|surface soils/i);
+  const bad = JSON.parse(JSON.stringify(raw));
+  bad.areas.eloy.sinking_zone.orders[0].pct = 500; bad.areas.eloy.sinking_zone.points_with_soil_data = 0; bad.areas.willcox.box = 'x';
+  const cleaned = cleanSoils(bad);
+  assert.ok(cleaned.areas.eloy.zone === null && cleaned.areas.eloy.box, 'a zone with no soil data is dropped, the box set is kept');
+  assert.ok(cleaned.areas.willcox.zone && cleaned.areas.willcox.box === null, 'a malformed set is dropped');
+});
+
+test('plain language is trimmed: research-only blocks cover the extras, and the research tables exist', async () => {
+  const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
+  for (const id of ['nisar-record', 'gw-detail', 'area-stats', 'soils-compare']) assert.match(html, new RegExp('id="' + id + '"[^>]*data-aud="research"'), id + ' is research-only');
+  assert.match(html, /<section id="overview-purpose"[^>]*data-aud="research"/);
+  assert.match(html, /<section id="overview-farmland"[^>]*data-aud="research"/);
+  assert.match(html, /<button type="button" role="tab" id="tab-farmland"[^>]*data-aud="research"/);
+  assert.ok(!/data-aud="plain" class="overview-narrative-qualification"|<p data-aud="plain" class="overview-narrative-qualification"/.test(html), 'the repeated caution is not shown to everyone');
 });

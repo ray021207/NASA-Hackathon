@@ -179,6 +179,10 @@ export function cleanNisar(raw) {
     farmland: cleanFarmland(raw.farmland),
     directions: cleanDirections(raw.directions)
   };
+  // Optional research detail (dropped quietly if absent or malformed)
+  const rec = r => r && typeof r.start === 'string' && typeof r.end === 'string' && validDate(r.start) && validDate(r.end) && nz(r.dates, 1, 1000) !== null && typeof r.track === 'string' ? { start: r.start, end: r.end, dates: r.dates, track: r.track.slice(0, 12) } : null;
+  out.research = { rClean: nz(p.r_without_bad_date, -1, 1), jumpBefore: nz(w.jump_before_mm, 0, 1000), jumpAfter: nz(w.jump_after_mm, 0, 1000), last3: out.playa.last3,
+    willcoxRecord: rec(raw.record?.willcox), eloyRecord: rec(raw.record?.eloy), release: typeof raw.release === 'string' ? raw.release.slice(0, 600) : null };
   const ok = [out.pattern, out.weather, out.sinking, out.playa, out.overlap].every(g => Object.values(g).every(v => v !== null)) && out.willcox && out.eloy && out.figure && out.farmland && out.directions;
   return ok ? out : null;
 }
@@ -241,4 +245,28 @@ export function cleanGeology(raw) {
     if (basin && summary && layers.length >= 2 && facts.length >= 2) areas[slug] = { basin, summary, caveat, layers, facts, measured, recovery, fissures, plain: plain && plain.layerNotes.length === layers.length && plain.layerNotes.every(Boolean) ? plain : null, detail, sources: [...used].map(id => ({ id, ...sources[id] })) };
   }
   return Object.keys(areas).length ? { areas } : null;
+}
+
+const SOIL_PROPS = ['clay_pct', 'silt_pct', 'sand_pct', 'organic_matter_pct', 'ph', 'ec_dS_m', 'sar', 'caco3_pct', 'gypsum_pct', 'cec_meq_100g', 'awc_cm_cm', 'ksat_um_s'];
+export function cleanSoils(raw) {
+  // USDA soil survey summary per study area (data/processed/soils.json). Strict and optional: anything malformed is dropped.
+  if (!raw || typeof raw !== 'object' || !raw.areas || typeof raw.areas !== 'object') return null;
+  const list = (arr, max) => (Array.isArray(arr) ? arr : []).slice(0, max).map(x => ({ name: geoText(x?.name, 140), pct: nz(x?.pct, 0, 100) })).filter(x => x.name && x.pct !== null);
+  const one = s => {
+    if (!s || typeof s !== 'object') return null;
+    const pr = s.properties_weighted_mean || {};
+    const props = {};
+    for (const k of SOIL_PROPS) props[k] = { top: nz(pr[k]?.['0-30'], -1e6, 1e6), deep: nz(pr[k]?.['30-100'], -1e6, 1e6) };
+    const covered = nz(s.points_with_soil_data, 0, 1e5), points = nz(s.points, 1, 1e5);
+    if (covered === null || points === null || covered < 1) return null;
+    return { points, covered, orders: list(s.orders, 6), suborders: list(s.suborders, 5), greatGroups: list(s.great_groups, 8), mapUnits: list(s.map_units, 8), landforms: list(s.landforms, 6),
+      ecoSites: list(s.ecological_sites, 6), drainage: list(s.drainage, 5), hydgrp: list(s.hydrologic_group, 4), temp: list(s.temperature_regime, 3), restrictions: list(s.restrictive_layers, 5),
+      texture: list(s.surface_texture, 6), slope: nz(s.slope_pct_mean, 0, 100), props };
+  };
+  const areas = {};
+  for (const [slug, a] of Object.entries(raw.areas)) {
+    const zone = one(a?.sinking_zone), box = one(a?.box);
+    if (zone || box) areas[slug] = { zone, box };
+  }
+  return Object.keys(areas).length ? { areas, source: geoText(raw.source, 300), note: geoText(raw.note, 600) } : null;
 }

@@ -121,12 +121,12 @@
       <ul>
         <li><a href="#atlas"><strong>Where is the ground sinking?</strong><span>Open the map</span></a></li>
         <li><a href="#overview-nisar"><strong>What does NASA’s NISAR show?</strong><span>Its first year, tested</span></a></li>
-        <li><a href="#overview-farmland"><strong>What is on top of it?</strong><span>Farmland and desert, seen by radar</span></a></li>
+        <li data-aud="research"><a href="#overview-farmland"><strong>What is on top of it?</strong><span>Farmland and desert, seen by radar</span></a></li>
         <li><a href="#overview-pumping"><strong>Is it the pumping?</strong><span>Farm water use against sinking</span></a></li>
         <li><a href="#overview-groundwater"><strong>Is the water table falling?</strong><span>Wells measured for 30 years</span></a></li>
         <li><a href="#overview-geology"><strong>What lies beneath, and what is at risk?</strong><span>Geology and infrastructure</span></a></li>
         <li><button type="button" data-dialog="limits"><strong>How sure are we?</strong><span>Read the limits</span></button></li>
-        <li><button type="button" data-dialog="method"><strong>How does radar measure the ground?</strong><span>A plain-language guide</span></button></li>
+        <li data-aud="research"><button type="button" data-dialog="method"><strong>How does radar measure the ground?</strong><span>A plain-language guide</span></button></li>
       </ul>
     </nav>
     <section id="overview-story" class="overview-narrative" aria-labelledby="overview-narrative-title">
@@ -156,10 +156,9 @@
 <p data-aud="research">We built Sinkronized to connect radar measurements, observation dates and uncertainty with groundwater research—helping people ask more informed questions without pretending every pixel has a known cause.</p>
         </article>
       </div>
-      <p data-aud="plain" class="overview-narrative-qualification"><strong>One thing to keep straight:</strong> farming is the biggest water user in the Willcox area, and a <a href="https://www.mdpi.com/2076-3263/13/6/176" target="_blank" rel="noopener noreferrer">2023 study</a> links more farmland to falling groundwater. That is useful context. It does not tell us that any one farm, well or building caused the sinking at a particular spot. <button type="button" data-dialog="sources">Explore the research ↗&#xFE0E;</button></p>
-<p data-aud="research" class="overview-narrative-qualification"><strong>The distinction matters:</strong> agriculture is a major estimated water-use sector in the Willcox Basin, and a <a href="https://www.mdpi.com/2076-3263/13/6/176" target="_blank" rel="noopener noreferrer">2023 peer-reviewed study</a> links agricultural expansion with groundwater decline. That supports regional context, not attributing an individual satellite observation to a particular farm, well or development. <button type="button" data-dialog="sources">Explore the research ↗&#xFE0E;</button></p>
+      <p data-aud="research" class="overview-narrative-qualification"><strong>The distinction matters:</strong> agriculture is a major estimated water-use sector in the Willcox Basin, and a <a href="https://www.mdpi.com/2076-3263/13/6/176" target="_blank" rel="noopener noreferrer">2023 peer-reviewed study</a> links agricultural expansion with groundwater decline. That supports regional context, not attributing an individual satellite observation to a particular farm, well or development. <button type="button" data-dialog="sources">Explore the research ↗&#xFE0E;</button></p>
     </section>
-    <section id="overview-purpose" class="overview-purpose" aria-labelledby="purpose-title">
+    <section id="overview-purpose" class="overview-purpose" aria-labelledby="purpose-title" data-aud="research">
       <div class="overview-purpose-header">
         <div><span class="overview-mission-label">WHY THIS MATTERS</span><h2 id="purpose-title">A clearer view of the ground we share.</h2></div>
         <p>Making the evidence understandable helps people see where closer investigation, monitoring and better-informed decisions may be needed.</p>
@@ -207,10 +206,9 @@
           <a href="https://www.mdpi.com/2076-3263/13/6/176" target="_blank" rel="noopener noreferrer">Geosciences · 2023 research paper ↗&#xFE0E;</a>
         </article>
       </div>
-      <p data-aud="plain" class="overview-proof-qualifier"><strong>What research supports:</strong> pumping groundwater can make the ground sink, and farming is a big source of pumping here. <strong>What our map cannot show on its own:</strong> that a particular farm, well or building caused the sinking at a particular spot. <button type="button" data-dialog="sources">View all research sources ↗&#xFE0E;</button></p>
-<p data-aud="research" class="overview-proof-qualifier"><strong>Supported:</strong> groundwater extraction is a documented driver of land subsidence, and agriculture is a significant pumping pressure in these basins. <strong>Not supported by this map alone:</strong> attributing a specific new satellite observation to an individual farm, well or facility. <button type="button" data-dialog="sources">View all research sources ↗&#xFE0E;</button></p>
+      <p data-aud="research" class="overview-proof-qualifier"><strong>Supported:</strong> groundwater extraction is a documented driver of land subsidence, and agriculture is a significant pumping pressure in these basins. <strong>Not supported by this map alone:</strong> attributing a specific new satellite observation to an individual farm, well or facility. <button type="button" data-dialog="sources">View all research sources ↗&#xFE0E;</button></p>
     </section>
-    <div class="overview-evidence">
+    <div class="overview-evidence" data-aud="research">
       <div class="overview-evidence-copy">
         <span class="overview-mission-label">WHAT WE ARE STUDYING</span>
         <h2>Not just whether the land moves. <em>How confidently we can say so.</em></h2>
@@ -240,7 +238,7 @@
         <button type="button" class="overview-secondary" data-dialog="method">Read how the measurements work</button>
       </details>
     </div>
-    <div class="overview-steps" aria-label="Explore the evidence in three steps">
+    <div class="overview-steps" aria-label="Explore the evidence in three steps" data-aud="research">
       <div><span>01 / LOCATE</span><p>Choose a study area drawn from the team’s latest dataset—not a fixed list.</p></div>
       <div><span>02 / READ</span><p>Inspect measured movement, acquisition dates and comparisons where records exist.</p></div>
       <div><span>03 / QUESTION</span><p>Check confidence, viewing direction and missing observations before drawing conclusions.</p></div>
@@ -251,7 +249,7 @@
     <h2 id="evidence-title" class="sr-only">Evidence</h2>
     <div class="evidence-tabs" role="tablist" aria-label="Evidence topics">
       <button type="button" role="tab" id="tab-nisar" aria-controls="overview-nisar" aria-selected="true">What NISAR shows</button>
-      <button type="button" role="tab" id="tab-farmland" aria-controls="overview-farmland" aria-selected="false" tabindex="-1">Farms and the radar</button>
+      <button type="button" role="tab" id="tab-farmland" aria-controls="overview-farmland" aria-selected="false" tabindex="-1" data-aud="research">Farms and the radar</button>
       <button type="button" role="tab" id="tab-pumping" aria-controls="overview-pumping" aria-selected="false" tabindex="-1">Pumping and sinking</button>
       <button type="button" role="tab" id="tab-groundwater" aria-controls="overview-groundwater" aria-selected="false" tabindex="-1">Water levels</button>
       <button type="button" role="tab" id="tab-geology" aria-controls="overview-geology" aria-selected="false" tabindex="-1">Geology and infrastructure</button>
@@ -270,7 +268,7 @@
           <h3>NISAR finds the same sinking basin.</h3>
           <details class="more"><summary>How we know</summary><div data-aud="plain"><p>Over the Willcox basin we compared NISAR’s one-year map with the ten-year map from the older satellite, block by block. They line up: where one sees sinking, so does the other. The match score is <span data-nisar="r"></span> (1 would be perfect, 0 none).</p></div><div data-aud="research"><p>Across <span data-nisar="blocks"></span> map blocks at Willcox, NISAR’s one-year pattern lines up with the ten-year Sentinel-1 pattern (correlation <span data-nisar="r"></span>; 1 is a perfect match, 0 is none). Where one satellite sees sinking, so does the other.</p><p class="tech-note"><strong>Method.</strong> Pearson correlation of per-block rates on a 300 m grid. Each map is shifted to its own median because absolute levels depend on the reference. One bad September 2026 date is left in; removing it raises r slightly.</p></div></details>
         </article>
-        <article class="overview-proof-card">
+        <article class="overview-proof-card" data-aud="research">
           <span class="overview-proof-id">02 / A CLEANER SIGNAL</span>
           <strong class="overview-proof-number">−<span data-nisar="percent"></span>% <small>noise</small></strong>
           <h3>NISAR’s weather correction works.</h3>
@@ -283,15 +281,16 @@
           <details class="more"><summary>How we know</summary><div data-aud="plain"><p>A single noisy observation can hide a slow trend, so a short record is not enough. At Willcox’s <span data-nisar="willcox-rate"></span> cm a year we estimate NISAR needs about <span data-nisar="willcox-years"></span> years of unbroken data for a 90% chance of a confirmed speed. Today that chance is about <span data-nisar="willcox-chance"></span>%. At Eloy (<span data-nisar="eloy-rate"></span> cm a year, started June 2026) the estimate is <span data-nisar="eloy-date"></span>.</p></div><div data-aud="research"><p>Noise in single observation dates dominates a short record. At Willcox’s <span data-nisar="willcox-rate"></span> cm/yr we estimate NISAR needs about <span data-nisar="willcox-years"></span> years of unbroken data for a 90% chance of a confirmed rate. Today that chance is about <span data-nisar="willcox-chance"></span>%. At Eloy (<span data-nisar="eloy-rate"></span> cm/yr, started June 2026) it is about <span data-nisar="eloy-date"></span>.</p><p class="tech-note"><strong>Method.</strong> Detection time uses the single-date noise measured in our Willcox series, a 3-sigma threshold and 90% power.</p></div></details>
         </article>
       </div>
-      <div class="viz" id="viz-directions" hidden></div>
+      <div id="nisar-record" class="geo-compare" data-aud="research" hidden></div>
+      <div class="viz" id="viz-directions" data-aud="research" hidden></div>
       <figure class="nisar-figure" data-aud="research">
         <img id="nisar-figure-img" alt="Left: scatter of NISAR one-year rate against Sentinel-1 ten-year rate, showing a rising relationship. Right: NISAR change over time at Willcox playa against the Sentinel-1 trend lines." width="1430" height="560" loading="lazy">
         <figcaption>Willcox basin. Left: each point is a 300 m block; the red line is the median Sentinel-1 rate for each NISAR rate. Right: NISAR’s year at the playa against Sentinel-1’s long-term trends. The sharp dip on one date in September 2026 is a single bad observation, not real motion.</figcaption>
       </figure>
-      <details class="more more-block"><summary>Where NISAR and Sentinel-1 do not agree</summary><div data-aud="plain"><p class="overview-proof-qualifier"> Over the six months both satellites watched (October 2025 to April 2026), their changes did not match: about 1 cm of movement in six months is smaller than the noise. In the sinking areas NISAR reads faster than Sentinel-1 (<span data-nisar="s-nisar"></span> against <span data-nisar="s-s1"></span> cm a year); we cannot yet tell whether that is noise or a recent speed-up. Over its full year NISAR’s change at the dry lake bed was <span data-nisar="net"></span> cm, close to Sentinel-1’s long-term trend, but one date can be off by 1 to 1.5 cm, so this is consistent, not proven.</p></div><div data-aud="research"><p class="overview-proof-qualifier"> Over the six months both watched (Oct 2025–Apr 2026) their changes did not match (correlation <span data-nisar="overlap"></span>): about 1 cm of movement in six months is smaller than the noise. In the sinking areas NISAR also reads faster than Sentinel-1 (<span data-nisar="s-nisar"></span> against <span data-nisar="s-s1"></span> cm/yr, relative to the surroundings); we cannot yet tell whether that is noise or a recent speed-up. Over its full year NISAR’s playa change was <span data-nisar="net"></span> cm, close to Sentinel-1’s long-term trend of <span data-nisar="trend"></span> cm/yr, but one date carries 1–1.5 cm of error, so this is consistent, not proven. <button type="button" data-dialog="limits">Read all limits ↗&#xFE0E;</button></p></div></details>
-      <details class="more more-block"><summary>From the other side</summary><div data-aud="plain"><p class="overview-proof-qualifier"> NISAR also looks at Willcox from the opposite direction. Over the same <span data-nisar="span"></span> days, the areas Sentinel-1 shows sinking changed by <span data-nisar="asc"></span> mm in one view and <span data-nisar="desc"></span> mm in the other (negative means moving away from the satellite), against <span data-nisar="exp"></span> mm expected from the ten-year rate. Both point the same way, but over so short a time the two views are too noisy to say more.</p></div><div data-aud="research"><p class="overview-proof-qualifier"> NISAR’s ascending track looks at Willcox from the opposite direction. Over the same June to October months (<span data-nisar="span"></span> days), the areas Sentinel-1 shows sinking changed by <span data-nisar="asc"></span> mm in the ascending data (95% range <span data-nisar="asc-lo"></span> to <span data-nisar="asc-hi"></span>) and <span data-nisar="desc"></span> mm in the descending data (<span data-nisar="desc-lo"></span> to <span data-nisar="desc-hi"></span>), relative to the rest, against <span data-nisar="exp"></span> mm expected from Sentinel-1’s long-term rate. Negative means moving away from the satellite. The difference between the two directions would reveal sideways motion; it is <span data-nisar="ew"></span> mm (<span data-nisar="ew-lo"></span> to <span data-nisar="ew-hi"></span>), too uncertain to say anything. Over so short a span the two directions’ whole-map patterns are mostly noise, so we do not compare them block by block.</p></div></details>
+      <details class="more more-block" data-aud="research"><summary>Where NISAR and Sentinel-1 do not agree</summary><div data-aud="research"><p class="overview-proof-qualifier"> Over the six months both watched (Oct 2025–Apr 2026) their changes did not match (correlation <span data-nisar="overlap"></span>): about 1 cm of movement in six months is smaller than the noise. In the sinking areas NISAR also reads faster than Sentinel-1 (<span data-nisar="s-nisar"></span> against <span data-nisar="s-s1"></span> cm/yr, relative to the surroundings); we cannot yet tell whether that is noise or a recent speed-up. Over its full year NISAR’s playa change was <span data-nisar="net"></span> cm, close to Sentinel-1’s long-term trend of <span data-nisar="trend"></span> cm/yr, but one date carries 1–1.5 cm of error, so this is consistent, not proven. <button type="button" data-dialog="limits">Read all limits ↗&#xFE0E;</button></p></div></details>
+      <details class="more more-block" data-aud="research"><summary>From the other side</summary><div data-aud="research"><p class="overview-proof-qualifier"> NISAR’s ascending track looks at Willcox from the opposite direction. Over the same June to October months (<span data-nisar="span"></span> days), the areas Sentinel-1 shows sinking changed by <span data-nisar="asc"></span> mm in the ascending data (95% range <span data-nisar="asc-lo"></span> to <span data-nisar="asc-hi"></span>) and <span data-nisar="desc"></span> mm in the descending data (<span data-nisar="desc-lo"></span> to <span data-nisar="desc-hi"></span>), relative to the rest, against <span data-nisar="exp"></span> mm expected from Sentinel-1’s long-term rate. Negative means moving away from the satellite. The difference between the two directions would reveal sideways motion; it is <span data-nisar="ew"></span> mm (<span data-nisar="ew-lo"></span> to <span data-nisar="ew-hi"></span>), too uncertain to say anything. Over so short a span the two directions’ whole-map patterns are mostly noise, so we do not compare them block by block.</p></div></details>
     </section>
-    <section id="overview-farmland" class="overview-proof overview-nisar" aria-labelledby="farmland-title" role="tabpanel" hidden>
+    <section id="overview-farmland" class="overview-proof overview-nisar" aria-labelledby="farmland-title" role="tabpanel" hidden data-aud="research">
       <div class="nisar-surface">
         <span class="overview-mission-label">NISAR BACKSCATTER / WHAT IS ON TOP</span>
         <h3 id="farmland-title">Radar also shows what covers the ground: farmland and desert.</h3>
@@ -357,7 +356,7 @@
           <h3>Sinking steps up with the pumping nearby.</h3>
           <details class="more"><summary>How we know</summary><div data-aud="plain"><p>We split the basin into small blocks and ranked them by estimated pumping nearby. Blocks with no field nearby barely move (<span data-pump="none"></span> cm a year). With a little pumping it is <span data-pump="low"></span>, with more <span data-pump="medium"></span>, and with the most <span data-pump="high"></span> (negative means sinking).</p></div><div data-aud="research"><p>Sorting the basin into 300 m blocks by the estimated pumping within <span data-pump="radius"></span> km, the typical block reads <span data-pump="none"></span> cm/yr with no field nearby, <span data-pump="low"></span> with a little pumping, <span data-pump="medium"></span> with more, and <span data-pump="high"></span> with the most (negative means sinking).</p></div></details>
         </article>
-        <article class="overview-proof-card">
+        <article class="overview-proof-card" data-aud="research">
           <span class="overview-proof-id">03 / HOW STRONG</span>
           <strong class="overview-proof-number"><span data-pump="rho"></span> <small>correlation</small></strong>
           <h3>A clear link, but mostly about where the fields are.</h3>
@@ -387,7 +386,7 @@
           <h3>Faster-falling water, faster-sinking ground.</h3>
           <details class="more"><summary>How we know</summary><div data-aud="plain"><p>We sorted the wells into four equal groups by how fast their water fell. Where it fell least, the ground reads <span data-gw="q0-rate"></span> cm a year; in the other groups it is <span data-gw="q1-rate"></span>, <span data-gw="q2-rate"></span> and <span data-gw="q3-rate"></span>. Beyond about 2 feet a year the sinking stops increasing, because how much the ground sinks also depends on the clay below, which wells do not record.</p></div><div data-aud="research"><p>Sorting the wells into four equal groups by how fast their water fell: where it fell least, the ground around the wells reads <span data-gw="q0-rate"></span> cm/yr (<span data-gw="q0-sink"></span>% of wells on sinking ground); then <span data-gw="q1-rate"></span>, <span data-gw="q2-rate"></span> and <span data-gw="q3-rate"></span> cm/yr. Beyond about 2 feet a year the sinking stops increasing: how much the ground sinks also depends on how much clay lies below, which these wells do not record.</p></div></details>
         </article>
-        <article class="overview-proof-card">
+        <article class="overview-proof-card" data-aud="research">
           <span class="overview-proof-id">03 / HOW STRONG</span>
           <strong class="overview-proof-number"><span data-gw="rho"></span> <small>correlation</small></strong>
           <h3>A clear link from two independent measurements.</h3>
@@ -395,6 +394,7 @@
         </article>
       </div>
       <div class="viz" id="viz-groundwater" hidden></div>
+      <div id="gw-detail" class="geo-compare" data-aud="research" hidden></div>
       <details class="more more-block"><summary>What this does not show</summary><div data-aud="plain"><p class="overview-proof-qualifier">The early and recent readings come from different programs, wells differ in depth and in which layer they tap, and the water record covers about 30 years while the radar covers ten. A link between falling water and sinking ground fits how pumped-out clay compacts, but these numbers alone do not show which wells or users caused it. <button type="button" data-dialog="sources">See the data sources ↗&#xFE0E;</button></p></div><div data-aud="research"><p class="overview-proof-qualifier">The early and recent readings come from different programs, and the recent reading is a single latest value without a resting-or-pumping flag in the service we used. Wells differ in depth and in which layer of the aquifer they tap. The water-level record spans about 30 years while the radar rate covers ten. A link between falling water and sinking ground matches the documented mechanism (pumped-out clays compact), but these numbers alone do not show which wells or users caused it. <button type="button" data-dialog="sources">See the data sources ↗&#xFE0E;</button></p></div></details>
     </section>
     <section id="overview-geology" class="overview-proof overview-nisar" aria-labelledby="geology-title" role="tabpanel">
@@ -405,6 +405,8 @@
         <p data-aud="research">This tab gathers what U.S. Geological Survey studies, Arizona law and the state water agency record about the ground under these basins. The geology differs from basin to basin: <a href="#atlas">open a study area on the map</a> to see what lies beneath that area. <strong>It summarises published findings. It is not engineering or legal advice.</strong></p>
       </div>
       <div id="geology-compare" class="geo-compare" hidden></div>
+      <div id="area-stats" class="geo-compare" data-aud="research" hidden></div>
+      <div id="soils-compare" class="geo-compare" data-aud="research" hidden></div>
       <h3 class="geo-bg-title">Background: what U.S. Geological Survey studies found</h3>
       <div class="overview-proof-grid">
         <article class="overview-proof-card">
@@ -429,10 +431,9 @@
           <details class="more"><summary>How we know</summary><div data-aud="plain"><p>By 1977, about 625 square miles around Eloy had sunk, by up to 12.5 feet. Uneven sinking can tear open earth fissures, long cracks that can grow into gullies more than 10 feet wide and 30 feet deep. The USGS records damage to highways, railroads, sewers, canals, buildings and flood dikes in Arizona, including the Central Arizona Project canal where it crosses the Picacho fissure. Sinking can also change the slope of drains: near Luke Air Force Base a drain overflowed and flooded more than 100 houses. (Galloway and others, 1999)</p></div><div data-aud="research"><p>By 1977, about 625 square miles around Eloy had sunk, by as much as 12.5 feet. Where the ground sinks unevenly, it can tear open earth fissures: long cracks that often appear after heavy storms and can erode into gullies more than 10 feet wide and 30 feet deep. They form mostly near basin edges and above buried bedrock “steps”. The USGS records damage to highways, railroads, sewers, canals, aqueducts, buildings and flood-control dikes in Arizona, including the Central Arizona Project canal where it crosses the Picacho fissure, and a natural-gas pipeline undercut by a fissure. Sinking also changes the slope of drains: near Luke Air Force Base a drain overflowed and flooded more than 100 houses. Willcox Basin has earth fissures too. Source: Galloway and others, USGS, 1999.</p></div></details>
         </article>
       </div>
-      <div class="plan-guide">
+      <div class="plan-guide" data-aud="research">
         <h3>What planners and builders can do, from documented practice</h3>
-        <ul data-aud="plain" class="plan-list"><li><strong>Check the official fissure maps first.</strong> The Arizona Geological Survey maps earth fissures, and Arizona law (A.R.S. § 32-2117) requires the Department of Real Estate to post them. The required notice says each map “supplements, and is not a substitute for, a professional inspection.”</li><li><strong>Treat basin edges and buried rock steps as higher risk.</strong> Fissures concentrate there, and long lines such as canals, pipelines and roads are most exposed where they cross them.</li><li><strong>Design crossings for movement.</strong> Arizona examples: sheet piles on both sides of the CAP aqueduct, and a road “land bridge” built over a trench with compacted fill, a reinforced grid and a waterproof membrane.</li><li><strong>Re-check drains and flood channels.</strong> Sinking changes their slopes and can make them overflow.</li><li><strong>Monitor.</strong> Arizona agencies track sinking with instruments in the ground and GPS surveys; satellite radar adds wide coverage.</li><li><strong>Slow the water-table decline.</strong> Where imported water, recharge and retired farmland stopped declines, some fissures stopped being active. In Willcox the state created an Active Management Area (order of December 19, 2024), and irrigation is now limited to land already legally irrigated.</li></ul>
-          <ul data-aud="research" class="plan-list">
+        <ul data-aud="research" class="plan-list">
           <li><strong>Check the official fissure maps first.</strong> The Arizona Geological Survey maps earth fissures. By Arizona law (A.R.S. § 32-2117) the Department of Real Estate must post these maps, and the required notice says each map “supplements, and is not a substitute for, a professional inspection.”</li>
           <li><strong>Treat basin edges and buried bedrock steps as higher risk.</strong> That is where fissures concentrate. Long lines such as canals, pipelines and roads are most exposed where they cross them.</li>
           <li><strong>Design crossings for movement and erosion.</strong> Arizona examples: sheet piles on both sides of the CAP aqueduct, with the soil beneath compacted; and a road “land bridge” built from a 30-foot trench, compacted fill, a reinforced grid and a waterproof membrane.</li>
@@ -441,8 +442,8 @@
           <li><strong>Slow the water-table decline.</strong> Where imported water, recharge and retired farmland stopped water-level declines, some fissures stopped being active. In Willcox the state designated an Active Management Area (order of December 19, 2024; in effect from January 8, 2025) after presenting evidence of land subsidence and fissuring. Irrigation is now limited to land already legally irrigated, and a draft goal aims to mitigate land subsidence by cutting groundwater overdraft at least 50% by 2075.</li>
         </ul>
       </div>
-      <details class="more more-block"><summary>What this does not cover</summary><p class="overview-proof-qualifier">This tab summarises published findings; it is not engineering, legal or real-estate advice, and any site decision needs a professional geotechnical investigation. The official fissure locations are not yet on our map: we could not download the Arizona Geological Survey dataset in time, so check its maps directly. The geology described is from boreholes and studies, not from our radar, which measures the surface only.</p></details>
-      <div class="plan-sources">
+      <details class="more more-block"><summary>What this does not cover</summary data-aud="research"><p class="overview-proof-qualifier">This tab summarises published findings; it is not engineering, legal or real-estate advice, and any site decision needs a professional geotechnical investigation. The official fissure locations are not yet on our map: we could not download the Arizona Geological Survey dataset in time, so check its maps directly. The geology described is from boreholes and studies, not from our radar, which measures the surface only.</p></details>
+      <div class="plan-sources" data-aud="research">
         <h4>Sources for this tab</h4>
         <ul>
           <li><a href="https://doi.org/10.3133/wsp1859F" target="_blank" rel="noopener noreferrer">Brown, S. G. &amp; Schumann, H. H. (1969). Geohydrology and Water Utilization in the Willcox Basin, Graham and Cochise Counties, Arizona. USGS Water-Supply Paper 1859-F</a></li>

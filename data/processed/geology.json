@@ -185,6 +185,16 @@
      "label": "Permanent compaction",
      "text": "Inelastic compaction occurs when effective stress exceeds the previous maximum (the preconsolidation stress). The first recognized earth fissure (1927, about 3 mi southeast of Picacho) came before significant water-level declines, which suggests some sediments were already near their preconsolidation stress.",
      "source": "pool2001"
+    },
+    {
+     "label": "Picacho fissure over time",
+     "text": "The Picacho earth fissure was a single crack in an October 1967 aerial photograph; by June 1989 it had become a system of multiple parallel cracks, with a scarp showing as much as 2 ft of vertical offset (west side down-dropped).",
+     "source": "galloway1999"
+    },
+    {
+     "label": "Subsidence follows decline",
+     "text": "Repeat leveling and borehole extensometers (Eloy, Higley Road and Luke Air Force Base from the late 1960s) showed the greatest subsidence in the areas of greatest water-level decline (Schumann and Poland, 1970, as cited by the USGS).",
+     "source": "galloway1999"
     }
    ],
    "fissures": {
@@ -262,6 +272,7 @@
    "sources": [
     "azgs_fissures",
     "brown1969",
+    "galloway1999",
     "konieczki2006",
     "smilovsky2025"
    ],
@@ -322,9 +333,19 @@
      "source": "konieczki2006"
     },
     {
-     "label": "Recent InSAR result",
-     "text": "A 2025 InSAR study reports that recent wetter years gave only temporary, local recharge, while subsidence persists and in some zones is accelerating.",
+     "label": "InSAR record (2025)",
+     "text": "Sentinel-1 and ALOS InSAR time series, checked against GPS benchmarks and groundwater-level records, show two major deformation zones with rates above 15 cm/yr and cumulative vertical displacement above 11 ft (about 3.4 m) in some places since the mid-20th century. Above-average rain in recent years gave temporary, local recharge and some water-level improvement, mainly in the fine-grained sediments of the Willcox Playa, but subsidence persists and in some zones is still accelerating. Natural recharge does not offset long-term deficits above 100,000 acre-ft a year.",
      "source": "smilovsky2025"
+    },
+    {
+     "label": "How our numbers compare",
+     "text": "Our fastest 300 m cell in this study box reads about -8.5 cm/yr (Sentinel-1, 2016-2026, line of sight), below the rates above 15 cm/yr reported for two zones in that study. The sensors, periods and resolutions differ and we did not test which of these explains the gap.",
+     "source": "smilovsky2025"
+    },
+    {
+     "label": "National assessment",
+     "text": "The USGS national subsidence assessment lists the Cochise County farming areas near Willcox and Bowie among Arizona's subsidence areas; by 1980 water levels had fallen at least 100 ft in each listed area and 300 to 500 ft in most.",
+     "source": "galloway1999"
     }
    ],
    "fissures": {
@@ -677,6 +698,11 @@
      "label": "Model prediction",
      "text": "An electrical-analog model of the basin predicted declines from 1960 to 1980 of as much as 120 ft at Bowie and 160 ft at San Simon. The result depends directly on how closely future pumpage matched the hypothesized amounts and distribution.",
      "source": "white1965"
+    },
+    {
+     "label": "National assessment",
+     "text": "Subsidence-related earth fissures near Bowie are among the well-known Arizona occurrences listed in the USGS national assessment; by 1980 water levels in the listed Arizona subsidence areas had fallen at least 100 ft, and 300 to 500 ft in most.",
+     "source": "galloway1999"
     },
     {
      "label": "Caveat",

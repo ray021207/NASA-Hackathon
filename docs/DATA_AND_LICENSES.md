@@ -31,3 +31,10 @@ Python dependencies are listed with versions in `requirements.txt`.
 ## Phone Overview backdrop
 
 - `web/assets/arizona-backdrop.svg` is original artwork made for this project (see AI_USAGE.md), released under the project licence. No third-party image is used.
+
+## USDA NRCS Soil Survey (SSURGO) via Soil Data Access
+
+- Source: USDA Natural Resources Conservation Service, Soil Survey Geographic Database (SSURGO), read through Soil Data Access (https://sdmdataaccess.sc.egov.usda.gov/). U.S. government data, public domain; credit NRCS.
+- What we use (`src/soils_nrcs.py`, output `data/processed/soils.json`): for each study area, 120 random points in the whole box and 120 in the sinking zone are matched to soil map units; each map unit's components, horizons, restrictions, landforms and NRCS ecological sites are combined into shares (soil order, great group, landform, ecological site, texture, drainage) and weighted means (sand, silt, clay, organic matter, pH, EC, SAR, CaCO3, gypsum, CEC, available water capacity, Ksat) for the top 0-30 cm and 30-100 cm. Queried 2026-11-15.
+- Limits: these are the soils of the top ~2 m as mapped by the survey, not the aquifer layers (see geology.json). The survey has no microbial or biological-crust data. Sampling is by points, so shares carry sampling error (120 points per set). Weighted means can hide patches.
+- Salinity and sodicity flags use the standard USDA Salinity Laboratory thresholds (EC 4 dS/m, SAR 13; Handbook 60).

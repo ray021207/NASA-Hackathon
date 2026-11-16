@@ -1043,3 +1043,15 @@ html:not([data-audience="research"]) .audience-side[data-set="plain"],html[data-
 @media(max-width:700px){.geo-detail>div{grid-template-columns:1fr}}
 html:not([data-audience="research"]) .bar-ci{display:none}
 .report-methods-plain>.detail-section:first-child:not(#_){border-top:0;padding-top:14px}
+/* Plain language shows fewer cards in a row: let the visible ones share the width. */
+html:not([data-audience="research"]) .overview-proof-grid:not(#_){grid-template-columns:repeat(auto-fit,minmax(290px,1fr))}
+html:not([data-audience="research"]) .insight-grid:not(#_){grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.soil-block{margin-top:6px}
+.soil-block .detail-facts{margin-top:10px}
+.soil-table{min-width:0}
+.soil-table td{font-variant-numeric:tabular-nums}
+#area-stats .geo-compare-table,#soils-compare .geo-compare-table{min-width:1000px}
+#nisar-record .geo-compare-table,#gw-detail .geo-compare-table{min-width:0}
+#nisar-record .geo-compare-table tbody th{width:30%}
+.overview-proof-card>details.more[open]:not(#_){margin-top:14px;padding-top:0}
+#area-stats thead th,#soils-compare thead th,#gw-detail thead th,#nisar-record thead th{text-transform:none;letter-spacing:0;font-size:12.5px}
