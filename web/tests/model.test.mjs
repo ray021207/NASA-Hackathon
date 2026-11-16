@@ -388,6 +388,18 @@ test('geology.json: every area has a plain version and sourced research detail t
   assert.ok(cleanGeology(bad).areas.eloy.detail.every(d => d.source !== 'not-a-source'), 'unsourced detail is dropped');
 });
 
+test('papers read in full: Willcox research detail cites Job 2023 (and the Peng 2022 abstract), and the Resources dialog lists what is used from each paper', async () => {
+  const clean = cleanGeology(JSON.parse(await readFile(new URL('../../data/processed/geology.json', import.meta.url), 'utf8')));
+  const w = clean.areas.willcox;
+  assert.ok(w.detail.filter(d => d.source === 'job2023').length >= 8, 'Job 2023 detail entries survive the strict checker');
+  assert.ok(w.detail.some(d => d.source === 'peng2022' && /abstract/i.test(d.text)), 'Peng 2022 is marked as abstract-only');
+  const text = w.detail.map(d => d.text).join(' ');
+  for (const needle of ['0.89', '93.2%', '18,326', '3,937', '116.8 m']) assert.ok(text.includes(needle), 'Job 2023 number present: ' + needle);
+  const js = await readFile(new URL('../app.js', import.meta.url), 'utf8');
+  assert.ok(js.includes('Papers read, and exactly what we use from each'), 'ledger heading');
+  for (const paper of ['Job, Ochoa', 'Peng, Lu', 'Smilovsky (2025)', 'Devlin &amp; Lohman (2025)', 'Devlin (2025)', 'Saporta, Gomba']) assert.ok(js.includes(paper), 'ledger names ' + paper);
+});
+
 test('soils.json: real USDA survey summaries validate for every area, bad entries are dropped', async () => {
   const raw = JSON.parse(await readFile(new URL('../../data/processed/soils.json', import.meta.url), 'utf8'));
   const clean = cleanSoils(raw);

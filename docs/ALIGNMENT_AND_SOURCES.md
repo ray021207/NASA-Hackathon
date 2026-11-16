@@ -6,7 +6,7 @@ Written for the team on 15 November 2026, the day of the deadline. It is an hone
 
 **Measured by us (recent).** Every headline number comes from data covering 2016 to 2026: OPERA Sentinel-1 displacement (July 2016 to April 2026), NASA NISAR (October 2025 to November 2026), USGS and ADWR well measurements (latest readings 2015 to 2025), the USGS irrigation-withdrawal estimates for 2024, USDA Cropland 2025, ERA5 rain, and ADWR's radar products (to 2026). The site's numbers are loaded from `data/processed/` and checked by tests.
 
-**Published studies, recent.** Smilovsky 2025 (Willcox InSAR, GSA abstract), Devlin 2025, Job and others 2023, Peng and others 2022, Saporta and others 2021, ADWR's Active Management Area order (December 2024), ADWR's 2022 water-use estimates, the NISAR handbook and user guide (2025).
+**Published studies, recent.** Job and others 2023 (read in full), Devlin and Lohman 2025 (read in full, author preprint), Smilovsky 2025 (Willcox InSAR, GSA abstract), Peng and others 2022 (EGU abstract), Devlin 2025 (dissertation abstract), Saporta and others 2021 (EGU abstract), ADWR's Active Management Area order (December 2024), ADWR's 2022 water-use estimates, the NISAR handbook and user guide (2025).
 
 **Published studies, older (by necessity).** The basin geology rests on seven foundational USGS reports: Coates and Cushman 1955, White and Hardt 1965, Brown and Schumann 1969, Epstein 1987, Galloway and others 1999, Pool and others 2001 and Konieczki 2006. They remain the standard published sources for basin structure, aquifer properties and subsidence history. But the conditions they describe (pumping totals, water-level declines, subsidence amounts) are historical, so the site always gives the year or period. We did not find newer replacements that we could read in full.
 
@@ -17,7 +17,8 @@ Written for the team on 15 November 2026, the day of the deadline. It is an hone
 
 **What was and was not checked.**
 - Checked: every number on the site against the data files (tests), and every literature figure against reports read in full text (USGS reports 1955 to 2006, Circular 1182, Epstein 1987).
-- Checked only from abstracts or summaries: Smilovsky 2025, Job and others 2023, Peng and others 2022, Devlin 2025, Saporta and others 2021. They are cited for what their abstracts state; we did not read their full text.
+- Read in full: Job and others 2023 and Devlin and Lohman 2025 (from the author preprint; the publisher's page blocked the download). Every number we take from them is listed in `docs/PAPERS_USED.md` and in the Resources dialog.
+- Checked only from abstracts: Smilovsky 2025 (GSA abstract), Peng and others 2022 (we read the authors' EGU 2022 abstract, not the journal article), Devlin 2025 (dissertation embargoed, abstract only) and Saporta and others 2021 (EGU abstract). They are cited only for what those abstracts state.
 - Not independently verified: the ADWR figure of 155,805 acre-feet (taken from ADWR's page) and the USDA thresholds (EC 4 dS/m, SAR 13; Handbook 60, from standard knowledge, not re-read).
 
 ## 2. Original plan versus now

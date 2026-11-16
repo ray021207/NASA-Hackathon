@@ -132,7 +132,9 @@ Select every option that applies. This answer is not shown to judges.
 | Pool, Carruth & Meehan (2001), Hydrogeology of Picacho Basin, USGS WRI 00-4277 | https://pubs.usgs.gov/publication/wri004277 |
 | Job et al. (2023), Willcox Groundwater Basin, Geosciences 13(6) 176 | https://doi.org/10.3390/geosciences13060176 |
 | Peng et al. (2022), Willcox Basin subsidence from InSAR, Remote Sensing of Environment 271 | https://doi.org/10.1016/j.rse.2022.112894 |
-| Devlin (2025), vegetation and agriculture effects on InSAR, Cornell dissertation | https://ecommons.cornell.edu/entities/publication/5e298b2f-9ae6-4861-abfe-a8c194323c08 |
+| Devlin & Lohman (2025), vegetation bias in InSAR time series, Earth and Space Science 12(6) | https://doi.org/10.1029/2024EA004062 |
+| Peng et al. (2022), EGU 2022 abstract of the same Willcox study (what we actually read) | https://doi.org/10.5194/egusphere-egu22-4147 |
+| Devlin (2025), vegetation and agriculture effects on InSAR, Cornell dissertation (abstract only) | https://ecommons.cornell.edu/entities/publication/5e298b2f-9ae6-4861-abfe-a8c194323c08 |
 | Saporta, Gomba & De Zan (2021), InSAR phase bias, EGU21-3503 | https://meetingorganizer.copernicus.org/EGU21/EGU21-3503.html |
 | USGS Water Science School: Land Subsidence | https://www.usgs.gov/water-science-school/science/land-subsidence |
 | Galloway et al. (1999), Land Subsidence in the United States, USGS Circular 1182 | https://doi.org/10.3133/cir1182 |

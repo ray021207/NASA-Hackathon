@@ -1083,3 +1083,9 @@ html:not(#_){scroll-padding-top:calc(var(--top-h,100px) + 14px)}
 #area-stats .geo-compare-table:not(#_),#soils-compare .geo-compare-table:not(#_){table-layout:auto;min-width:940px}
 #area-stats .geo-compare-table td,#soils-compare .geo-compare-table td{font-variant-numeric:tabular-nums}
 @media(max-width:760px){.geo-compare-table:not(#_){table-layout:auto}.geo-compare-table tbody tr:nth-child(even){background:var(--paper)}}
+
+/* ---- Resources dialog: papers-read ledger ---- */
+.paper-ledger article{border-top:1px solid var(--rule);padding:10px 0 4px}
+.paper-ledger h4{margin:0 0 4px;font-size:14px;line-height:1.35}
+.paper-ledger p,.paper-ledger li{font-size:13.5px;line-height:1.5}
+.paper-ledger ul{margin:4px 0 8px;padding-left:18px}

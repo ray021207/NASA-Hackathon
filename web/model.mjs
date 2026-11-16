@@ -233,7 +233,7 @@ export function cleanGeology(raw) {
     const plain = pl && geoText(pl.summary, 320) && Array.isArray(pl.layer_notes) && Array.isArray(pl.facts)
       ? { summary: geoText(pl.summary, 320), layerNotes: pl.layer_notes.map(t => geoText(t, 160)), facts: pl.facts.slice(0, 5).map(f => ({ text: geoText(f?.text, 240), source: sources[f?.source] ? f.source : null })).filter(f => f.text && f.source) } : null;
     // Research detail (optional): labelled, sourced paragraphs for researchers and water engineers.
-    const detail = (Array.isArray(a?.detail) ? a.detail : []).slice(0, 12).map(d => ({ label: geoText(d?.label, 60), text: geoText(d?.text, 700), source: sources[d?.source] ? d.source : null })).filter(d => d.label && d.text && d.source);
+    const detail = (Array.isArray(a?.detail) ? a.detail : []).slice(0, 20).map(d => ({ label: geoText(d?.label, 60), text: geoText(d?.text, 700), source: sources[d?.source] ? d.source : null })).filter(d => d.label && d.text && d.source);
     const fz = a?.fissures;
     const fissures = fz && isNumber(fz.km_confirmed) && fz.km_confirmed >= 0 && isNumber(fz.km_reported) && fz.km_reported >= 0 && sources[fz.source]
       ? { confirmed: fz.km_confirmed, reported: fz.km_reported, areas: (Array.isArray(fz.azgs_study_areas) ? fz.azgs_study_areas : []).map(t => geoText(t, 60)).filter(Boolean).slice(0, 6), source: fz.source } : null;
