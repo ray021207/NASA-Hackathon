@@ -8,3 +8,7 @@ __pycache__/
 .ipynb_checkpoints/
 data/processed/cache/
 data/*.log
+
+# local-only notes and assistant instructions (not part of the submission)
+local_notes/
+AGENTS.md

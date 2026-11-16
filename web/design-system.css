@@ -567,7 +567,8 @@ html.views-on .evidence [role=tabpanel]:not(.is-active){display:none!important}
 /* quick answers on the Overview */
 .quick-answers{margin:8px 0 34px;padding:30px 0 6px;border-top:1px solid var(--rule)}
 .quick-answers h2{font:730 clamp(24px,2.4vw,32px)/1.15 var(--sans);letter-spacing:-.04em;margin:0 0 16px;color:var(--ink)}
-.quick-answers ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.quick-answers ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;justify-content:center;gap:12px}
+.quick-answers li{flex:0 0 calc((100% - 24px) / 3);min-width:0}
 .quick-answers a,.quick-answers button{display:flex;flex-direction:column;gap:5px;width:100%;height:100%;text-align:left;text-decoration:none;color:var(--ink);background:var(--paper);border:1px solid #e3ddd3;border-radius:var(--edge-radius);padding:18px 20px;transition:border-color .2s ease,transform .2s ease}
 .quick-answers a:hover,.quick-answers button:hover{border-color:var(--rust);transform:translateY(-2px);color:var(--ink)}
 .quick-answers strong{font:700 16px/1.3 var(--sans)}
@@ -600,8 +601,8 @@ details.more-block>p.overview-proof-qualifier{margin-top:12px}
 .bar-ci::before{left:0}.bar-ci::after{right:0}
 .bar-value{font:700 14px/1.2 var(--sans);font-variant-numeric:tabular-nums;color:var(--ink);min-width:64px;text-align:right}
 .viz-note{font:400 12.5px/1.5 var(--sans);color:var(--slate-deep);margin:12px 0 0}
-@media(max-width:900px){.quick-answers ul{grid-template-columns:repeat(2,minmax(0,1fr))}.viz-pair{grid-template-columns:1fr}}
-@media(max-width:560px){.quick-answers ul{grid-template-columns:1fr}.evidence-tabs{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:thin}.evidence-tabs [role=tab]{padding:12px 16px;font-size:13px}.bar-row{grid-template-columns:1fr auto;grid-template-areas:"label value" "track track"}.bar-label{grid-area:label}.bar-value{grid-area:value}.bar-track{grid-area:track}.viz{padding:18px 16px}}
+@media(max-width:900px){.quick-answers li{flex-basis:calc((100% - 12px) / 2)}.viz-pair{grid-template-columns:1fr}}
+@media(max-width:560px){.quick-answers li{flex-basis:100%}.evidence-tabs{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:thin}.evidence-tabs [role=tab]{padding:12px 16px;font-size:13px}.bar-row{grid-template-columns:1fr auto;grid-template-areas:"label value" "track track"}.bar-label{grid-area:label}.bar-value{grid-area:value}.bar-track{grid-area:track}.viz{padding:18px 16px}}
 @media(prefers-reduced-motion:reduce){.bar-fill{transition:none}}
 /* Footer: readable on the light page. It had inherited pale sand text meant for a dark footer (about 1.2:1 on cream); ink on cream is 12.5:1. */
 .page-footer{color:var(--ink);background:var(--canvas);border-top:1px solid var(--rule)}
@@ -1089,3 +1090,16 @@ html:not(#_){scroll-padding-top:calc(var(--top-h,100px) + 14px)}
 .paper-ledger h4{margin:0 0 4px;font-size:14px;line-height:1.35}
 .paper-ledger p,.paper-ledger li{font-size:13.5px;line-height:1.5}
 .paper-ledger ul{margin:4px 0 8px;padding-left:18px}
+
+/* ---- Phones: every comparison table becomes a stack of cards. Undo the desktop column widths, centring and minimum widths so the cards fill the screen. ---- */
+@media(max-width:760px){
+ .geo-compare-table:not(#_){min-width:0;table-layout:auto}
+ #area-stats .geo-compare-table:not(#_),#soils-compare .geo-compare-table:not(#_),#nisar-record .geo-compare-table:not(#_),#gw-detail .geo-compare-table:not(#_){min-width:0;table-layout:auto}
+ #geology-compare .geo-compare-table th:nth-child(n),#geology-compare .geo-compare-table td:nth-child(n){width:auto;text-align:left}
+ #nisar-record .geo-compare-table tbody th:not(#_){width:auto}
+ .geo-compare-table tbody th:not(#_){padding:12px 14px 10px;font-size:15px;line-height:1.35}
+ .geo-compare-table td:not(#_){padding:8px 14px}
+ .geo-compare-table td:last-child:not(#_){padding-bottom:12px}
+ #geology-compare .recovery-chip{margin:2px 0 6px}
+}
+

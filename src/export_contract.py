@@ -1,5 +1,5 @@
-"""Write the data contract the Field-atlas UI reads (AGENTS.md section 13) into data/processed/, from the same cubes as the map.
-Files: hotspots.geojson, timeseries_<slug>.json, rate_<slug>.png/.json  (+ extra region layers, see docs/UI_DATA_CONTRACT.md).
+"""Write the data files the website reads (hotspots, per-area time series, rate images) into data/processed/, from the same cubes as the map.
+Files: hotspots.geojson, timeseries_<slug>.json, rate_<slug>.png/.json  (+ extra region layers).
 Values: LOS cm and cm/yr, negative = sinking (ground moving away from the satellite). Unknown = null, never 0.
 Usage: python export_contract.py   (run export_web.py first is not required; this script loads the cubes itself)"""
 import json, os, numpy as np
@@ -9,10 +9,10 @@ import insights
 ADWRJ = json.load(open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data/processed/adwr_validation.json"))) if os.path.exists(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data/processed/adwr_validation.json")) else {}
 
 ROOT = ew.ROOT; OUT = f"{ROOT}/data/processed"
-TAG = {  # tagline, county (all text is plain, factual, and matches docs/UI_DATA_CONTRACT.md)
+TAG = {  # tagline, county (all text is plain, factual, and matches the data files the website reads)
     "eloy": ("The long sink", "Pinal"), "willcox": ("The largest sink", "Cochise"), "north_willcox": ("The fastest patch", "Graham"),
     "south": ("The southern sink", "Cochise"), "east": ("Unconfirmed: one look direction", "Cochise")}
-FARM = {"eloy": "yes", "willcox": "yes", "north_willcox": "unchecked", "south": "yes", "east": "little"}   # from the OpenStreetMap land-use check (docs/STATUS.md)
+FARM = {"eloy": "yes", "willcox": "yes", "north_willcox": "unchecked", "south": "yes", "east": "little"}   # from the OpenStreetMap land-use check (src/geocode_clusters.py)
 SIGN_S1 = "Positive values mean the ground moved toward the satellite; negative values mean it moved away (sinking). Measured along the satellite's slanted view, not straight down. (OPERA product convention.)"
 SIGN_NISAR = "NISAR sign convention not yet verified against the product specification; read with care."
 REL_NISAR = "NASA NISAR L2 GUNW, Provisional release (production CRID P05023)"

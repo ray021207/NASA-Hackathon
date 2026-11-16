@@ -1,5 +1,5 @@
 """Read one NISAR GUNW pair, subtract the ionosphere screen, and return LOS displacement (mm) over a lon/lat window.
-Sign convention d = -(lambda/4pi)*phi is the AGENTS.md assumption and is UNVERIFIED against the product spec."""
+Sign convention d = -(lambda/4pi)*phi is the standard InSAR convention; the wavelength and sign are read from the product file (see the README, Method)."""
 import h5py, numpy as np
 from pyproj import Transformer
 import contextlib

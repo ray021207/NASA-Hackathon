@@ -32,7 +32,6 @@ Updated: November 14–15, 2026 (Arizona). This document explains **which claims
 
 The project reads processed exports from `data/processed/` and distinguishes Sentinel-1 historical line-of-sight displacement/rate from short-record, provisional NISAR observations. Real observation dates, source tracks, reference areas, reported uncertainty and limitations are shown in the map interface.
 
-- Source data contract: `docs/UI_DATA_CONTRACT.md`
 - Data exports: `data/processed/hotspots.geojson`, `timeseries_<slug>.json`, `rate_<slug>.json` and `rate_<slug>.png`
 - ADWR comparison method: `docs/adwr_validation.md`
 - NISAR product metadata and sources: https://nisar.jpl.nasa.gov/ and https://search.asf.alaska.edu/

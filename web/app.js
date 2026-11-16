@@ -1134,7 +1134,7 @@ start().catch(error => {
   console.error('Atlas initialization failed:', error);
 });
 
-// ---- About us: team profiles from web/team.json (hand-edited; see web/README.md) ----
+// ---- About us: team profiles from web/team.json (hand-edited) ----
 async function loadTeam() {
   try {
     if (window.ATLAS_PREVIEW_DATA && 'team.json' in window.ATLAS_PREVIEW_DATA) return cleanTeam(window.ATLAS_PREVIEW_DATA['team.json']);
